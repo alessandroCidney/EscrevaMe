@@ -1,0 +1,16 @@
+aside {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 50%;
+	height: 100%;
+
+	background-color: #1e017d;
+
+	> img {
+		height: 70%;
+
+		opacity: 0.3;
+	}
+}
