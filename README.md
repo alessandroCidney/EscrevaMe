@@ -1,6 +1,8 @@
 # EscrevaMe
 EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas redações, interagindo com pessoas de todo o mundo e promovendo a difusão de conhecimentos.
 
+<img src="https://github.com/alessandroCidney/EscrevaMe/tree/master/src/assets/images/designs/design.jpg" />
+
 ## Funcionalidades planejadas
 
 ### Página de Login
