@@ -58,20 +58,22 @@ div.login {
 				}
 
 				& + span button {
-						min-width: 0;
-						padding: 0;
-						margin: 0;
+					min-width: 0;
+					padding: 0;
+					margin: 0;
 
-						border: 0;
-						
+					border: 0;
+
+					background: transparent;
+					color: #1e017d;
+
+					font-size: .9rem;
+
+					cursor: pointer;
+
+					&:hover {
 						text-decoration: underline;
-
-						background: transparent;
-						
-						color: #1e017d;
-						font-size: .9rem;
-
-						cursor: pointer;
+					}
 				}
 			}
 

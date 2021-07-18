@@ -5,12 +5,13 @@ import './styles.scss';
 import { EssayOfUserPage } from '../../components/EssayOfUserPage';
 import { EssaysArea } from '../../components/EssaysArea';
 import { MainHeader } from '../../components/MainHeader';
+import { MainFooter } from '../../components/MainFooter';
 
 export function UserPage() {
 
 	return (
 		<div className="user-page container-column">
-			<MainHeader />
+			{/*<MainHeader />*/}
 			
 			<div className="custom-background">
 				<div className="profile-photo">
@@ -38,6 +39,8 @@ export function UserPage() {
 				<EssayOfUserPage />
 				<EssayOfUserPage />
 			</EssaysArea>
+
+			<MainFooter />
 		</div>
 	);
 }
