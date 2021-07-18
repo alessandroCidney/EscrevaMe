@@ -4,11 +4,13 @@ import './styles.scss';
 // Components
 import { EssayOfUserPage } from '../../components/EssayOfUserPage';
 import { EssaysArea } from '../../components/EssaysArea';
+import { MainHeader } from '../../components/MainHeader';
 
 export function UserPage() {
 
 	return (
 		<div className="user-page container-column">
+			<MainHeader />
 			
 			<div className="custom-background">
 				<div className="profile-photo">
