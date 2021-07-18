@@ -34,4 +34,4 @@ EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas reda
 - #9fa8da (Azul claro)
 - #ede7ff (Azul muito claro)
 - #0073ff (Azul claro, mas forte)
-- #ff3333 (vermelho)
+- #ff3333 (Vermelho)

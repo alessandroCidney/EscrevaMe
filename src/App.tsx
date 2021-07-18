@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoginPage } from './pages/LoginPage';
-import { JoinUsPage } from './pages/JoinUsPage';
+import { UserPage } from './pages/UserPage';
 
 import './styles/global.scss';
 
@@ -11,7 +11,7 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={LoginPage} />
-        <Route path="/joinus" component={JoinUsPage} />
+        <Route path="/users/:id" exact component={UserPage} />
       </Switch>
     </BrowserRouter>
   );

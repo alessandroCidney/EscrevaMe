@@ -1,0 +1,69 @@
+div.essay-of-user-page {
+	width: 250px;
+	height: 300px;
+
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+	gap: 10px;
+
+	transition: .2s;
+
+	&.highlight:hover {
+		background: #7b53ff;
+		color: #fff;
+	}
+
+	&:hover {
+		background: #000;
+		color: #fff;
+	}
+
+	background: #ede7ff;
+
+	padding-top: 30px;
+
+	cursor: pointer;
+
+	> h3 {
+		width: 90%;
+		height: 20%;
+		
+		font-weight: normal;
+		font-size: .9rem;
+
+		text-align: center;
+	}
+
+	> div.image {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		width: 100%;
+		height: 50%;
+
+		> i {
+			font-size: 100px;
+		}
+	}
+
+	> div.footer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+
+		height: 30%;
+	}
+}
+
+div.essays-area.highlight {
+	div.essay-of-user-page {
+		&:hover {
+			background: #7b53ff;
+			color: #fff;
+		}
+	}
+}

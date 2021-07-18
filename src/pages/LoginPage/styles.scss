@@ -1,11 +1,5 @@
 div.login {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: row;
-
-	width: 100vw;
-	height: 100vh;
+	max-height: 100vh;
 
 	main {
 		display: flex;
@@ -35,7 +29,57 @@ div.login {
 				font-familly: 'Poppins', sans-serif;
 			}
 
+			button, span {
+				animation: showFromBottomToUp .2s ease;
+			}
+
+			> button > div {
+				font-size: 1.5rem;
+			}
+
+			form {
+				animation: showFromBottomToUp .2s ease;
+
+				height: 35%;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				gap: 10px;
+
+				input {
+					width: 100%;
+					
+					padding: 15px 20px;
+
+					border: 1px solid #737380;;
+					border-radius: 8px;
+				}
+
+				& + span button {
+						min-width: 0;
+						padding: 0;
+						margin: 0;
+
+						border: 0;
+						
+						text-decoration: underline;
+
+						background: transparent;
+						
+						color: #1e017d;
+						font-size: .9rem;
+
+						cursor: pointer;
+				}
+			}
+
 			> span {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 5px;
 
 				color: #737380;
 

@@ -13,7 +13,7 @@ import facebookIconImg from '../../assets/images/icons/facebook-icon.png';
 export function JoinUsPage() {
 
 	return (
-		<div className="join-us">
+		<div className="join-us container-row">
 			<AsideWithMan />
 
 			<main>
