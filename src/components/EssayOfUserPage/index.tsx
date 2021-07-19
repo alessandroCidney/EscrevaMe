@@ -4,6 +4,9 @@ import './styles.scss';
 // Components
 import { FontAwesomeIcon } from '../FontAwesomeIcon';
 
+// React Router DOM
+import { useHistory } from 'react-router-dom';
+
 // Types
 type EssayProps = {
 	title?: string;
@@ -12,9 +15,14 @@ type EssayProps = {
 };
 
 export function EssayOfUserPage({ title="Sem título", highlight=false, icon="text" }: EssayProps) {
+	const history = useHistory();
+
+	function redirectToEssay() {
+		history.push('/essays/12345');
+	}
 
 	return (
-		<div className={`essay-of-user-page ${highlight && 'highlight'}`}>
+		<button className={`essay-of-user-page ${highlight && 'highlight'}`} onClick={redirectToEssay}>
 			<h3>{title}</h3>
 			<div className="image">
 				{ icon==="quote" ? (
@@ -29,6 +37,6 @@ export function EssayOfUserPage({ title="Sem título", highlight=false, icon="te
 				{/*<FontAwesomeIcon iconName="fas fa-eye" />
 				<p>5678</p>*/}
 			</div>
-		</div>
+		</button>
 	);
 }

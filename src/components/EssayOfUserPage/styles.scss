@@ -1,4 +1,4 @@
-div.essay-of-user-page {
+button.essay-of-user-page {
 	width: 250px;
 	height: 300px;
 
@@ -7,6 +7,8 @@ div.essay-of-user-page {
 	justify-content: flex-start;
 	flex-direction: column;
 	gap: 10px;
+
+	border: 0;
 
 	transition: .2s;
 
@@ -20,7 +22,7 @@ div.essay-of-user-page {
 		color: #fff;
 	}
 
-	background: #ede7ff;
+	background-color: #ede7ff;
 
 	padding-top: 30px;
 
@@ -60,7 +62,7 @@ div.essay-of-user-page {
 }
 
 div.essays-area.highlight {
-	div.essay-of-user-page {
+	button.essay-of-user-page {
 		&:hover {
 			background: #7b53ff;
 			color: #fff;
