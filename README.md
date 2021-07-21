@@ -32,7 +32,7 @@ EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas reda
 ## Cores legais para o projeto
 - #1e017d (Azul escuro)
 - #000000
-- #7b53ff (Azul intermediário)
+- #7b53ff, rgba(123, 83, 255, 1) (Azul intermediário)
 - #9fa8da (Azul claro)
 - #ede7ff (Azul muito claro)
 - #0073ff (Azul claro, mas forte)
