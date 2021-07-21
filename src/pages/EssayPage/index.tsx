@@ -4,6 +4,7 @@ import './styles.scss';
 // Components
 import { MainHeader } from '../../components/MainHeader';
 import { MainFooter } from '../../components/MainFooter';
+import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
 
 export function EssayPage() {
 
@@ -30,10 +31,21 @@ export function EssayPage() {
 				</div>	
 			</main>
 
-			<div className="user-data">
-				<div className="profile-photo"></div>
-				<div className="username"><p>Alessandro Cídney</p></div>
+			<div className="user-items">
+				<div className="user-data">
+					<div className="profile-photo"></div>
+					<div className="username"><h4>Escrito por</h4><p>Alessandro Cídney</p></div>
+				</div>
+
+				<div className="user-actions">
+					{/* <FontAwesomeIcon iconName="fas fa-heart" /> */}
+
+					<FontAwesomeIcon onHoverTransformToSolidVersion iconName="far fa-heart" />
+					<FontAwesomeIcon iconName="far fa-comment-alt" />
+					<FontAwesomeIcon iconName="far fa-share-square" />
+				</div>
 			</div>
+			
 
 			<MainFooter />
 		</div>

@@ -1,7 +1,7 @@
 div.essay-page {
 	animation: showWithOpacityTransition .2s ease;
 
-	align-items: flex-start;
+	align-items: center;
 	justify-content: flex-start;
 
 	> main {
@@ -12,9 +12,6 @@ div.essay-page {
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
-
-		border-right: 1px solid #ddd;
-		border-bottom: 1px solid #ddd;
 
 		> h1.essay-title {
 			width: 100%;
@@ -41,9 +38,20 @@ div.essay-page {
 		}
 	}
 
-	> div.user-data {
-			width: 70%;
-			padding: 50px 70px;
+	> div.user-items {
+		width: 49%;
+
+		padding: 100px 20px;
+
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-direction: row;
+
+		border-top: 1px solid #ddd;
+
+		> div.user-data {
+			width: 50%;
 
 			display: flex;
 			align-items: center;
@@ -65,12 +73,27 @@ div.essay-page {
 				min-width: 150px;
 
 				display: flex;
-				align-items: center;
+				align-items: flex-start;
 				justify-content: center;
+				flex-direction: column;
 
 				text-align: center;
 			}
 		}
+
+		> div.user-actions {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 30px;
+
+			font-size: 2rem;
+
+			> i {
+				cursor: pointer;
+			}
+		}
+	}
 
 	> footer {
 		margin-top: 0;

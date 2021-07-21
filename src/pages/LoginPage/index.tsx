@@ -3,6 +3,9 @@ import { Button } from '../../components/Button';
 import { AsideWithMan } from '../../components/AsideWithMan';
 import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
 
+// Firebase
+import { firebase, auth } from '../../services/firebaseService/firebase';
+
 // SASS
 import './styles.scss';
 
@@ -11,6 +14,9 @@ import { Link, useHistory } from 'react-router-dom';
 
 // React
 import { useState, FormEvent } from 'react';
+
+// Hooks
+import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 
 // Images
 import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
@@ -24,17 +30,41 @@ export function LoginPage() {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
 
+  /**
+   * googleUser e signInWithGoogle contém as informações
+   * do context GoogleAuthContext, obtidas através do hook useGoogleAuth.
+   * 
+   * */
+
+  const { googleUser, signInWithGoogle } = useGoogleAuth();
+
   function toggleButtonsWhenDoLoginWithEmailAndPassword() {
     setLoginWithEmail(!loginWithEmail ? true : false);
   }
 
-  function handleLoginWithEmailAndPassword(event: FormEvent) {
+  async function handleLoginWithGoogle() {
+    if(!googleUser) {
+      await signInWithGoogle();
+    }
+
+    /**
+     * Necessário testar se os dados do usuário já existem para
+     * corrigir o erro do TypeScript "Object is possibly 'undefined'"
+     * 
+     * */
+
+    if(googleUser) {
+      history.push(`/users/${googleUser.id}`);  
+    }
+  }
+
+  async function handleLoginWithEmailAndPassword(event: FormEvent) {
     // Quando esta função é chamada, emailValue e passwordValue já contém os valores de email
     // e senha recebidos através dos inputs de email e senha.
 
     event.preventDefault();
 
-    history.push(`/users/${emailValue}-${passwordValue}`)
+    //history.push(`/users/${emailValue}-${passwordValue}`);
   }
 
   return (
@@ -46,7 +76,7 @@ export function LoginPage() {
           <img src={logoWithNameImg} alt="Logo do EscrevaMe" />
           { !loginWithEmail ? (
             <>  
-              <Button className="red">
+              <Button className="red" onClick={handleLoginWithGoogle}>
                 <div>
                   <img src={googleIconImg} alt="Logo do Google" />
                 </div>
@@ -55,9 +85,9 @@ export function LoginPage() {
 
               <Button className="blue">
                 <div>
-                  <img src={facebookIconImg} alt="Logo do Facebook" />
+                  <FontAwesomeIcon iconName="fab fa-twitter" />
                 </div>
-                <span>Entrar com o Facebook</span>
+                <span>Entrar com o Twitter</span>
               </Button>
 
               <Button

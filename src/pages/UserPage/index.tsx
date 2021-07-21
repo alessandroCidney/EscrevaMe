@@ -4,10 +4,28 @@ import './styles.scss';
 // Components
 import { EssayOfUserPage } from '../../components/EssayOfUserPage';
 import { EssaysArea } from '../../components/EssaysArea';
-import { MainHeader } from '../../components/MainHeader';
 import { MainFooter } from '../../components/MainFooter';
 
+// React Router DOM
+import { useParams } from 'react-router-dom';
+
+// Hooks
+// import { useGoogleAuth } from '../../hooks/useGoogleAuth';
+
+type UserPageParams = {
+	id: string;
+}
+
 export function UserPage() {
+
+	const params = useParams<UserPageParams>();
+
+	const userId = params.id;
+
+	// const { googleUser } = useGoogleAuth();
+
+	/**
+	 * */
 
 	return (
 		<div className="user-page container-column">
@@ -20,7 +38,7 @@ export function UserPage() {
 			</div>
 
 			<div className="user-data">	
-				<h1>@Username</h1>
+				<h1>@{ userId }</h1>
 				<p>Este é um exemplo de descrição para o perfil de um possível futuro usuário da plataforma EscrevaMe</p>
 			</div>
 			
