@@ -7,12 +7,7 @@ EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas reda
 
 ### Página de Login
 - Google
-- Facebook
-- Email e senha
-
-### Página de Cadastro
-- Google
-- Facebook
+- Twitter
 - Email e senha
 
 ### Perfil do Usuário
