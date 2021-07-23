@@ -76,14 +76,14 @@ export function LoginPage() {
           <img src={logoWithNameImg} alt="Logo do EscrevaMe" />
           { !loginWithEmail ? (
             <>  
-              <Button className="red" onClick={handleLoginWithGoogle}>
+              <Button className="red" disabled onClick={handleLoginWithGoogle}>
                 <div>
                   <img src={googleIconImg} alt="Logo do Google" />
                 </div>
                 <span>Entrar com o Google</span>
               </Button>
 
-              <Button className="blue">
+              <Button className="blue" disabled>
                 <div>
                   <FontAwesomeIcon iconName="fab fa-twitter" />
                 </div>
@@ -98,7 +98,7 @@ export function LoginPage() {
                 </div>
                 <span>Entrar com email e senha</span>
               </Button>
-              <span>Dúvidas? Acesse o nosso <Link to="/gui">Guia</Link></span>
+              <span>Não possui uma conta? <Link to="/joinus">Cadastre-se</Link></span>
             </>
           ) : (
             <>
@@ -127,9 +127,6 @@ export function LoginPage() {
               </span>
             </>
           )}
-          
-          
-          
         </div>
       </main>
     </div>

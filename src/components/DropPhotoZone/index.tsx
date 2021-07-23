@@ -1,0 +1,181 @@
+// React
+import { useState, FormEvent, CSSProperties, useEffect } from 'react';
+
+// Components
+import { Button } from '../Button';
+
+// SASS
+import './styles.scss';
+
+// Images
+import photoImg from '../../assets/images/icons/photo-icon.png';
+
+type DropPhotoZoneProps = {
+	functionToExecuteOnSubmit: (profilePhoto: File | undefined) => Promise<void>;
+	textForButton: string;
+}
+
+export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton }: DropPhotoZoneProps) {
+	const [file, setFile] = useState<File>();
+	const [fileURL, setFileURL] = useState();
+
+	const [dragOver, setDragOver] = useState(false);
+	const [showSpan, setShowSpan] = useState(true);
+	const [showThumb, setShowThumb] = useState(false);
+	const [thumbLabel, setThumbLabel] = useState('myFile.txt');
+	const [thumbImageURL, setThumbImageURL] = useState<CSSProperties>({ 
+		width: '100%',
+		height: '100%',
+		borderRadius: '50%',
+		overflow: 'hidden',
+		backgroundSize: '100px',
+		position: 'relative',
+		backgroundImage: `url(${photoImg})`,
+		backgroundPosition: 'center',
+		backgroundRepeat: 'no-repeat'
+	});
+
+	async function uploadUser() {
+		// const username = "primeirousuarioteste"
+
+		// const users = db.collection("users");
+
+		// const items = [] as Record<string, string>[];
+
+		// users.where("name", "==", username).get()
+		// 	.then(querySnapshot => {
+		// 		console.log(querySnapshot)
+		// 		querySnapshot.forEach(doc => {
+		// 			items.push(doc.data())
+
+		// 		})
+
+		// 		if(items.length) {
+		// 			console.log(items)
+		// 		} else {
+		// 			console.log("Nenhum item encontrado")
+		// 		}
+		// 	});
+
+		// if(fileURL) {
+		// 	await users.add({
+		// 		name: username,
+		// 		avatar: fileURL,
+		// 	});
+		// }
+	}
+
+	// 
+	async function uploadFile(event: FormEvent) {
+		event.preventDefault();
+		
+		// if(file) {
+		// 	const storageRef = firebase.storage().ref();
+		// 	const fileRef = storageRef.child(file.name);
+		// 	await fileRef.put(file);
+		// 	setFileURL(await fileRef.getDownloadURL());
+		// }
+
+		uploadUser()
+	}
+
+	function updateThumb() {
+		if(showSpan) {
+			setShowSpan(false);
+		}
+
+		if(!showThumb) {
+			setShowThumb(true);
+		}
+
+		if(file) {
+			setThumbLabel(file.name);
+
+			if(file.type.startsWith('image/')) {
+				const reader = new FileReader();
+
+				reader.readAsDataURL(file);
+
+				reader.onload = () => {
+					setThumbImageURL({ 
+						width: '100%',
+						height: '100%',
+						borderRadius: '50%',
+						overflow: 'hidden',
+						backgroundColor: '#ccc',
+						backgroundSize: 'cover',
+						position: 'relative',
+						backgroundImage: `url(${reader.result})`,
+						backgroundPosition: 'center'
+					});
+				}
+			} else {
+				setThumbImageURL({ 
+					width: '100%',
+					height: '100%',
+					borderRadius: '50%',
+					overflow: 'hidden',
+					backgroundSize: '100px',
+					position: 'relative',
+					backgroundImage: `url(${photoImg})`,
+					backgroundPosition: 'center',
+					backgroundRepeat: 'no-repeat'
+				});
+			}
+		}
+	}
+
+	useEffect(() => updateThumb(), [file]);
+
+	return (
+		<form className="drop-photo-form" onSubmit={event => {
+			uploadFile(event);
+			functionToExecuteOnSubmit(file);
+		}}>
+			<div 
+				className={`drop-zone ${dragOver && 'dragover'}`}
+
+				onDragOver={event => {
+					event.preventDefault(); // previne que o navegador abra a imagem em uma nova guia
+					setDragOver(true)
+				}} 
+
+				onDragLeave={() => setDragOver(false)}
+
+				onDragEnd={() => setDragOver(false)}
+
+				onDrop={event => {
+					event.preventDefault(); // previne que o navegador abra a imagem em uma nova guia
+
+					if(event.dataTransfer.files.length) {
+						setFile(event.dataTransfer.files[0]);
+
+						updateThumb();
+					}
+
+					setDragOver(false);
+				}}
+
+				onClick={event => { // previne que o navegador abra a imagem em uma nova guia
+
+					console.log(event)
+				}}
+			>
+				{ showSpan && <span className="drop-zone__prompt">Envie sua foto de perfil</span>}
+				{ showThumb && <div className="thumb" data-label={thumbLabel} style={thumbImageURL}></div>}
+
+				<input type="file" name="imageFile" onChange={event => {
+					let files = (event.target as HTMLInputElement).files
+					if(!files) {
+						return;
+					} else {
+						setFile(files[0]);
+						updateThumb();
+					}
+					
+				}} />
+			</div>
+			<Button type="submit">{textForButton}</Button>
+		</form>
+	);
+}

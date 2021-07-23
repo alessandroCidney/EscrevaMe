@@ -19,8 +19,13 @@ button.button {
 
 	cursor: pointer;
 
-	&:hover {
+	&:not(:disabled):hover {
 		filter: brightness(.9);
+	}
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
 	}
 
 	span {
