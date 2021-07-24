@@ -1,5 +1,5 @@
 // React
-import { useState, FormEvent, useEffect } from 'react';
+import { useState } from 'react';
 
 // SASS
 import './styles.scss';
@@ -22,14 +22,11 @@ import { validateEmail } from '../../util/validateEmail';
 // Images
 import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
 import googleIconImg from '../../assets/images/icons/google-icon.png';
-import facebookIconImg from '../../assets/images/icons/facebook-icon.png';
 
 export function JoinUsPage() {
 	const history = useHistory();
 
 	const firestore = firebase.firestore();
-
-	const [storageFileURL, setStorageFileURL] = useState('');
 
 	const [showButtons, setShowButtons] = useState(true);
 	const [showInputs, setShowInputs ] = useState(false);
@@ -41,7 +38,7 @@ export function JoinUsPage() {
 
 	function testInputValues() {
 
-		if(!joinUsername || !joinEmail || !joinPassword) {
+		if(!joinUsername || joinUsername.trim()==='' || !joinEmail || joinEmail.trim()==='' || !joinPassword || joinPassword.trim()==='') {
 			return false;
 		}
 
@@ -61,8 +58,8 @@ export function JoinUsPage() {
 
 		async function registerUser(url: string) {
 			await usersColection.add({
-				username: joinUsername,
-				email: joinEmail,
+				username: joinUsername.trim(),
+				email: joinEmail.trim(),
 				avatar: url
 			})
 		}
@@ -187,7 +184,6 @@ export function JoinUsPage() {
 									placeholder="Digite seu email"
 									onChange={event => setJoinEmail(event.target.value)}
 									value={joinEmail}
-									className={ (!validateEmail(joinEmail) && joinEmail!=='') ? 'invalid': ''}
 								/>
 								<input 
 									type="password"
@@ -197,6 +193,7 @@ export function JoinUsPage() {
 								/>
 								<Button
 									type="button"
+									disabled={((!validateEmail(joinEmail) && joinEmail!=='') || !testInputValues()) ? true : false}
 									onClick={() => { 
 										if(testInputValues()) {
 											setShowButtons(false);

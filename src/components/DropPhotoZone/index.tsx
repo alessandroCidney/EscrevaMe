@@ -1,5 +1,5 @@
 // React
-import { useState, FormEvent, CSSProperties, useEffect } from 'react';
+import { useState, CSSProperties, useEffect } from 'react';
 
 // Components
 import { Button } from '../Button';

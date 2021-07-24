@@ -8,7 +8,7 @@ export function MainFooter() {
 			<div className="footer-list">
 				<h6>Sobre o Projeto</h6>
 				<ul>
-					<li><a href="#">GitHub</a></li>
+					<li><a target="_blank" href="https://github.com/alessandroCidney/EscrevaMe">GitHub</a></li>
 					<li><a href="#">Guia</a></li>
 				</ul>
 			</div>
@@ -16,8 +16,8 @@ export function MainFooter() {
 			<div className="footer-list">
 				<h6>Sobre o autor</h6>
 				<ul>
-					<li><a href="#">GitHub</a></li>
-					<li><a href="#">LinkedIn</a></li>
+					<li><a target="_blank" href="https://github.com/alessandroCidney">GitHub</a></li>
+					<li><a target="_blank" href="https://www.linkedin.com/in/acidn">LinkedIn</a></li>
 				</ul>
 			</div>
 

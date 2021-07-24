@@ -31,7 +31,7 @@ export function EssayPage() {
 				</div>	
 			</main>
 
-			<div className="user-items">
+			<aside className="user-items">
 				<div className="user-data">
 					<div className="profile-photo"></div>
 					<div className="username"><h4>Escrito por</h4><p>Alessandro Cídney</p></div>
@@ -44,7 +44,7 @@ export function EssayPage() {
 					<FontAwesomeIcon iconName="far fa-comment-alt" />
 					<FontAwesomeIcon iconName="far fa-share-square" />
 				</div>
-			</div>
+			</aside>
 			
 
 			<MainFooter />

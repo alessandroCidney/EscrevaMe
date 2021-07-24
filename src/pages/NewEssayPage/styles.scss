@@ -1,0 +1,92 @@
+div.new-essay-page {
+	
+	main {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		gap: 20px;
+
+		width: 60%;
+		min-height: 120vh;
+
+		> h1 {
+			width: 80%;
+			height: 15vh;
+
+			font-size: 1.5rem;
+			margin-top: 15x;
+			padding: 10px 0 10px 0;
+
+			display: flex;
+			align-items: flex-end;
+			justify-content: center;
+
+			color:var(--color-main-blue);
+		}
+
+		> textarea {
+			width: 100%;
+
+			border: 1px solid #ddd;
+
+			&.title-textarea {
+				height: 10vh;
+
+				padding: 10px;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				text-align: center;
+
+				font-size: 1.5rem;
+				font-weight: bolder;
+			}
+
+			&.content-textarea {
+				height: 100vh;
+
+				padding: 10px;
+
+				text-align: justify;
+
+				font-size: 1.2rem;
+			}
+		}
+	}
+
+	aside.user-items {
+		width: 49%;
+
+		padding: 100px 20px;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: row;
+
+		> div.user-data {
+
+			width: 50%;
+			min-width: 250px;
+
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			flex-direction: row;
+			gap: 20px;
+
+			> div.profile-photo {
+				background: #000;
+
+				border-radius: 50%;
+
+				width: 70px;
+				height: 70px;
+
+			}
+		}
+	}
+}
