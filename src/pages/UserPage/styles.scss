@@ -6,7 +6,7 @@ div.user-page {
 	div.custom-background {
 		display: flex;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 
 		width: 100%;
 		height: 30vh;
@@ -17,14 +17,13 @@ div.user-page {
 		background-position: center;
 
 		> div.profile-photo {
-			margin: 0 auto;
-
-			width: 150px;
-			height: 150px;
+			width: 200px;
+			height: 200px;
+			margin-left: 200px;
 
 			transform: translateY(75px);
 
-			background-color: #000;
+			background-color: #ccc;
 
 			border-radius: 50%;
 		}

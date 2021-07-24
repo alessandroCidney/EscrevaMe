@@ -35,50 +35,6 @@ export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton }: Drop
 		backgroundRepeat: 'no-repeat'
 	});
 
-	async function uploadUser() {
-		// const username = "primeirousuarioteste"
-
-		// const users = db.collection("users");
-
-		// const items = [] as Record<string, string>[];
-
-		// users.where("name", "==", username).get()
-		// 	.then(querySnapshot => {
-		// 		console.log(querySnapshot)
-		// 		querySnapshot.forEach(doc => {
-		// 			items.push(doc.data())
-
-		// 		})
-
-		// 		if(items.length) {
-		// 			console.log(items)
-		// 		} else {
-		// 			console.log("Nenhum item encontrado")
-		// 		}
-		// 	});
-
-		// if(fileURL) {
-		// 	await users.add({
-		// 		name: username,
-		// 		avatar: fileURL,
-		// 	});
-		// }
-	}
-
-	// 
-	async function uploadFile(event: FormEvent) {
-		event.preventDefault();
-		
-		// if(file) {
-		// 	const storageRef = firebase.storage().ref();
-		// 	const fileRef = storageRef.child(file.name);
-		// 	await fileRef.put(file);
-		// 	setFileURL(await fileRef.getDownloadURL());
-		// }
-
-		uploadUser()
-	}
-
 	function updateThumb() {
 		if(showSpan) {
 			setShowSpan(false);
@@ -129,7 +85,7 @@ export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton }: Drop
 
 	return (
 		<form className="drop-photo-form" onSubmit={event => {
-			uploadFile(event);
+			event.preventDefault();
 			functionToExecuteOnSubmit(file);
 		}}>
 			<div 

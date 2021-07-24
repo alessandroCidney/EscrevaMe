@@ -25,8 +25,11 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 import facebookIconImg from '../../assets/images/icons/facebook-icon.png';
 
 export function JoinUsPage() {
+	const history = useHistory();
+
 	const firestore = firebase.firestore();
-	const usersColection = firestore.collection("users");
+
+	const [storageFileURL, setStorageFileURL] = useState('');
 
 	const [showButtons, setShowButtons] = useState(true);
 	const [showInputs, setShowInputs ] = useState(false);
@@ -37,6 +40,7 @@ export function JoinUsPage() {
 	const [joinPassword, setJoinPassword] = useState('');
 
 	function testInputValues() {
+
 		if(!joinUsername || !joinEmail || !joinPassword) {
 			return false;
 		}
@@ -48,17 +52,84 @@ export function JoinUsPage() {
 		return true;
 	}
 
+	// Essa função é enviada pelas props do componente DropPhotoZone
+	// e ele a aciona quando se clica no botão do componente
+
 	async function joinUs(profilePhoto: File | undefined) {
 
-		const usersInDatabase = [] as Record<string, string>[];
+		const usersColection = firestore.collection("users");
 
-		usersColection.where("name", "==", joinUsername).get()
+		async function registerUser(url: string) {
+			await usersColection.add({
+				username: joinUsername,
+				email: joinEmail,
+				avatar: url
+			})
+		}
+
+		async function uploadFile() {
+			// Realiza o upload da imagem para o storage e capta a URL dela
+			if(profilePhoto) {
+				const storageRef = firebase.storage().ref();
+				const fileRef = storageRef.child(profilePhoto.name);
+				await fileRef.put(profilePhoto);
+				registerUser(await fileRef.getDownloadURL());
+			}
+		}
+
+		
+
+		const usersInDatabase = [] as Record<string, string>[];
+		const emailsInDatabase = [] as Record<string, string>[];
+
+		// A seguir, foi necessário utilizar a sintaxe de funções assíncronas com then(),
+		// pois a versão do Firestore que utilizava async e await estava em beta.
+
+		// Detectando se o usuário já existe no banco
+		usersColection.where("username", "==", joinUsername).get()
 			.then(usersQuerySnapshot => {
 				usersQuerySnapshot.forEach(usersDoc => {
 					usersInDatabase.push(usersDoc.data());
-				})
+				});
 
-				alert(usersInDatabase.length ? 'O usuário já existe!' : 'Tudo ok!');
+				if(usersInDatabase.length) {
+					// Se o usuário existir, o processo é interrompido
+					alert("O usuário já existe!");
+					return;
+				}
+
+				// Detectando se o email já foi utilizado por outro usuário
+				usersColection.where("email", "==", joinEmail).get()
+					.then(emailsQuerySnapshot => {
+						emailsQuerySnapshot.forEach(emailsDoc => {
+							emailsInDatabase.push(emailsDoc.data());
+						});
+
+						if(emailsInDatabase.length) {
+							// Se o email já foi utilizado, o processo é interrompido
+							alert("O usuário já existe!");
+							return;
+						}
+
+						// firebase.auth().createUserWithEmailAndPassword(joinEmail, joinPassword)
+						// 	.then(() => {
+						// 		uploadFile().then(() => {
+						// 			registerUser().then(() => console.log("Tudo ok!"));
+						// 		});
+						// 	})
+						// 	.catch(() => {
+						// 		alert("Não foi possível cadastrar o usuário");
+						// 	})
+
+						// Se o usuário não existir e se o email não estiver salvo, os dados do usuário
+						// serão armazenados no Cloud Firestore e a imagem será amrazenada no Storage
+						
+						uploadFile().then(() => {
+							history.push(`/users/${joinUsername}`)
+						});
+
+						
+					})
 			});
 
 	}
