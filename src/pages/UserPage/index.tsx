@@ -58,21 +58,20 @@ export function UserPage() {
 	let profilePhotoStyle = {
 		backgroundImage: `url(${userPhotoURL ? userPhotoURL : ''})`,
 		backgroundSize: "cover",
-		backgroundRepeat: "no-repeat"
+		backgroundRepeat: "no-repeat",
+		backgroundPosition: "center"
 	} as CSSProperties;
 
 	return (
 		<div className="user-page container-column">
 			<MainHeader />
 			
-			<div className="custom-background">
-				<div className="profile-photo" style={profilePhotoStyle}>
-							
-				</div>	
+			<div className="custom-background">	
 			</div>
 
 			<div className="user-page-content">
 				<div className="user-data">	
+					<div className="profile-photo" style={profilePhotoStyle}></div>	
 					<h1>@{ paramsUsername }</h1>
 					<p>Olá! Sou um usuário da plataforma EscrevaMe</p>
 				</div>
@@ -84,7 +83,7 @@ export function UserPage() {
 						<EssayOfUserPage icon="quote" />	
 					</EssaysArea>
 
-					<EssaysArea title="Todas as redações">
+					<EssaysArea title="Todas as redações" list>
 						<EssayOfUserPage />
 						<EssayOfUserPage />
 						<EssayOfUserPage />

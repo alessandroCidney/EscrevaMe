@@ -1,6 +1,6 @@
 button.essay-of-user-page {
-	width: 250px;
-	height: 300px;
+	width: 190px;
+	height: 240px;
 
 	display: flex;
 	align-items: center;
@@ -12,21 +12,15 @@ button.essay-of-user-page {
 
 	transition: .2s;
 
-	&.highlight:hover {
-		background: #7b53ff;
-		color: #fff;
-	}
-
-	&:hover {
-		background: #000;
-		color: #fff;
-	}
-
 	background-color: #ede7ff;
 
 	padding-top: 30px;
 
 	cursor: pointer;
+
+	&:hover {
+		background-color: #e4dbff;
+	}
 
 	> h3 {
 		width: 90%;
@@ -44,10 +38,10 @@ button.essay-of-user-page {
 		justify-content: center;
 
 		width: 100%;
-		height: 50%;
+		height: 40%;
 
 		> i {
-			font-size: 100px;
+			font-size: 60px;
 		}
 	}
 
@@ -63,9 +57,67 @@ button.essay-of-user-page {
 
 div.essays-area.highlight {
 	button.essay-of-user-page {
+		color: #7b53ff;
 		&:hover {
-			background: #7b53ff;
-			color: #fff;
+			/*background: #7b53ff;
+			color: #fff;*/
+		}
+	}
+}
+
+div.essays-area.list {
+	button.essay-of-user-page {
+		width: 70%;
+		height: 100px;
+
+		padding-top: 0;
+
+		flex-direction: row;
+
+		justify-content: space-around;
+
+		> h3 {
+			width: 30%;
+			height: 100%;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		> div.image {
+			display: none;
+		}
+
+		> div.footer {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+
+			width: 50%;
+			height: 100%;
+
+			font-size: 17px;
+		}
+	}
+}
+
+@media (max-width: 760px) {
+	button.essay-of-user-page {
+		width: 30%;
+		height: 200px;
+
+		> div.image {
+			> i {
+				font-size: 30px;
+			}
+		}
+	}	
+
+	div.essays-area.list {
+		button.essay-of-user-page {
+			width: 90%;
 		}
 	}
 }

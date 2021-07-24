@@ -11,74 +11,62 @@ div.user-page {
 		width: 100%;
 		height: 30vh;
 
-		background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, .7) 100%),  url(../../assets/images/wallpapers/feathers.jpg) no-repeat;
+		background: linear-gradient(rgba(255, 255, 255, .2), rgba(255, 255, 255, .2) 100%),  url(../../assets/images/wallpapers/feathers.jpg) no-repeat;
 		
 		background-size: cover;
 		background-position: center;
 
-		> div.profile-photo {
-			width: 200px;
-			height: 200px;
-			margin-left: 200px;
-
-			transform: translateY(75px);
-
-			background-color: #ccc;
-
-			border-radius: 50%;
-		}
+		border-bottom: 2px solid #ddd;
 	}
 
-	div.user-data {
-		padding-top: 100px;
-		margin-bottom: 100px;
+	> div.user-page-content {
 
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
-		gap: 10px;
-		
-		text-align: center;
+		align-items: flex-start;
+		justify-content: space-between;
+		flex-direction: row; 
 
-		h1 {
-			font-size: 2.5rem;
-		}
-	}
+		> div.user-data {
+			width: 40%;
 
-	div.user-content {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			gap: 20px;
 
-		padding: 100px 0;
+			transform: translateY(-100px);
 
-		h2 {
-			width: 100%;
-			margin-bottom: 70px;
+			> div.profile-photo {
+				width: 200px;
+				height: 200px;
 
-			font-size: 2rem;
+				background-color: #ccc;
 
-			text-align: center;
-
-			&.highlight {
-				color: #7b53ff;
+				border-radius: 50%;
 			}
 		}
 
-		> div.essays {
-			display: flex;
-			align-items: stretch;
-			justify-content: center;
-			flex-wrap: wrap;
-			gap: 30px;
+		> div.user-content {
+			width: 60%;
+		}
+	}
+}
 
-			min-height: 70vh; 
-			width: 100%;	
+@media (max-width: 760px) {
+	div.user-page {
 
-			&.highlight {
-				color: #7b53ff;
+		> div.user-page-content {
+			flex-direction: column;
+			align-items: center;
+
+			> div.user-data {
+				width: 100%;
+				font-size: .9rem;
+			}
+
+			> div.user-content {
+				width: 100%;
 			}
 		}
 	}
