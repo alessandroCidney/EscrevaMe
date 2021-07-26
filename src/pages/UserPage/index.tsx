@@ -4,6 +4,9 @@ import { useState, useEffect, CSSProperties } from 'react';
 // React Router DOM
 import { useHistory } from 'react-router-dom';
 
+// React Hot Toast
+import { Toaster } from 'react-hot-toast';
+
 // SASS
 import './styles.scss';
 
@@ -12,6 +15,7 @@ import { EssayOfUserPage } from '../../components/EssayOfUserPage';
 import { EssaysArea } from '../../components/EssaysArea';
 import { MainFooter } from '../../components/MainFooter';
 import { MainHeader } from '../../components/MainHeader';
+import { Button } from '../../components/Button';
 
 // React Router DOM
 import { useParams } from 'react-router-dom';
@@ -21,6 +25,10 @@ import { firebase } from '../../services/firebaseService/firebase';
 
 // Hooks
 // import { useGoogleAuth } from '../../hooks/useGoogleAuth';
+import { useEmailAuth } from '../../hooks/useEmailAuth';
+
+// Images
+import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 
 type UserPageParams = {
 	id: string;
@@ -28,6 +36,8 @@ type UserPageParams = {
 
 export function UserPage() {
 	const history = useHistory();
+
+	const { emailUser,  addUserDataToContext } = useEmailAuth();
 
 	const [userPhotoURL, setUserPhotoURL] = useState('')
 
@@ -55,15 +65,9 @@ export function UserPage() {
 		setUserPhotoURL(userData[0] ? userData[0].avatar : '');
 	})
 
-	let profilePhotoStyle = {
-		backgroundImage: `url(${userPhotoURL ? userPhotoURL : ''})`,
-		backgroundSize: "cover",
-		backgroundRepeat: "no-repeat",
-		backgroundPosition: "center"
-	} as CSSProperties;
-
 	return (
 		<div className="user-page container-column">
+			<Toaster />
 			<MainHeader />
 			
 			<div className="custom-background">	
@@ -71,9 +75,14 @@ export function UserPage() {
 
 			<div className="user-page-content">
 				<div className="user-data">	
-					<div className="profile-photo" style={profilePhotoStyle}></div>	
+					<div className="profile-photo">
+						<img src={userPhotoURL ? userPhotoURL : profilePhotoImg} alt={`Foto de perfil de ${paramsUsername}`} />
+					</div>	
 					<h1>@{ paramsUsername }</h1>
 					<p>Olá! Sou um usuário da plataforma EscrevaMe</p>
+					<Button
+						onClick={() => history.push('/essays/new')}
+					>Nova redação</Button>
 				</div>
 				
 				<div className="user-content">

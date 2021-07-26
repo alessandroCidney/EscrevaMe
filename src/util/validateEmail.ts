@@ -1,4 +1,4 @@
 export function validateEmail(email: string) {
-	let result = /\S+@\S+\.\S+/;
-  	return result.test(email);
+	let regExp =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  	return regExp.test(email);
 }

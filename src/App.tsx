@@ -14,6 +14,7 @@ import { NewEssayPage } from './pages/NewEssayPage';
 
 // Contexts
 import { GoogleAuthContextProvider } from './contexts/GoogleAuthContext';
+import { EmailAuthContextProvider } from './contexts/EmailAuthContext';
 
 // SASS
 import './styles/global.scss';
@@ -22,14 +23,16 @@ function App() {
   return (
     <BrowserRouter>
       <GoogleAuthContextProvider>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/login" exact component={LoginPage} />
-          <Route path="/joinus" exact component={JoinUsPage} />
-          <Route path="/users/:id" component={UserPage} />
-          <Route path="/essays/new" exact component={NewEssayPage} />
-          <Route path="/essays/:id" component={EssayPage} />
-        </Switch>
+        <EmailAuthContextProvider>
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/login" exact component={LoginPage} />
+            <Route path="/joinus" exact component={JoinUsPage} />
+            <Route path="/users/:id" component={UserPage} />
+            <Route path="/essays/new" exact component={NewEssayPage} />
+            <Route path="/essays/:id" component={EssayPage} />
+          </Switch>
+        </EmailAuthContextProvider>
       </GoogleAuthContextProvider>
     </BrowserRouter>
   );

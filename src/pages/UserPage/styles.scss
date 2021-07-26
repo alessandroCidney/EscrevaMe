@@ -41,9 +41,22 @@ div.user-page {
 				width: 200px;
 				height: 200px;
 
-				background-color: #ccc;
+				background-color: #fff;
 
 				border-radius: 50%;
+				border: 1px solid #ddd;
+
+				overflow: hidden;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				color: #ccc;
+
+				> img {
+					height: 100%;
+				} 
 			}
 		}
 

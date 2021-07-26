@@ -1,6 +1,12 @@
 // React
 import { useState } from 'react';
 
+// React Hot Toast
+import toast, { Toaster } from 'react-hot-toast';
+
+// Hooks
+import { useEmailAuth } from '../../hooks/useEmailAuth';
+
 // SASS
 import './styles.scss';
 
@@ -26,6 +32,12 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 export function JoinUsPage() {
 	const history = useHistory();
 
+	const { emailUser,  addUserDataToContext } = useEmailAuth();
+
+	if(emailUser) {
+	    history.push(`/users/${emailUser.username}`)
+	  }
+
 	const firestore = firebase.firestore();
 
 	const [showButtons, setShowButtons] = useState(true);
@@ -38,7 +50,7 @@ export function JoinUsPage() {
 
 	function testInputValues() {
 
-		if(!joinUsername || joinUsername.trim()==='' || !joinEmail || joinEmail.trim()==='' || !joinPassword || joinPassword.trim()==='') {
+		if(!joinUsername || joinUsername.trim()==='' || !joinEmail || joinEmail.trim()==='' || !joinPassword || joinPassword.trim()==='' || joinPassword.trim().length<6) {
 			return false;
 		}
 
@@ -59,9 +71,14 @@ export function JoinUsPage() {
 		async function registerUser(url: string) {
 			await usersColection.add({
 				username: joinUsername.trim(),
+				password: joinPassword.trim(),
 				email: joinEmail.trim(),
 				avatar: url
 			})
+
+			await firebase.auth().createUserWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
+
+			addUserDataToContext(joinUsername.trim(), url);
 		}
 
 		async function uploadFile() {
@@ -71,6 +88,8 @@ export function JoinUsPage() {
 				const fileRef = storageRef.child(profilePhoto.name);
 				await fileRef.put(profilePhoto);
 				registerUser(await fileRef.getDownloadURL());
+			} else {
+				registerUser('');
 			}
 		}
 
@@ -91,7 +110,7 @@ export function JoinUsPage() {
 
 				if(usersInDatabase.length) {
 					// Se o usuário existir, o processo é interrompido
-					alert("O usuário já existe!");
+					toast.error("O usuário já existe!");
 					return;
 				}
 
@@ -104,28 +123,20 @@ export function JoinUsPage() {
 
 						if(emailsInDatabase.length) {
 							// Se o email já foi utilizado, o processo é interrompido
-							alert("O usuário já existe!");
+							toast.error("O usuário já existe!");
 							return;
 						}
-
-						// firebase.auth().createUserWithEmailAndPassword(joinEmail, joinPassword)
-						// 	.then(() => {
-						// 		uploadFile().then(() => {
-						// 			registerUser().then(() => console.log("Tudo ok!"));
-						// 		});
-						// 	})
-						// 	.catch(() => {
-						// 		alert("Não foi possível cadastrar o usuário");
-						// 	})
 
 						// Se o usuário não existir e se o email não estiver salvo, os dados do usuário
 						// serão armazenados no Cloud Firestore e a imagem será amrazenada no Storage
 						
 						uploadFile().then(() => {
-							history.push(`/users/${joinUsername}`)
+							toast.success("Usuário criado com sucesso! Redirecionando...");
+							history.push(`/users/${joinUsername}`);
+						})
+						.catch(() => {
+							toast.error("Não foi possível criar o usuário.")
 						});
-
-						
 					})
 			});
 
@@ -133,6 +144,7 @@ export function JoinUsPage() {
 
 	return (
 		<div className="join-us container-row">
+			<Toaster />
 			<AsideWithMan />
 
 			<main>
@@ -172,7 +184,17 @@ export function JoinUsPage() {
 
 					{
 						showInputs && 
-							<form>
+							<form onSubmit={event => {
+								event.preventDefault()
+
+								if(testInputValues()) {
+									setShowButtons(false);
+						    		setShowInputs(false);
+						    		setShowPhotoZone(true); 
+								} else {
+									toast.error("Dados inválidos!");
+								}
+							}}>
 								<input 
 									type="text"
 									placeholder="Digite um nome de usuário"
@@ -180,7 +202,7 @@ export function JoinUsPage() {
 									value={joinUsername}
 								/>
 								<input
-									type="text"
+									type="email"
 									placeholder="Digite seu email"
 									onChange={event => setJoinEmail(event.target.value)}
 									value={joinEmail}
@@ -192,16 +214,10 @@ export function JoinUsPage() {
 									value={joinPassword}
 								/>
 								<Button
-									type="button"
+									type="submit"
 									disabled={((!validateEmail(joinEmail) && joinEmail!=='') || !testInputValues()) ? true : false}
 									onClick={() => { 
-										if(testInputValues()) {
-											setShowButtons(false);
-								    		setShowInputs(false);
-								    		setShowPhotoZone(true); 
-										} else {
-											alert("Dados inválidos!")
-										}
+										
 									}}
 								>
 									Próximo

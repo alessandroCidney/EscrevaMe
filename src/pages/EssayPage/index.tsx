@@ -1,3 +1,6 @@
+// React Hot Toast
+import { Toaster } from 'react-hot-toast';
+
 // SASS 
 import './styles.scss';
 
@@ -10,6 +13,7 @@ export function EssayPage() {
 
 	return (
 		<div className="essay-page container-column">
+			<Toaster />
 			<MainHeader />
 
 			<main>

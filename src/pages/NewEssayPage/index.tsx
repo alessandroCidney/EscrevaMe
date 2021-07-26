@@ -1,5 +1,11 @@
 // React
-import { useState } from 'react';
+import { useState, CSSProperties } from 'react';
+
+// React Router DOM
+import { useHistory } from 'react-router-dom';
+
+// React Hot Toast
+import toast, { Toaster } from 'react-hot-toast';
 
 // SASS
 import './styles.scss';
@@ -9,12 +15,23 @@ import { MainHeader } from '../../components/MainHeader';
 import { MainFooter } from '../../components/MainFooter';
 import { Button } from '../../components/Button';
 
+// Hooks
+import { useEmailAuth } from '../../hooks/useEmailAuth';
+
+// Images
+import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
+
 export function NewEssayPage() {
+	const history = useHistory();
+
 	const [essayTitle, setEssayTitle] = useState('');
 	const [essayContent, setEssayContent] = useState('');
 
+	const { emailUser, addUserDataToContext } = useEmailAuth();
+
 	return (
 		<div className="new-essay-page container-column">
+			<Toaster />
 			<MainHeader />
 
 				<main>
@@ -39,13 +56,17 @@ export function NewEssayPage() {
 					>Enviar redação</Button>
 				</main>
 
-				<aside className="user-items">
-					<div className="user-data">
-						<div className="profile-photo"></div>
-						<div className="username"><p>Alessandro Cídney</p><h4>Está escrevendo</h4></div>
-					</div>
-				</aside>
-
+				{
+					emailUser && 
+					<aside className="user-items">
+						<div className="user-data">
+							<div className="profile-photo">
+								<img src={emailUser.avatar?emailUser.avatar:profilePhotoImg} alt={`Foto de perfil de ${emailUser.username? ` de ${emailUser.username}` : ''}`} />
+							</div>
+							<div className="username"><p>@{emailUser && emailUser.username}</p><h4>Está escrevendo</h4></div>
+						</div>
+					</aside>
+				}
 
 			<MainFooter />
 		</div>
