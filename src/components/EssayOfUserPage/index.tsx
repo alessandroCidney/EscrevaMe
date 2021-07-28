@@ -1,6 +1,12 @@
 // SASS
 import './styles.scss';
 
+// React
+import { useState } from 'react';
+
+// Firebase
+import { firebase } from '../../services/firebaseService/firebase';
+
 // Components
 import { FontAwesomeIcon } from '../FontAwesomeIcon';
 
@@ -10,15 +16,40 @@ import { useHistory } from 'react-router-dom';
 // Types
 type EssayProps = {
 	title?: string;
+	author?: string | undefined;
 	highlight?: boolean;
 	icon?: string;
 };
 
-export function EssayOfUserPage({ title="Sem título", highlight=false, icon="text" }: EssayProps) {
+export function EssayOfUserPage({ title="Sem título", highlight=false, icon="text", author=undefined }: EssayProps) {
 	const history = useHistory();
 
+	const [charactersNumber, setCharactersNumber] = useState(0);
+
+	const firestore = firebase.firestore();
+	const essaysCollection = firestore.collection("essays");
+
+	let essayData = [] as Record<string, string>[];
+
+	if(author) {
+		essaysCollection.where("author", "==", author).get()
+			.then((essaysQuerySnapshot => {
+				essaysQuerySnapshot.forEach(essaysDoc => {
+					essayData.push(essaysDoc.data());
+				});
+
+				essayData.forEach(essay => {
+					if(essay.formated_essay_title == title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")) {
+						setCharactersNumber(essay.essay_content.length);
+					}
+				})
+			}));
+	}
+
 	function redirectToEssay() {
-		history.push('/essays/12345');
+		if(author) {
+			history.push(`/essays/${author}/${title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")}`);
+		}
 	}
 
 	return (
@@ -33,7 +64,7 @@ export function EssayOfUserPage({ title="Sem título", highlight=false, icon="te
 			</div>
 			<div className="footer">
 				<FontAwesomeIcon iconName="fas fa-feather" />
-				<p>1234</p>
+				<p>{charactersNumber}</p>
 				{/*<FontAwesomeIcon iconName="fas fa-eye" />
 				<p>5678</p>*/}
 			</div>

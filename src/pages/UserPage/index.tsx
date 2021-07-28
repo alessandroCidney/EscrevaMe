@@ -40,6 +40,7 @@ export function UserPage() {
 	const { emailUser,  addUserDataToContext } = useEmailAuth();
 
 	const [userPhotoURL, setUserPhotoURL] = useState('')
+	const [essaysData, setEssaysData] = useState([] as Record<string, string>[]);
 
 	let userData = [] as Record<string, string>[];
 
@@ -53,17 +54,30 @@ export function UserPage() {
 	// const { googleUser } = useGoogleAuth();
 
 	usersColection.where("username", "==", paramsUsername).get()
-	.then(usersQuerySnapshot => {
-		usersQuerySnapshot.forEach(usersDoc => {
-			userData.push(usersDoc.data());
+		.then(usersQuerySnapshot => {
+			usersQuerySnapshot.forEach(usersDoc => {
+				userData.push(usersDoc.data());
+			});
+
+			if(!userData[0]) {
+				history.push('/login');
+			}
+
+			setUserPhotoURL(userData[0] ? userData[0].avatar : '');
 		})
 
-		if(!userData[0]) {
-			history.push('/login');
-		}
+	let essayData = [] as Record<string, string>[];
 
-		setUserPhotoURL(userData[0] ? userData[0].avatar : '');
-	})
+	const essaysCollection = firestore.collection("essays");
+
+	essaysCollection.where("author", "==", paramsUsername).get()
+		.then(essaysQuerySnapshot => {
+			essaysQuerySnapshot.forEach(essaysDoc => {
+				essayData.push(essaysDoc.data());
+			});
+
+			setEssaysData(essayData.length > 0 ? essayData : []);
+		})
 
 	return (
 		<div className="user-page container-column">
@@ -88,18 +102,16 @@ export function UserPage() {
 				<div className="user-content">
 					<EssaysArea title="Redações destaque" highlight>
 						<EssayOfUserPage icon="quote" title="A sociedade brasileira nos últimos tempos" />
-						<EssayOfUserPage icon="quote" title="A tecnologia contemporânea" />
-						<EssayOfUserPage icon="quote" />	
+						<EssayOfUserPage icon="quote" title="A tecnologia contemporânea" />	
 					</EssaysArea>
 
 					<EssaysArea title="Todas as redações" list>
-						<EssayOfUserPage />
-						<EssayOfUserPage />
-						<EssayOfUserPage />
-						<EssayOfUserPage />
-						<EssayOfUserPage />
-						<EssayOfUserPage />
-						<EssayOfUserPage />
+						{ essaysData.length > 0 ? essaysData.map(essay => {
+								return (<EssayOfUserPage author={essay && essay.author} title={essay.essay_title} />)
+							}) : (
+								<span>Poste redações para que elas apareçam em seu perfil</span>
+							)
+						}
 					</EssaysArea>
 				</div>
 			</div>

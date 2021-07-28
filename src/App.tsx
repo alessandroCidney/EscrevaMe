@@ -30,7 +30,7 @@ function App() {
             <Route path="/joinus" exact component={JoinUsPage} />
             <Route path="/users/:id" component={UserPage} />
             <Route path="/essays/new" exact component={NewEssayPage} />
-            <Route path="/essays/:id" component={EssayPage} />
+            <Route path="/essays/:username/:title" component={EssayPage} />
           </Switch>
         </EmailAuthContextProvider>
       </GoogleAuthContextProvider>

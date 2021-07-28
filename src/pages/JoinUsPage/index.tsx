@@ -71,7 +71,6 @@ export function JoinUsPage() {
 		async function registerUser(url: string) {
 			await usersColection.add({
 				username: joinUsername.trim(),
-				password: joinPassword.trim(),
 				email: joinEmail.trim(),
 				avatar: url
 			})

@@ -18,16 +18,105 @@ import { Button } from '../../components/Button';
 // Hooks
 import { useEmailAuth } from '../../hooks/useEmailAuth';
 
+// Firebase
+import { firebase } from '../../services/firebaseService/firebase';
+
 // Images
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 
 export function NewEssayPage() {
 	const history = useHistory();
 
+	const firestore = firebase.firestore();
+	const essaysCollection = firestore.collection("essays");
+
 	const [essayTitle, setEssayTitle] = useState('');
 	const [essayContent, setEssayContent] = useState('');
 
 	const { emailUser, addUserDataToContext } = useEmailAuth();
+
+	function validateValues() {
+		if(essayTitle.trim() === '' || essayContent.trim() === '') {
+			return false;
+		}
+
+		if(essayTitle.trim().length < 2 || essayContent.trim().length < 700) {
+			return false;
+		}
+
+		if(essayContent.trim().split(" ").length < 3) {
+			return false;
+		}
+
+		function testLengthOfAllWordsOfEssay(content: string) {
+			const trimContent = content.trim().split(" ");
+
+			let biggerWord = '';
+
+			trimContent.forEach(word => {
+				if(word.length > biggerWord.length) biggerWord = word;
+			});
+
+			if(biggerWord.length > 46) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		if(testLengthOfAllWordsOfEssay(essayContent)) {
+			return false;
+		}
+
+		if(essayTitle.trim().length > 42 || essayContent.trim().length > 2900) {
+			return false;
+		}
+
+		return true;
+	}
+
+	function validateAndUploadValues() {
+
+		async function uploadEssay() {
+			if(emailUser && validateValues()) {
+				await essaysCollection.add({
+					essay_title: essayTitle,
+					formated_essay_title: essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-"),
+					essay_content: essayContent,
+					author: emailUser.username,
+					created_at: new Date()
+				});
+			}
+		}
+
+		if(emailUser && validateValues()) {
+
+			let essayData = [] as Record<string, string>[];
+
+			essaysCollection.where("author", "==", emailUser.username).get()
+				.then(essaysQuerySnapshot => {
+					essaysQuerySnapshot.forEach(essaysDoc => {
+						essayData.push(essaysDoc.data());
+					});
+
+					let essayAlreadyExists = false;
+
+					essayData.forEach(essay => {
+						if(essay.formated_essay_title === essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")) {
+							essayAlreadyExists = true;
+						}
+					});
+
+					if(!essayAlreadyExists) {
+						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")}`));
+					} else {
+						toast.error("Você já possui uma redação com mesmo título");
+					}
+				})
+		} else {
+			toast.error("Você precisa fazer login para postar redações");
+		}
+	}
 
 	return (
 		<div className="new-essay-page container-column">
@@ -52,7 +141,13 @@ export function NewEssayPage() {
 					></textarea>
 
 					<Button 
-						disabled={(essayTitle !== '' && essayContent !== '') ? false : true}
+						disabled={validateValues() ? false : true}
+
+						onClick={() => {
+							if(validateValues()) {
+								validateAndUploadValues()
+							}
+						}}
 					>Enviar redação</Button>
 				</main>
 
