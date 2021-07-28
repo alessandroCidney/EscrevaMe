@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 type FontAwesomeIconProps = {
 	iconName: string;
 	onHoverTransformToSolidVersion?: boolean;
+	alwaysSolid?: boolean;
 }
 
-export function FontAwesomeIcon({iconName, onHoverTransformToSolidVersion=false }: FontAwesomeIconProps) {
+export function FontAwesomeIcon({iconName, onHoverTransformToSolidVersion=false, alwaysSolid=false }: FontAwesomeIconProps) {
 	const [solid, setSolid] = useState(false);
 
 	function transformToSolidVersion() {
@@ -18,6 +19,19 @@ export function FontAwesomeIcon({iconName, onHoverTransformToSolidVersion=false 
 	}
 
 	return (
-		<i className={!solid ? iconName : `fas ${iconName.split(" ")[1]}`} onMouseOver={transformToSolidVersion} onMouseOut={transformToNoSolidVersion}></i>
+		<i 
+			className={!solid && !alwaysSolid ? iconName : `fas ${iconName.split(" ")[1]}`} 
+			
+			onMouseOver={() => {
+				if(!alwaysSolid) {
+					transformToSolidVersion()
+				}
+			}} 
+
+			onMouseOut={() => {
+				if(!alwaysSolid) {
+					transformToNoSolidVersion()
+				}
+			}}></i>
 	);
 }

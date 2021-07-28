@@ -84,7 +84,9 @@ export function NewEssayPage() {
 					formated_essay_title: essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-"),
 					essay_content: essayContent,
 					author: emailUser.username,
-					created_at: new Date()
+					author_avatar: emailUser.avatar,
+					created_at: new Date(),
+					likes: []
 				});
 			}
 		}
@@ -115,6 +117,7 @@ export function NewEssayPage() {
 				})
 		} else {
 			toast.error("Você precisa fazer login para postar redações");
+			history.push('/login');
 		}
 	}
 

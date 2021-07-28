@@ -80,7 +80,11 @@ header.main-header ~ * {
 	header.main-header {
 
 		div.logo {
-			width: 50%;
+			width: 60%;
+		}
+
+		nav.options {
+			width: 40%;
 		}
 	}
 }

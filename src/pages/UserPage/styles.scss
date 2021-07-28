@@ -26,7 +26,7 @@ div.user-page {
 		justify-content: space-between;
 		flex-direction: row; 
 		max-width: 90%;
-		min-width: 70%;
+		min-width: 80%;
 
 		> div.user-data {
 			width: 40%;
@@ -74,6 +74,8 @@ div.user-page {
 		> div.user-page-content {
 			flex-direction: column;
 			align-items: center;
+
+			max-width: 98%;
 
 			> div.user-data {
 				width: 100%;

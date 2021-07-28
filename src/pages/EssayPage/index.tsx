@@ -13,6 +13,10 @@ import { firebase } from '../../services/firebaseService/firebase';
 // SASS 
 import './styles.scss';
 
+// Hooks
+import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useEssay } from '../../hooks/useEssay';
+
 // Components
 import { MainHeader } from '../../components/MainHeader';
 import { MainFooter } from '../../components/MainFooter';
@@ -29,91 +33,120 @@ type EssayPageParams = {
 export function EssayPage() {
 	const history = useHistory();
 
-	const [essayTitle, setEssayTitle] = useState('');
-	const [essayContent, setEssayContent] = useState('');
-	const [essayAuthor, setEssayAuthor] = useState('');
-	const [authorAvatar, setAuthorAvatar] = useState('');
+	const [update, setUpdate] = useState(1);
 
 	const firestore = firebase.firestore();
 	const essaysCollection = firestore.collection("essays");
-	const usersColection = firestore.collection("users");
 
 	const params = useParams<EssayPageParams>();
 
 	const username = params.username;
 	const essayFormatedTitle = params.title;
 
-	let essaysData = [] as Record<string, string>[];
-	let usersData = [] as Record<string, string>[];
+	const { emailUser } = useEmailAuth();
+	const { essay } = useEssay(username, essayFormatedTitle, update);
 
-	essaysCollection.where("author", "==", username).get()
-		.then((essaysQuerySnapshot => {
-			essaysQuerySnapshot.forEach(essaysDoc => {
-				essaysData.push(essaysDoc.data());
-			});
+	async function handleLikeQuestion(id: string, essayLikes: string[]) {
+		
+		if(!essayLikes) {
+			essayLikes = [];
+		}
 
-			let essayExists = false;
+		if(emailUser && essay) {
+			const essayRef = essaysCollection.doc(id)
 
-			essaysData.forEach(essay => {
-				if(essay.formated_essay_title === essayFormatedTitle) {
-					essayExists = true;
+			if(essayLikes.indexOf(emailUser.username) === -1) {
 
-					setEssayTitle(essay.essay_title);
-					setEssayContent(essay.essay_content);
-					setEssayAuthor(essay.author);
+				if(typeof(essay.likes) != "string") {
+					const newLikes = [...essayLikes, emailUser.username];
 
-					usersColection.where("username", "==", essay.author).get()
-						.then((usersQuerySnapshot => {
-							usersQuerySnapshot.forEach((usersDoc => {
-								usersData.push(usersDoc.data());
-							}))
-
-							if(usersData.length > 0) {
-								setAuthorAvatar(usersData[0].avatar);
-							}
-						}))
+					await essayRef.update({
+						likes: newLikes
+					});
 				}
-			});
+			} else {
+					const newArr = [] as string[];
 
-			if(!essayExists) {
-				toast.error('Redação inexistente');
-				//history.push('/login');
+					essayLikes.forEach(author => {
+						if(author != emailUser.username) newArr.push(author);
+					});
+
+					await essayRef.update({
+						likes: newArr
+					});
 			}
-		}))
+		}
 
+		setUpdate(update + 1);
+	}
+
+	
 	return (
+
 		<div className="essay-page container-column">
 			<Toaster />
 			<MainHeader />
 
+		{essay ?
+			(
+			<>
 			<main>
 				<h1 className="essay-title">
-					{essayTitle}
+					{essay.essay_title}
 				</h1>
 				<div className="essay-content">
-					{essayContent}
-				</div>	
+					{essay.essay_content}
+				</div>
 			</main>
 
 			<aside className="user-items">
 				<div className="user-data">
 					<div className="profile-photo">
-						<img src={authorAvatar ? authorAvatar : profilePhotoImg} alt={`Foto de perfil ${essayAuthor ? ` de ${essayAuthor}` : 'de um usuário'}`} />
+						<img 
+							src={essay.author_avatar && 
+								typeof(essay.author_avatar)=="string" 
+								? essay.author_avatar : profilePhotoImg} 
+							
+							alt={`Foto de perfil ${essay.author 
+								? ` de ${essay.author}` 
+								: 'de um usuário'}`} 
+						/>
 					</div>
-					<div className="username"><h4>Escrito por</h4><p>{essayAuthor}</p></div>
+					<div className="username">
+						<h4>Escrito por</h4>
+						<p>{essay.author}</p>
+					</div>
 				</div>
 
 				<div className="user-actions">
-					{/* <FontAwesomeIcon iconName="fas fa-heart" /> */}
-
-					<FontAwesomeIcon onHoverTransformToSolidVersion iconName="far fa-heart" />
-					{/*<FontAwesomeIcon iconName="far fa-comment-alt" />*/}
-					{/*<FontAwesomeIcon iconName="far fa-share-square" />*/}
+					{
+						(emailUser 
+							&& essay.essay_title 
+							&& typeof(essay.essay_title)=="string" 
+							&& essay.essay_title.trim().length > 2) 
+						&&
+						(
+							<button 
+								onClick={() => handleLikeQuestion(essay.id, essay.likes)}
+							>
+								<FontAwesomeIcon 
+									alwaysSolid={emailUser && essay.likes && essay.likes.indexOf(emailUser.username) !== -1 ? true : false} 
+									onHoverTransformToSolidVersion 
+									iconName="far fa-heart" 
+								/>
+							</button>
+						)
+					}	
 				</div>
 			</aside>
-			
 
 			<MainFooter />
+			
+			</>)
+		
+
+		: (<main>Redação inexistente</main>)}
 		</div>
+		
 	);
 }

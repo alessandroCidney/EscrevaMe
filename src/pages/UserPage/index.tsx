@@ -31,7 +31,7 @@ import { useEmailAuth } from '../../hooks/useEmailAuth';
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 
 type UserPageParams = {
-	id: string;
+	username: string;
 }
 
 export function UserPage() {
@@ -42,42 +42,57 @@ export function UserPage() {
 	const [userPhotoURL, setUserPhotoURL] = useState('')
 	const [essaysData, setEssaysData] = useState([] as Record<string, string>[]);
 
-	let userData = [] as Record<string, string>[];
-
 	const firestore = firebase.firestore();
 	const usersColection = firestore.collection("users");
-
-	const params = useParams<UserPageParams>();
-
-	const paramsUsername = params.id;
-
-	// const { googleUser } = useGoogleAuth();
-
-	usersColection.where("username", "==", paramsUsername).get()
-		.then(usersQuerySnapshot => {
-			usersQuerySnapshot.forEach(usersDoc => {
-				userData.push(usersDoc.data());
-			});
-
-			if(!userData[0]) {
-				history.push('/login');
-			}
-
-			setUserPhotoURL(userData[0] ? userData[0].avatar : '');
-		})
-
-	let essayData = [] as Record<string, string>[];
-
 	const essaysCollection = firestore.collection("essays");
 
-	essaysCollection.where("author", "==", paramsUsername).get()
-		.then(essaysQuerySnapshot => {
-			essaysQuerySnapshot.forEach(essaysDoc => {
-				essayData.push(essaysDoc.data());
+	const params = useParams<UserPageParams>();
+	const paramsUsername = params.username;
+
+	console.log("Render!")
+
+	const findUserQuery = usersColection.where("username", "==", paramsUsername);
+	const findEssaysQuery = essaysCollection.where("author", "==", paramsUsername);
+
+	useEffect(() => {
+
+		findUserQuery.get()
+			.then(usersQuerySnapshot => {
+				usersQuerySnapshot.forEach(usersDoc => {
+					const userData = usersDoc.data();
+
+					if(!userData) {
+						history.push('/login');
+					}
+
+					setUserPhotoURL(userData ? userData.avatar : '');
+					setEssaysData(essayData.length > 0 ? essayData : []);
+				});
 			});
 
-			setEssaysData(essayData.length > 0 ? essayData : []);
-		})
+
+		const essayData = [] as Record<string, string>[];
+
+		findEssaysQuery.get()
+			.then(essaysQuerySnapshot => {
+				essaysQuerySnapshot.forEach(essaysDoc => {
+					essayData.push(essaysDoc.data());
+				});
+
+				setEssaysData(essayData.length > 0 ? essayData : []);
+			});
+
+	}, []);
+
+	let bestEssays = [] as Record<string, string>[];
+
+	if(essaysData) {
+		essaysData.forEach(essay => bestEssays.push(essay));
+
+		bestEssays.sort((a, b) => b.likes.length - a.likes.length);
+
+		bestEssays = bestEssays.slice(0,3);
+	}
 
 	return (
 		<div className="user-page container-column">
@@ -101,8 +116,12 @@ export function UserPage() {
 				
 				<div className="user-content">
 					<EssaysArea title="Redações destaque" highlight>
-						<EssayOfUserPage icon="quote" title="A sociedade brasileira nos últimos tempos" />
-						<EssayOfUserPage icon="quote" title="A tecnologia contemporânea" />	
+						{
+							bestEssays.length > 0 ?
+								bestEssays.map(essay => <EssayOfUserPage author={essay.author} icon="quote" title={essay.essay_title} />)
+							: <span>Poste redações para que elas apareçam em seu perfil</span>
+						}
+
 					</EssaysArea>
 
 					<EssaysArea title="Todas as redações" list>
@@ -116,8 +135,6 @@ export function UserPage() {
 				</div>
 			</div>
 
-			
-		
 			<MainFooter />
 		</div>
 	);

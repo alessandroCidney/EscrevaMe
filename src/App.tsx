@@ -28,7 +28,7 @@ function App() {
             <Route path="/" exact component={Home} />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/joinus" exact component={JoinUsPage} />
-            <Route path="/users/:id" component={UserPage} />
+            <Route path="/users/:username" component={UserPage} />
             <Route path="/essays/new" exact component={NewEssayPage} />
             <Route path="/essays/:username/:title" component={EssayPage} />
           </Switch>

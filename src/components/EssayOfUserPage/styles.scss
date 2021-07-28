@@ -108,6 +108,10 @@ div.essays-area.list {
 		width: 30%;
 		height: 200px;
 
+		> h3 {
+			font-size: .7rem;
+		}
+
 		> div.image {
 			> i {
 				font-size: 30px;
@@ -118,6 +122,14 @@ div.essays-area.list {
 	div.essays-area.list {
 		button.essay-of-user-page {
 			width: 90%;
+
+			> h3 {
+				font-size: .8rem;
+			}
+
+			> div.footer {
+				font-size: .8rem;
+			}
 		}
 	}
 }

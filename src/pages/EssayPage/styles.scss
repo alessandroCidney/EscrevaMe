@@ -13,6 +13,8 @@ div.essay-page {
 		justify-content: center;
 		flex-direction: column;
 
+		text-align: center;
+
 		> h1.essay-title {
 			width: 100%;
 			font-size: 1.5rem;
@@ -60,11 +62,11 @@ div.essay-page {
 			gap: 20px;
 
 			> div.profile-photo {
-				background: #000;
+				background: #fff;
 
 				border-radius: 50%;
 
-				width: 70px;
+				min-width: 70px;
 				height: 70px;
 
 				overflow: hidden;
@@ -97,10 +99,15 @@ div.essay-page {
 			justify-content: center;
 			gap: 30px;
 
-			font-size: 2rem;
+			> button {
+				border: none;
+				background-color: transparent;
+				font-size: 2rem;
+				width: 30px;
 
-			> i {
-				cursor: pointer;
+				> i {
+					cursor: pointer;
+				}
 			}
 		}
 	}
@@ -108,4 +115,34 @@ div.essay-page {
 	> footer {
 		margin-top: 0;
 	}
+}
+
+
+@media (max-width: 760px) {
+	div.essay-page {
+
+		> main {
+			width: 98%;
+
+			> div.essay-title {
+				font-size: 1rem;
+			}
+
+			> div.essay-content {
+				font-size: 1rem;
+
+				max-width: 85%;
+			}
+		}
+
+		> aside.user-items {
+			width: 80%;
+
+			padding: 100px 0;
+			
+			> div.user-actions {
+				width: 30%;
+			}
+		}
+	}		
 }

@@ -47,7 +47,6 @@ export function EmailAuthContextProvider(props: EmailAuthContextProviderProps) {
 						})
 
 						if(userData[0]) {
-							console.log(userData[0])
 							setEmailUser({
 								username: userData[0].username,
 								avatar: userData[0].avatar

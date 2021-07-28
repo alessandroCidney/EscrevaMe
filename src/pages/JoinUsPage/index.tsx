@@ -130,7 +130,7 @@ export function JoinUsPage() {
 						// serão armazenados no Cloud Firestore e a imagem será amrazenada no Storage
 						
 						uploadFile().then(() => {
-							toast.success("Usuário criado com sucesso! Redirecionando...");
+							toast.success("Usuário criado com sucesso!");
 							history.push(`/users/${joinUsername}`);
 						})
 						.catch(() => {
