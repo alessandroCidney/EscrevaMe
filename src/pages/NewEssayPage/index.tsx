@@ -21,6 +21,9 @@ import { useEmailAuth } from '../../hooks/useEmailAuth';
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
 
+// Util
+import { adaptEssayNameToURL } from '../../util/adaptEssayNameToURL';
+
 // Images
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 
@@ -81,7 +84,7 @@ export function NewEssayPage() {
 			if(emailUser && validateValues()) {
 				await essaysCollection.add({
 					essay_title: essayTitle,
-					formated_essay_title: essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^ a-zA-Z0-9]/g, '').toLowerCase().split(" ").join("-"),
+					formated_essay_title: adaptEssayNameToURL(essayTitle),
 					essay_content: essayContent,
 					author: emailUser.username,
 					author_avatar: emailUser.avatar,
@@ -104,13 +107,13 @@ export function NewEssayPage() {
 					let essayAlreadyExists = false;
 
 					essayData.forEach(essay => {
-						if(essay.formated_essay_title === essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^ a-zA-Z0-9]/g, '').toLowerCase().split(" ").join("-")) {
+						if(essay.formated_essay_title === adaptEssayNameToURL(essayTitle)) {
 							essayAlreadyExists = true;
 						}
 					});
 
 					if(!essayAlreadyExists) {
-						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^ a-zA-Z0-9]/g, '').toLowerCase().split(" ").join("-")}`));
+						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${adaptEssayNameToURL(essayTitle)}`));
 					} else {
 						toast.error("Você já possui uma redação com mesmo título");
 					}
