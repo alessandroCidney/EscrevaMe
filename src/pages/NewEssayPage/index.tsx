@@ -81,7 +81,7 @@ export function NewEssayPage() {
 			if(emailUser && validateValues()) {
 				await essaysCollection.add({
 					essay_title: essayTitle,
-					formated_essay_title: essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-"),
+					formated_essay_title: essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Zs]/g, "").toLowerCase().split(" ").join("-"),
 					essay_content: essayContent,
 					author: emailUser.username,
 					author_avatar: emailUser.avatar,
@@ -104,13 +104,13 @@ export function NewEssayPage() {
 					let essayAlreadyExists = false;
 
 					essayData.forEach(essay => {
-						if(essay.formated_essay_title === essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")) {
+						if(essay.formated_essay_title === essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Zs]/g, "").toLowerCase().split(" ").join("-")) {
 							essayAlreadyExists = true;
 						}
 					});
 
 					if(!essayAlreadyExists) {
-						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")}`));
+						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${essayTitle.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Zs]/g, "").toLowerCase().split(" ").join("-")}`));
 					} else {
 						toast.error("Você já possui uma redação com mesmo título");
 					}

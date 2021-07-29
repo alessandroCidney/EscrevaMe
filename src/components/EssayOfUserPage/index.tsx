@@ -16,12 +16,13 @@ import { useHistory } from 'react-router-dom';
 // Types
 type EssayProps = {
 	title?: string;
+	formated_title?: string;
 	author?: string | undefined;
 	highlight?: boolean;
 	icon?: string;
 };
 
-export function EssayOfUserPage({ title="Sem título", highlight=false, icon="text", author=undefined }: EssayProps) {
+export function EssayOfUserPage({ formated_title="", title="Sem título", highlight=false, icon="text", author=undefined }: EssayProps) {
 	const history = useHistory();
 
 	const [charactersNumber, setCharactersNumber] = useState(0);
@@ -39,7 +40,7 @@ export function EssayOfUserPage({ title="Sem título", highlight=false, icon="te
 				});
 
 				essayData.forEach(essay => {
-					if(essay.formated_essay_title == title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")) {
+					if(essay.formated_essay_title == formated_title) {
 						setCharactersNumber(essay.essay_content.length);
 					}
 				})
@@ -48,7 +49,7 @@ export function EssayOfUserPage({ title="Sem título", highlight=false, icon="te
 
 	function redirectToEssay() {
 		if(author) {
-			history.push(`/essays/${author}/${title.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ").join("-")}`);
+			history.push(`/essays/${author}/${formated_title}`);
 		}
 	}
 

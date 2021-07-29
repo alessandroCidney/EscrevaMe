@@ -118,7 +118,7 @@ export function UserPage() {
 					<EssaysArea title="Redações destaque" highlight>
 						{
 							bestEssays.length > 0 ?
-								bestEssays.map(essay => <EssayOfUserPage author={essay.author} icon="quote" title={essay.essay_title} />)
+								bestEssays.map(essay => <EssayOfUserPage author={essay.author} icon="quote" formated_title={essay.formated_essay_title} title={essay.essay_title} />)
 							: <span>Poste redações para que elas apareçam em seu perfil</span>
 						}
 
@@ -126,7 +126,7 @@ export function UserPage() {
 
 					<EssaysArea title="Todas as redações" list>
 						{ essaysData.length > 0 ? essaysData.map(essay => {
-								return (<EssayOfUserPage author={essay && essay.author} title={essay.essay_title} />)
+								return (<EssayOfUserPage author={essay && essay.author} formated_title={essay.formated_essay_title} title={essay.essay_title} />)
 							}) : (
 								<span>Poste redações para que elas apareçam em seu perfil</span>
 							)

@@ -26,7 +26,7 @@ div.user-page {
 		justify-content: space-between;
 		flex-direction: row; 
 		max-width: 90%;
-		min-width: 80%;
+		min-width: 85%;
 
 		> div.user-data {
 			width: 40%;
@@ -57,7 +57,7 @@ div.user-page {
 				color: #ccc;
 
 				> img {
-					height: 100%;
+					min-width: 100%;
 				} 
 			}
 		}
