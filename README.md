@@ -5,33 +5,41 @@ EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas reda
 
 ## Páginas
 
+### Página de Login
+
 <div align="center">
-	 Página de Login
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/LoginPage.png" />
 </div>
 
+
 Nesta página é possível realizar login para poder ter acesso às funcionalidades da aplicação
 
+### Página de Cadastro
+
 <div align="center">
-	Página de Cadastro
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/JoinUsPage.png" />
 </div>
 
+
 Nesta página é possível realizar o cadastro (atualmente, apenas com email e senha). Após se cadastrar, o usuário é redirecionado para sua página de usuário, podendo ter acesso às outras páginas da aplicação.
 
+### Página de Usuário
+
 <div align="center">
-	Página de Usuário
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/UserPage.png" />
 </div>
+
 
 Nesta página, o usuário pode ver seus dados, como username, avatar, redações destaque e todas as redações, assim como a quantidade de caracteres de cada uma de suas redações.
 
 Se o usuário acessar a página de outro, também poderá ver os mesmos dados do outro, pois não há nenhuma informação secreta ou sensível neste local.
 
+### Página de Nova Redação
+
 <div align="center">
-	Página de Nova Redação
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/NewEssayPage.png" />
 </div>
+
 
 Nesta página é possível adicionar novas redações. Existem alguns processos de validação para que, somente ao passar por eles, a redação possa ser enviada.
 
