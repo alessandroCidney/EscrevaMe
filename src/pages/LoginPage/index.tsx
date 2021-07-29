@@ -30,13 +30,18 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 import facebookIconImg from '../../assets/images/icons/facebook-icon.png';
 
 export function LoginPage() {
+  // Aciona o useHistory do React Router DOM
   const history = useHistory();
 
+  // Aciona o Cloud Firestore do Firebase e 
+  // armazena a referência da collection Users
   const firestore = firebase.firestore();
   const usersColection = firestore.collection("users");
 
+  // Aciona o hook useEmailAuth e importa as variáveis que ele retorna
   const { emailUser, addUserDataToContext } = useEmailAuth();
 
+  // Se o usuário estiver logado, redireciona para a página dele
   if(emailUser) {
     history.push(`/users/${emailUser.username}`)
   }
