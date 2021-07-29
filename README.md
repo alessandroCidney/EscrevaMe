@@ -3,6 +3,17 @@ EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas reda
 
 <img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/designs/design.jpg" />
 
+## Como funciona?
+
+### Cadastro
+Os usuários podem se cadatrar a partir do componente JoinUsPage, escolhendo um dos métodos de cadastro (em 29/07/2021, o único método disponível era cadastro por email e senha).
+
+Após realizar o cadastro, os usuários são redirecionados para suas respectivas páginas de usuário.
+
+#### Detalhes
+- O sistema identifica automaticamente que emails são válidos e quais não são, permitindo o cadastro apenas de emails válidos.
+- O sistema identifica automaticamente se os dados informados já estão sendo utilizados. Se sim, não permite o cadastro
+
 ## Páginas
 
 ### Página de Login
