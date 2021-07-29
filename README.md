@@ -9,6 +9,7 @@ EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas reda
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/LoginPage.png" />
+	<br />
 </div>
 
 
@@ -18,6 +19,7 @@ Nesta página é possível realizar login para poder ter acesso às funcionalida
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/JoinUsPage.png" />
+	<br />
 </div>
 
 
@@ -27,6 +29,7 @@ Nesta página é possível realizar o cadastro (atualmente, apenas com email e s
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/UserPage.png" />
+	<br />
 </div>
 
 
@@ -38,6 +41,7 @@ Se o usuário acessar a página de outro, também poderá ver os mesmos dados do
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/NewEssayPage.png" />
+	<br />
 </div>
 
 
