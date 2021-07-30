@@ -22,35 +22,42 @@ Os usuário podem fazer login e ter acesso à plataforma com o componente LoginP
 
 Após realizar o login, os usuários são redirecionados para suas respectivas páginas de usuário.
 
+## :raising_hand: Para desenvolvedores
+
+### Ativar o projeto localmente
+Para ativar o projeto localmente, basta baixá-lo e utilizar o comando `yarn start` na pasta do projeto através do terminal.
+
+O projeto será inicializado e ficará disponível em `http://localhost:5000`. 
+
 ## :wrench: Funcionalidades planejadas
 
 ### Página de Login
-:white_check_mark: Autenticação por email e senha 
-:white_circle: Autenticação com o Google
-:white_circle: Autenticação com o Twitter
+- :white_check_mark: Autenticação por email e senha 
+- :white_circle: Autenticação com o Google
+- :white_circle: Autenticação com o Twitter
 
 ## Página de Cadastro
-:white_check_mark: Cadastro com email e senha
-:white_circle: Cadastro com o Google
-:white_circle: Cadastro com o Twitter
-:white_check_mark: Envio de foto de perfil
+- :white_check_mark: Cadastro com email e senha
+- :white_circle: Cadastro com o Google
+- :white_circle: Cadastro com o Twitter
+- :white_check_mark: Envio de foto de perfil
 
 ### Perfil do Usuário
-:white_check_mark: Dados do usuário
-:white_check_mark: Foto de perfil
-:white_check_mark: Redações enviadas
-:white_check_mark: Redações destaque do usuário
+- :white_check_mark: Dados do usuário
+- :white_check_mark: Foto de perfil
+- :white_check_mark: Redações enviadas
+- :white_check_mark: Redações destaque do usuário
 
 ### Página Principal
-:white_circle: Redações destaque
-:white_circle: Visualizar outras redações
-:white_circle: Avaliar outras redações
+- :white_circle: Redações destaque
+- :white_circle: Visualizar outras redações
+- :white_circle: Avaliar outras redações
 
 ### Página da Redação
-:white_check_mark: Título da redação
-:white_check_mark: Conteúdo da redação
-:white_check_mark: Autor da redação
-:white_circle: Data de criação da redação
+- :white_check_mark: Título da redação
+- :white_check_mark: Conteúdo da redação
+- :white_check_mark: Autor da redação
+- :white_circle: Data de criação da redação
 
 ## :book: Páginas
 
@@ -95,13 +102,6 @@ Se o usuário acessar a página de outro, também poderá ver os mesmos dados do
 
 
 Nesta página é possível adicionar novas redações. Existem alguns processos de validação para que, somente ao passar por eles, a redação possa ser enviada.
-
-## :raising_hand: Para desenvolvedores
-
-### Ativar o projeto localmente
-Para ativar o projeto localmente, basta baixá-lo e utilizar o comando `yarn start` na pasta do projeto através do terminal.
-
-O projeto será inicializado e ficará disponível em `http://localhost:5000`. 
 
 ## :space_invader: Principais Dependências
 - React
