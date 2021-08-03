@@ -22,6 +22,9 @@ import { MainHeader } from '../../components/MainHeader';
 import { MainFooter } from '../../components/MainFooter';
 import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
 
+// Util
+import { adaptEssayContentToEssayPage } from '../../util/adaptEssayContent';
+
 // Images
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 
@@ -80,7 +83,6 @@ export function EssayPage() {
 
 		setUpdate(update + 1);
 	}
-
 	
 	return (
 
@@ -96,7 +98,7 @@ export function EssayPage() {
 					{essay.essay_title}
 				</h1>
 				<div className="essay-content">
-					{essay.essay_content}
+					{adaptEssayContentToEssayPage(essay.essay_content)}
 				</div>
 			</main>
 

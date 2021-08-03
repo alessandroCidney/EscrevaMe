@@ -23,6 +23,7 @@ import { firebase } from '../../services/firebaseService/firebase';
 
 // Util
 import { adaptEssayNameToURL } from '../../util/adaptEssayNameToURL';
+import { adaptEssayContentToFirestore } from '../../util/adaptEssayContent';
 
 // Images
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
@@ -85,7 +86,7 @@ export function NewEssayPage() {
 				await essaysCollection.add({
 					essay_title: essayTitle,
 					formated_essay_title: adaptEssayNameToURL(essayTitle),
-					essay_content: essayContent,
+					essay_content: adaptEssayContentToFirestore(essayContent),
 					author: emailUser.username,
 					author_avatar: emailUser.avatar,
 					created_at: new Date(),
@@ -113,15 +114,7 @@ export function NewEssayPage() {
 					});
 
 					if(!essayAlreadyExists) {
-
-						/*Testando o conteúdo*/
-						console.log(essayContent.split("\n"))
-
-						/*
-							Descobri que é possível quebrar os diferentes parágrafos através de .split("\n")
-						*/
-						
-						// uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${adaptEssayNameToURL(essayTitle)}`));
+						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${adaptEssayNameToURL(essayTitle)}`));
 					} else {
 						toast.error("Você já possui uma redação com mesmo título");
 					}

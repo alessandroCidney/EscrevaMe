@@ -49,8 +49,6 @@ export function UserPage() {
 	const params = useParams<UserPageParams>();
 	const paramsUsername = params.username;
 
-	console.log("Render!")
-
 	const findUserQuery = usersColection.where("username", "==", paramsUsername);
 	const findEssaysQuery = essaysCollection.where("author", "==", paramsUsername);
 
