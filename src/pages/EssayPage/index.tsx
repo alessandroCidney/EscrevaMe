@@ -34,6 +34,7 @@ export function EssayPage() {
 	const history = useHistory();
 
 	const [update, setUpdate] = useState(1);
+	const [showAddCommentTextarea, setShowAddCommentTextarea] = useState(false);
 
 	const firestore = firebase.firestore();
 	const essaysCollection = firestore.collection("essays");
@@ -125,7 +126,7 @@ export function EssayPage() {
 							&& typeof(essay.essay_title)=="string" 
 							&& essay.essay_title.trim().length > 2) 
 						&&
-						(
+						(<>
 							<button 
 								onClick={() => handleLikeQuestion(essay.id, essay.likes)}
 							>
@@ -135,13 +136,28 @@ export function EssayPage() {
 									iconName="far fa-heart" 
 								/>
 							</button>
-						)
+
+							<button
+								onClick={() => {
+									if(showAddCommentTextarea) {
+										setShowAddCommentTextarea(false);
+									} else {
+										setShowAddCommentTextarea(true);
+									}
+								}}
+							>
+								<FontAwesomeIcon 
+									alwaysSolid={showAddCommentTextarea}
+									iconName="far fa-comment-alt"
+								/>
+							</button>
+						</>)
 					}	
 				</div>
 			</aside>
 
 			<div className="comments-area">
-				<div className="add-comment">
+				<div className={`add-comment ${!showAddCommentTextarea && "dont-show"}`}>
 					<textarea 
 						className="comment-content no-shadow-on-focus"
 						placeholder="O que você pensa sobre esse texto? Interaja!"
