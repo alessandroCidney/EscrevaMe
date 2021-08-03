@@ -43,6 +43,13 @@ a:hover {
 	display: none !important;
 }
 
+.no-shadow-on-focus {
+	&:focus {
+		box-shadow: 0 0 0 0;
+		outline: 0;
+	}
+}
+
 @keyframes showFromBottomToUp {
 	from {
 		transform: translateY(10px);

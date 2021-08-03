@@ -140,6 +140,25 @@ export function EssayPage() {
 				</div>
 			</aside>
 
+			<div className="comments-area">
+				<div className="add-comment">
+					<textarea 
+						className="comment-content no-shadow-on-focus"
+						placeholder="O que você pensa sobre esse texto? Interaja!"
+					></textarea>
+				</div>
+				<div className="comments">
+					<h2>Comentários</h2>
+
+					<div className="comments-list">
+						<div className="comment">
+							Comment Comment Comment Comment Comment Comment
+							Comment Comment Comment Comment Comment Comment
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<MainFooter />
 			
 			</>)
