@@ -113,7 +113,15 @@ export function NewEssayPage() {
 					});
 
 					if(!essayAlreadyExists) {
-						uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${adaptEssayNameToURL(essayTitle)}`));
+
+						/*Testando o conteúdo*/
+						console.log(essayContent.split("\n"))
+
+						/*
+							Descobri que é possível quebrar os diferentes parágrafos através de .split("\n")
+						*/
+						
+						// uploadEssay().then(() => history.push(`/essays/${emailUser.username}/${adaptEssayNameToURL(essayTitle)}`));
 					} else {
 						toast.error("Você já possui uma redação com mesmo título");
 					}
