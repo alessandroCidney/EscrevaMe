@@ -29,6 +29,31 @@ header.main-header {
 		}
 	}
 
+	div.search {
+		width: 40%;
+		height: 100%;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+
+		> input {
+			width: 70%;
+			height: 50%;
+
+			padding: 10px;
+
+			border-radius: 8px;
+			border: 1px solid #ddd;
+		}
+
+		> button {
+			min-width: 10% !important;
+			height: 50%;
+		}
+	}
+
 	nav.options {
 		width: 30%;
 		height: 100%;

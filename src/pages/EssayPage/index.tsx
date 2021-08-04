@@ -21,6 +21,7 @@ import { useEssay } from '../../hooks/useEssay';
 import { MainHeader } from '../../components/MainHeader';
 import { MainFooter } from '../../components/MainFooter';
 import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
+import { Button } from '../../components/Button';
 
 // Util
 import { adaptEssayContentToEssayPage } from '../../util/adaptEssayContent';
@@ -33,11 +34,19 @@ type EssayPageParams = {
 	title: string;
 }
 
+type CommentType = {
+	comment_author: string;
+	comment_author_avatar: string;
+	comment_content: string;
+	created_at: Date;
+}
+
 export function EssayPage() {
 	const history = useHistory();
 
 	const [update, setUpdate] = useState(1);
 	const [showAddCommentTextarea, setShowAddCommentTextarea] = useState(false);
+	const [commentText, setCommentText] = useState('');
 
 	const firestore = firebase.firestore();
 	const essaysCollection = firestore.collection("essays");
@@ -57,7 +66,7 @@ export function EssayPage() {
 		}
 
 		if(emailUser && essay) {
-			const essayRef = essaysCollection.doc(id)
+			const essayRef = essaysCollection.doc(id);
 
 			if(essayLikes.indexOf(emailUser.username) === -1) {
 
@@ -67,6 +76,8 @@ export function EssayPage() {
 					await essayRef.update({
 						likes: newLikes
 					});
+
+					toast.success("Redação adicionada aos favoritos");
 				}
 			} else {
 					const newArr = [] as string[];
@@ -78,10 +89,122 @@ export function EssayPage() {
 					await essayRef.update({
 						likes: newArr
 					});
+
+					toast.success("Redação removida dos favoritos");
 			}
 		}
 
+		// Força nova renderização
 		setUpdate(update + 1);
+	}
+
+	function validateCommentTextWithoutToasts() {
+		const trimComment = commentText.trim();
+
+		if(trimComment === '') {
+			return false;
+		}
+
+		let biggerWord = '';
+
+		trimComment.split(" ").forEach(word => {
+			if(word.length > biggerWord.length) biggerWord = word;
+		});
+
+		if(biggerWord.length > 46) {
+			return false;
+		}
+
+		if(trimComment.trim().length>300) {
+			return false;
+		}
+
+		return true;
+	}
+
+	function sendComment() {
+
+		async function saveCommentInFirebase(firebaseComments: CommentType[]) {
+			if(!essay) {
+				toast.error("A redação não existe");
+				return;
+			}
+
+			if(!emailUser) {
+				toast.error("Você precisa fazer login para comentar");
+				return;
+			}
+
+			const essayRef = essaysCollection.doc(essay.id);
+
+			const newComment = {
+				comment_author: emailUser.username,
+				comment_author_avatar: emailUser.avatar,
+				comment_content: commentText,
+				created_at: new Date()
+			};
+
+			let newComments = [newComment, ...firebaseComments];	
+
+			await essayRef.update({
+				comments: newComments
+			});
+
+			toast.success("Comentário enviado");
+
+			setCommentText('');
+
+			// Força nova renderização
+			setUpdate(update + 1);
+		}
+
+		function validateCommentText() {
+			const trimComment = commentText.trim();
+
+			if(trimComment === '') {
+				toast.error('O comentário está vazio');
+				return false;
+			}
+
+			let biggerWord = '';
+
+			trimComment.split(" ").forEach(word => {
+				if(word.length > biggerWord.length) biggerWord = word;
+			});
+
+			if(biggerWord.length > 46) {
+				toast.error('Palavras inválidas no comentário');
+				return false;
+			}
+
+			if(trimComment.trim().length>300) {
+				toast.error('Limite de caracteres atingido');
+				return false;
+			}
+
+			return true;
+		}
+
+		if(!emailUser) {
+			toast.error("Você precisa fazer login para comentar");
+			return;
+		} else {
+			if(essay && validateCommentText()) {
+				const essayRef = essaysCollection.doc(essay.id);
+
+				essayRef.get()
+					.then(result => {
+						let results = result.data();
+
+						if(results) {
+							saveCommentInFirebase(results.comments);
+						} else {
+							let firebaseComments = [] as CommentType[];
+							saveCommentInFirebase(firebaseComments);
+						}
+					})
+			}
+		}
 	}
 	
 	return (
@@ -163,18 +286,39 @@ export function EssayPage() {
 					<textarea 
 						className="comment-content no-shadow-on-focus"
 						placeholder="O que você pensa sobre esse texto? Interaja!"
+						onChange={event => setCommentText(event.target.value)}
+						value={commentText}
 					></textarea>
+					<Button
+						onClick={sendComment}
+						disabled={validateCommentTextWithoutToasts() ? false : true}
+					>Enviar comentário</Button>
 				</div>
-				<div className="comments">
-					<h2>Comentários</h2>
+				{
+					essay.comments.length > 0 && 
+					<>
+						<div className="comments">
+						<h2>Comentários</h2>
 
-					<div className="comments-list">
-						<div className="comment">
-							Comment Comment Comment Comment Comment Comment
-							Comment Comment Comment Comment Comment Comment
+						<div className="comments-list">
+							{essay.comments.map(c => 
+								<div className="comment">
+									<div className="comment-author">
+										<div className="profile-photo">
+											<img src={c.comment_author_avatar ? c.comment_author_avatar : profilePhotoImg} alt={`Avatar do usuário ${c.comment_author}`} />	
+										</div>
+										<p>@{c.comment_author}</p>
+									</div>
+									<div className="comment-content">
+										{c.comment_content}
+									</div>
+								</div>
+							)}
 						</div>
 					</div>
-				</div>
+					</>
+				}
+				
 			</div>
 
 			<MainFooter />
@@ -182,7 +326,7 @@ export function EssayPage() {
 			</>)
 		
 
-		: (<main>Redação inexistente</main>)}
+		: (<main>Carregando...</main>)}
 		</div>
 		
 	);

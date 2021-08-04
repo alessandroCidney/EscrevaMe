@@ -90,7 +90,8 @@ export function NewEssayPage() {
 					author: emailUser.username,
 					author_avatar: emailUser.avatar,
 					created_at: new Date(),
-					likes: []
+					likes: [],
+					comments: []
 				});
 			}
 		}

@@ -1,8 +1,21 @@
 // React
 import { useState, useEffect } from 'react';
 
+// React Router DOM
+import { useHistory } from 'react-router-dom';
+
+// React Hot Toast
+import toast from 'react-hot-toast';
+
 // Firebase
 import { firebase } from '../services/firebaseService/firebase';
+
+type CommentType = {
+	comment_author: string;
+	comment_author_avatar: string;
+	comment_content: string;
+	created_at: Date;
+}
 
 type EssayType = {
 	id: string;
@@ -13,9 +26,12 @@ type EssayType = {
 	author_avatar: string;
 	created_at: Date;
 	likes: string[];
+	comments: CommentType[];
 }
 
 export function useEssay(username: string, essayFormatedTitle: string, update: number) {
+	const history = useHistory();
+
 	let [essay, setEssay] = useState<EssayType>();
 
 	const firestore = firebase.firestore();
@@ -28,6 +44,11 @@ export function useEssay(username: string, essayFormatedTitle: string, update: n
 
 		essaysAuthorAndTitleQuery.get()
 		.then(essaysQuerySnapshot => {
+			if(essaysQuerySnapshot.empty) {
+				toast.error("A redação não existe");
+				history.push('/');
+			}
+
 			essaysQuerySnapshot.forEach(essaysDoc => {
 				const data = essaysDoc.data();
 
@@ -39,7 +60,8 @@ export function useEssay(username: string, essayFormatedTitle: string, update: n
 					author: data.author,
 					author_avatar: data.author_avatar,
 					created_at: data.created_at,
-					likes: data.likes
+					likes: data.likes,
+					comments: data.comments
 				});
 			})
 		})

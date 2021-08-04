@@ -9,7 +9,7 @@ export function MainFooter() {
 				<h6>Sobre o Projeto</h6>
 				<ul>
 					<li><a target="_blank" href="https://github.com/alessandroCidney/EscrevaMe">GitHub</a></li>
-					<li><a href="#">Guia</a></li>
+					<li><a href="https://github.com/alessandroCidney/EscrevaMe">Guia</a></li>
 				</ul>
 			</div>
 

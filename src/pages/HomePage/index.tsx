@@ -14,7 +14,7 @@ import { useEmailAuth } from '../../hooks/useEmailAuth';
 import pencilGif from '../../assets/images/animations/pencil.gif';
 import computerImg from '../../assets/images/computer/computer.png';
 
-export function Home() {
+export function HomePage() {
 	const history = useHistory();
 
 	const { emailUser } = useEmailAuth();

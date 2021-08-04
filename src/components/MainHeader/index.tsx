@@ -1,8 +1,12 @@
+// React
+import { useState } from 'react';
+
 // SASS
 import './styles.scss';
 
 // Components
 import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
+import { Button } from '../../components/Button';
 
 // React Router DOM
 import { useHistory } from 'react-router-dom';
@@ -20,6 +24,8 @@ import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 export function MainHeader() {
 	const history = useHistory();
 
+	const [search, setSearch] = useState('');
+
 	const { emailUser, removeUserContextData } = useEmailAuth();
 
 	async function signOutForEmailMethod() {
@@ -30,10 +36,30 @@ export function MainHeader() {
 		history.push('/login');
 	}
 
+	function searchNow() {
+		setSearch('');
+		history.push(`/users/${search}`);
+	}
+
 	return (
 		<header className="main-header">
 			<div className="logo">
 				<img onClick={() => history.push('/')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
+			</div>
+
+			<div className="search">
+				<input
+					type="text"
+					placeholder="Pesquise por um usuário"
+					onChange={event => setSearch(event.target.value)}
+					value={search}
+				/>
+				<Button 
+					className="header-search-button"
+					onClick={searchNow}
+				>
+					<FontAwesomeIcon iconName="fas fa-search" />
+				</Button>
 			</div>
 			
 			{

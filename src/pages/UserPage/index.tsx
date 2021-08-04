@@ -5,7 +5,7 @@ import { useState, useEffect, CSSProperties } from 'react';
 import { useHistory } from 'react-router-dom';
 
 // React Hot Toast
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 // SASS
 import './styles.scss';
@@ -53,15 +53,17 @@ export function UserPage() {
 	const findEssaysQuery = essaysCollection.where("author", "==", paramsUsername);
 
 	useEffect(() => {
+		console.log("potato")
 
 		findUserQuery.get()
 			.then(usersQuerySnapshot => {
+				if(usersQuerySnapshot.empty) {
+					toast.error("O usuário não existe");
+					history.push('/');
+				}
+
 				usersQuerySnapshot.forEach(usersDoc => {
 					const userData = usersDoc.data();
-
-					if(!userData) {
-						history.push('/login');
-					}
 
 					setUserPhotoURL(userData ? userData.avatar : '');
 					setEssaysData(essayData.length > 0 ? essayData : []);
@@ -80,7 +82,7 @@ export function UserPage() {
 				setEssaysData(essayData.length > 0 ? essayData : []);
 			});
 
-	}, []);
+	}, [paramsUsername]);
 
 	let bestEssays = [] as Record<string, string>[];
 

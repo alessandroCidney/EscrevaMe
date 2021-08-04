@@ -5,7 +5,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 // Components
-import { Home } from './pages/Home';
+import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { JoinUsPage } from './pages/JoinUsPage';
 import { UserPage } from './pages/UserPage';
@@ -25,7 +25,7 @@ function App() {
       <GoogleAuthContextProvider>
         <EmailAuthContextProvider>
           <Switch>
-            <Route path="/" exact component={Home} />
+            <Route path="/" exact component={HomePage} />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/joinus" exact component={JoinUsPage} />
             <Route path="/users/:username" component={UserPage} />
