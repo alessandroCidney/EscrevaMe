@@ -106,7 +106,7 @@ export function LoginPage() {
                 addUserDataToContext(userData[0].username, userData[0].avatar);
 
                 toast.success("Usuário conectado!");
-                history.push(`/users/${userData[0].username}`);
+                history.push(`/main`);
               })
               .catch((err) => {
                 console.log(err)
@@ -132,14 +132,14 @@ export function LoginPage() {
                 <div>
                   <img src={googleIconImg} alt="Logo do Google" />
                 </div>
-                <span>Entrar com o Google</span>
+                <span>Continuar com o Google</span>
               </Button>
 
               <Button className="blue" disabled>
                 <div>
                   <FontAwesomeIcon iconName="fab fa-twitter" />
                 </div>
-                <span>Entrar com o Twitter</span>
+                <span>Continuar com o Twitter</span>
               </Button>
 
               <Button

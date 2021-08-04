@@ -11,6 +11,7 @@ import { JoinUsPage } from './pages/JoinUsPage';
 import { UserPage } from './pages/UserPage';
 import { EssayPage } from './pages/EssayPage';
 import { NewEssayPage } from './pages/NewEssayPage';
+import { MainPage } from './pages/MainPage';
 
 // Contexts
 import { GoogleAuthContextProvider } from './contexts/GoogleAuthContext';
@@ -28,6 +29,7 @@ function App() {
             <Route path="/" exact component={HomePage} />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/joinus" exact component={JoinUsPage} />
+            <Route path="/main" exact component={MainPage} />
             <Route path="/users/:username" component={UserPage} />
             <Route path="/essays/new" exact component={NewEssayPage} />
             <Route path="/essays/:username/:title" component={EssayPage} />

@@ -11,6 +11,9 @@ import { Button } from '../../components/Button';
 // React Router DOM
 import { useHistory } from 'react-router-dom';
 
+// React Hot Toast
+import toast from 'react-router-dom';
+
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
 
@@ -37,6 +40,11 @@ export function MainHeader() {
 	}
 
 	function searchNow() {
+
+		if(search.trim() === '') {
+			return;
+		}
+
 		setSearch('');
 		history.push(`/users/${search}`);
 	}
@@ -44,7 +52,7 @@ export function MainHeader() {
 	return (
 		<header className="main-header">
 			<div className="logo">
-				<img onClick={() => history.push('/')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
+				<img onClick={() => history.push('/main')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
 			</div>
 
 			<div className="search">
@@ -66,9 +74,9 @@ export function MainHeader() {
 				emailUser &&
 				<nav className="options">
 					<button
-						onClick={() => history.push(`/users/${emailUser.username}`)}
+						onClick={() => history.push('/main')}
 					>
-						<img src={emailUser.avatar ? emailUser.avatar : profilePhotoImg} alt={`Foto de perfil${emailUser.username? ` de ${emailUser.username}` : ''}`} />
+						<FontAwesomeIcon iconName="fas fa-home" />
 					</button>
 
 					<button
@@ -77,7 +85,11 @@ export function MainHeader() {
 						<FontAwesomeIcon iconName="fas fa-sign-out-alt" />
 					</button>
 
-					
+					<button
+						onClick={() => history.push(`/users/${emailUser.username}`)}
+					>
+						<img src={emailUser.avatar ? emailUser.avatar : profilePhotoImg} alt={`Foto de perfil${emailUser.username? ` de ${emailUser.username}` : ''}`} />
+					</button>
 				</nav>
 			}
 		</header>

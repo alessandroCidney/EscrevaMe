@@ -206,6 +206,20 @@ export function EssayPage() {
 			}
 		}
 	}
+
+	async function deleteEssay() {
+		if(emailUser && essay) {
+			if(emailUser.username === essay.author) {
+				let essayRef = essaysCollection.doc(essay.id);
+
+				await essayRef.delete();
+
+				toast.success("Redação removida com sucesso");
+
+				history.push(`/users/${emailUser.username}`);
+			}
+		}
+	}
 	
 	return (
 
@@ -227,7 +241,10 @@ export function EssayPage() {
 
 			<aside className="user-items">
 				<div className="user-data">
-					<div className="profile-photo">
+					<button 
+						className="profile-photo"
+						onClick={() => history.push(`/users/${essay.author}`)}
+					>
 						<img 
 							src={essay.author_avatar && 
 								typeof(essay.author_avatar)=="string" 
@@ -237,7 +254,7 @@ export function EssayPage() {
 								? ` de ${essay.author}` 
 								: 'de um usuário'}`} 
 						/>
-					</div>
+					</button>
 					<div className="username">
 						<h4>Escrito por</h4>
 						<p>{essay.author}</p>
@@ -276,6 +293,15 @@ export function EssayPage() {
 									iconName="far fa-comment-alt"
 								/>
 							</button>
+
+							{
+								(emailUser.username === essay.author) &&
+								<button
+									onClick={deleteEssay}
+								>
+									<FontAwesomeIcon iconName="far fa-trash-alt" />
+								</button>
+							}
 						</>)
 					}	
 				</div>

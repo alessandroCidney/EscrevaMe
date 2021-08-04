@@ -61,10 +61,15 @@ div.essay-page {
 			flex-direction: row;
 			gap: 20px;
 
-			> div.profile-photo {
+			> button.profile-photo {
 				background: #fff;
 
+				cursor: pointer;
+
 				border-radius: 50%;
+				border: 0;
+
+				display: block;
 
 				min-width: 70px;
 				max-width: 70px;
