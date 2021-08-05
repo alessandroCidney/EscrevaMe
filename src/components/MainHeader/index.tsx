@@ -51,14 +51,14 @@ export function MainHeader() {
 
 	return (
 		<header className="main-header">
-			<div className="logo">
-				<img onClick={() => history.push('/main')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
+			<div className="logo dont-show-if-mobile">
+				<img onClick={() => history.push('/')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
 			</div>
 
 			<div className="search">
 				<input
 					type="text"
-					placeholder="Pesquise por um usuário"
+					placeholder="@username"
 					onChange={event => setSearch(event.target.value)}
 					value={search}
 				/>

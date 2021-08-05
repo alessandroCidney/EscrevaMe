@@ -257,7 +257,7 @@ export function EssayPage() {
 					</button>
 					<div className="username">
 						<h4>Escrito por</h4>
-						<p>{essay.author}</p>
+						<p>@{essay.author}</p>
 					</div>
 				</div>
 

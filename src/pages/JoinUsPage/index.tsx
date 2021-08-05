@@ -54,6 +54,10 @@ export function JoinUsPage() {
 			return false;
 		}
 
+		if(joinUsername.trim().split(" ").length > 1) {
+			return false;
+		}
+
 		if(!validateEmail(joinEmail)) {
 			return false;
 		}

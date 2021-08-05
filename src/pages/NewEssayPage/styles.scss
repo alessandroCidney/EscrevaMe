@@ -100,3 +100,20 @@ div.new-essay-page {
 		}
 	}
 }
+
+@media (max-width: 760px) {
+	div.new-essay-page {
+		main {
+			width: 90%;
+
+			textarea {
+				&.title-textarea {
+					font-size: 1rem;
+				}
+				&.content-textarea {
+					font-size: 1rem;
+				}
+			}
+		}
+	}
+}

@@ -41,7 +41,7 @@ div.essay-page {
 	}
 
 	> aside.user-items {
-		width: 49%;
+		width: 60%;
 
 		padding: 100px 20px;
 
@@ -266,13 +266,27 @@ div.essay-page {
 		}
 
 		> aside.user-items {
-			width: 80%;
+			width: 90%;
 
 			padding: 100px 0;
+
+			flex-direction: column;
+			gap: 30px;
 			
 			> div.user-actions {
-				width: 30%;
+				width: 100%;
 			}
+
+			> div.user-data {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 70%;
+			}
+		}
+
+		> div.comments-area {
+			width: 90%;
 		}
 	}		
 }

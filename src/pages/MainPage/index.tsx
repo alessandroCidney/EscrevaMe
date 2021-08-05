@@ -39,13 +39,21 @@ type EssayType = {
 	comments: CommentType[];
 }
 
+type UserType = {
+	avatar: string;
+	email: string;
+	username: string;
+}
+
 export function MainPage() {
 	const history = useHistory();
 
 	const [essays, setEssays] = useState<EssayType[]>([]);
+	const [users, setUsers] = useState<UserType[]>();
 
 	const firestore = firebase.firestore();
 	const essaysCollection = firestore.collection("essays");
+	const usersColection = firestore.collection("users");
 
 	useEffect(() => {
 		let essaysData = [] as EssayType[];
@@ -55,19 +63,32 @@ export function MainPage() {
 				essaysQuerySnapshot.forEach(essaysDoc => {
 					let data = essaysDoc.data() as EssayType;
 					if(data) {
-						essaysData.push(data)
+						essaysData.push(data);
 					}
-				})
+				});
 
 				essaysData.sort((a, b) => b.created_at.seconds - a.created_at.seconds);
 
 				setEssays(essaysData);
 			});
+
+		let usersData = [] as UserType[];
+
+		usersColection.get()
+			.then(usersQuerySnapshot => {
+				usersQuerySnapshot.forEach(usersDoc => {
+					let data = usersDoc.data() as UserType;
+
+					if(data) {
+						usersData.push(data);
+					}
+				});
+
+				setUsers(usersData);
+			})
 	}, []);
 
 	const { emailUser } = useEmailAuth();
-
-	console.log(essays)
 
 	return (
 		<div className="main-page container-column">
@@ -75,7 +96,7 @@ export function MainPage() {
 
 			<div className="all-content-of-main">
 				{emailUser &&
-					<div className="main-menu">
+					<div className="main-menu dont-show-if-mobile">
 						<ul>
 							<li><Link to="/main">Página Principal</Link></li>
 							<li><Link to="/essays/new">Nova Redação</Link></li>
@@ -120,16 +141,30 @@ export function MainPage() {
 					}
 				</div>
 
-				<div className="last-users">
-					<div className="user">
-						<div className="profile-photo">
-							Foto
-						</div>
-						<div className="username">
-							Username
-						</div>
-					</div>
+				<div className="last-users dont-show-if-mobile">
+				{
+					(emailUser && users && users.length>0) ?
+						users.map(u => 
+							
+								<button 
+									className="user"
+									onClick={event => history.push(`/users/${u.username}`)}
+								>
+									<div className="profile-photo">
+										<img 
+											src={u.avatar ? u.avatar : profilePhotoImg} 
+											alt="Foto de perfil" 
+										/>
+									</div>
+									<div className="username">
+										@{u.username}
+									</div>
+								</button>
+							)	
+						: (<span>Nenhum novo usuário</span>)
+				}
 				</div>
+				
 
 			</div>
 		</div>

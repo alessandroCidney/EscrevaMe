@@ -20,7 +20,7 @@ export function HomePage() {
 	const { emailUser } = useEmailAuth();
 
 	if(emailUser) {
-		history.push('/login');
+		history.push('/main');
 	}
 
 	return (
