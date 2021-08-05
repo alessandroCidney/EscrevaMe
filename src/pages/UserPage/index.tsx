@@ -53,7 +53,6 @@ export function UserPage() {
 	const findEssaysQuery = essaysCollection.where("author", "==", paramsUsername);
 
 	useEffect(() => {
-		console.log("potato")
 
 		findUserQuery.get()
 			.then(usersQuerySnapshot => {

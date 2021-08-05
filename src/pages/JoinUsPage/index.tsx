@@ -35,7 +35,7 @@ export function JoinUsPage() {
 	const { emailUser,  addUserDataToContext } = useEmailAuth();
 
 	if(emailUser) {
-	    history.push(`/users/${emailUser.username}`)
+	    history.push(`/main`);
 	  }
 
 	const firestore = firebase.firestore();
@@ -55,6 +55,10 @@ export function JoinUsPage() {
 		}
 
 		if(joinUsername.trim().split(" ").length > 1) {
+			return false;
+		}
+
+		if(joinUsername.trim().length > 16) {
 			return false;
 		}
 
@@ -81,7 +85,10 @@ export function JoinUsPage() {
 
 			await firebase.auth().createUserWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
 
-			addUserDataToContext(joinUsername.trim(), url);
+			await firebase.auth().signInWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
+				.then(() => {
+					addUserDataToContext(joinUsername.trim(), url);
+				});
 		}
 
 		async function uploadFile() {
@@ -105,7 +112,14 @@ export function JoinUsPage() {
 		// pois a versão do Firestore que utilizava async e await estava em beta.
 
 		// Detectando se o usuário já existe no banco
-		usersColection.where("username", "==", joinUsername).get()
+		usersColection
+		.where("username", "==", 
+			joinUsername
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, "")
+			.replace(/[^ a-zA-Z0-9]/g, '')
+			.toLowerCase())
+		.get()
 			.then(usersQuerySnapshot => {
 				usersQuerySnapshot.forEach(usersDoc => {
 					usersInDatabase.push(usersDoc.data());
@@ -118,7 +132,14 @@ export function JoinUsPage() {
 				}
 
 				// Detectando se o email já foi utilizado por outro usuário
-				usersColection.where("email", "==", joinEmail).get()
+				usersColection
+				.where("email", "==", 
+					joinEmail
+					.normalize('NFD')
+					.replace(/[\u0300-\u036f]/g, "")
+					.replace(/[^ a-zA-Z0-9]/g, '')
+					.toLowerCase())
+				.get()
 					.then(emailsQuerySnapshot => {
 						emailsQuerySnapshot.forEach(emailsDoc => {
 							emailsInDatabase.push(emailsDoc.data());

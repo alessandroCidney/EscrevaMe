@@ -43,7 +43,7 @@ export function LoginPage() {
 
   // Se o usuário estiver logado, redireciona para a página dele
   if(emailUser) {
-    history.push(`/users/${emailUser.username}`)
+    history.push(`/main`);
   }
 
   function testInputValues() {
