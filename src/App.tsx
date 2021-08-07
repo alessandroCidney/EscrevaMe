@@ -4,7 +4,7 @@ import React from 'react';
 // React Router DOM
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-// Components
+// Pages
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { JoinUsPage } from './pages/JoinUsPage';
@@ -12,6 +12,7 @@ import { UserPage } from './pages/UserPage';
 import { EssayPage } from './pages/EssayPage';
 import { NewEssayPage } from './pages/NewEssayPage';
 import { MainPage } from './pages/MainPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 
 // Contexts
 import { GoogleAuthContextProvider } from './contexts/GoogleAuthContext';
