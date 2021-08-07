@@ -137,7 +137,7 @@ export function MainPage() {
 									</div>
 								</div>
 							</button>)
-						: (<span>Carregando...</span>)
+						: (<span>Nenhuma redação encontrada.</span>)
 					}
 				</div>
 

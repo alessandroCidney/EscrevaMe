@@ -104,8 +104,7 @@ export function LoginPage() {
             firebase.auth().signInWithEmailAndPassword(emailValue.trim(), passwordValue.trim())
               .then(() => {
                 addUserDataToContext(userData[0].username, userData[0].avatar);
-
-                toast.success("Usuário conectado!");
+                
                 history.push(`/main`);
               })
               .catch((err) => {

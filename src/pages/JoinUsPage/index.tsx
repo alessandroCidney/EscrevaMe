@@ -85,10 +85,10 @@ export function JoinUsPage() {
 
 			await firebase.auth().createUserWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
 
-			await firebase.auth().signInWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
-				.then(() => {
-					addUserDataToContext(joinUsername.trim(), url);
-				});
+			// await firebase.auth().signInWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
+			// 	.then(() => {
+			// 		addUserDataToContext(joinUsername.trim(), url);
+			// 	});
 		}
 
 		async function uploadFile() {
@@ -156,7 +156,7 @@ export function JoinUsPage() {
 						
 						uploadFile().then(() => {
 							toast.success("Usuário criado com sucesso!");
-							history.push(`/users/${joinUsername}`);
+							history.push(`/login`);
 						})
 						.catch(() => {
 							toast.error("Não foi possível criar o usuário.")

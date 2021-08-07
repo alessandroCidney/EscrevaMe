@@ -22,18 +22,10 @@ export function MainFooter() {
 			</div>
 
 			<div className="footer-list">
-				<h6>Ajude-nos a crescer</h6>
-				<ul>
-					<li><a href="#">Faça uma doação</a></li>
-					<li><a href="#">Compartilhe o projeto</a></li>
-				</ul>
-			</div>
-
-			<div className="footer-list">
 				<h6>Importante</h6>
 				<ul>
 					<li><a href="#">Política de Privacidade</a></li>
-					<li><a href="#">A importância da colaboração</a></li>
+					<li><a href="#">Política de tratamento e segurança de dados</a></li>
 				</ul>
 			</div>
 

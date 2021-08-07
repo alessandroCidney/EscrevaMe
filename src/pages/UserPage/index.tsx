@@ -108,9 +108,13 @@ export function UserPage() {
 					</div>	
 					<h1>@{ paramsUsername }</h1>
 					<p>Olá! Sou um usuário da plataforma EscrevaMe</p>
-					<Button
-						onClick={() => history.push('/essays/new')}
-					>Nova redação</Button>
+					
+					{
+						(emailUser && emailUser.username===paramsUsername) &&
+						<Button
+							onClick={() => history.push('/essays/new')}
+						>Nova redação</Button>
+					}
 				</div>
 				
 				<div className="user-content">
