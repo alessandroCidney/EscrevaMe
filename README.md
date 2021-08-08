@@ -1,5 +1,5 @@
 # EscrevaMe (WriteMe)
-EscrevaMe(WriteMe) é a platform where users can register themselves, interacting with people from all over the world and promoting the dissemination of knowledge.
+EscrevaMe(WriteMe) is a platform where users can register themselves, interacting with people from all over the world and promoting the dissemination of knowledge.
 
 <img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/designs/design.jpg" />
 
