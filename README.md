@@ -1,111 +1,100 @@
-# EscrevaMe
-EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas redações, interagindo com pessoas de todo o mundo e promovendo a difusão de conhecimentos.
+# EscrevaMe (WriteMe)
+EscrevaMe(WriteMe) é a platform where users can register themselves, interacting with people from all over the world and promoting the dissemination of knowledge.
 
 <img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/designs/design.jpg" />
 
-## :computer: Como funciona?
+## :computer: How does it work?
 
-### Plataforma
-Na plataforma EscrevaMe, os usuários podem se cadastrar e postar suas próprias redações, assim como curtir e interagir em redações de outros usuários.
+### Platform
+With EscrevaMe(WriteMe), the user can register and share their essays/compositions, interacting with other users.
 
-### Cadastro
-Os usuários podem se cadatrar a partir do componente JoinUsPage, escolhendo um dos métodos de cadastro (em 29/07/2021, o único método disponível era cadastro por email e senha).
+### Register (Sign Up)
+Users can register themselves with the JoinUsPage component, choosing one of the Sign Up methods.
 
-Após realizar o cadastro, os usuários são redirecionados para suas respectivas páginas de usuário.
+After registration, users are redirected to their user pages (UserPage component).
 
-#### Detalhes
-- O sistema identifica automaticamente que emails são válidos e quais não são, permitindo o cadastro apenas de emails válidos.
-- O sistema identifica automaticamente se os dados informados já estão sendo utilizados. Se sim, não permite o cadastro
+#### Details
+- The system identifies valid and invalid e-mails, allowing the registration only with valid e-mails.
+- The system identifies if the data entered is already being used. If the data entered is already being used by other users, registration will not be allowed.
 
-### Login
-Os usuário podem fazer login e ter acesso à plataforma com o componente LoginPage, escolhendo um dos métodos de login (em 29/07/2021, o único método disponível para login era por email e senha).
+### Sign In
+Users can sign in and access the platform with the LoginPage component, choosing one of the Sign Up methods. 
 
-Após realizar o login, os usuários são redirecionados para suas respectivas páginas de usuário.
+After sign up, users are redirected to their user pages (UserPage component).
 
-## :raising_hand: Para desenvolvedores
+## :raising_hand: For developers
 
-### Ativar o projeto localmente
-Para ativar o projeto localmente, basta baixá-lo e utilizar o comando `yarn start` na pasta do projeto através do terminal.
+### Activate the project locally
+To activate the project locally, download it and use `yarn start` command with the CMD.
 
-O projeto será inicializado e ficará disponível em `http://localhost:5000`. 
+The project will be inicialized. Access it at `http://localhost:5000`
 
-## :wrench: Funcionalidades planejadas
+## :wrench: planned features
 
-### Página de Login
-- :white_check_mark: Autenticação por email e senha 
-- :white_circle: Autenticação com o Google
-- :white_circle: Autenticação com o Twitter
+### LoginPage
+- :white_check_mark: Authentication with e-mail and password
+- :white_circle: Authentication with Google
+- :white_circle: Authentication with Twitter
 
-## Página de Cadastro
-- :white_check_mark: Cadastro com email e senha
-- :white_circle: Cadastro com o Google
-- :white_circle: Cadastro com o Twitter
-- :white_check_mark: Envio de foto de perfil
+### JoinUsPage
+- :white_check_mark: Sign Up with e-mail and password
+- :white_circle: Sign Up with Google
+- :white_circle: Sign Up with Twitter
+- :white_check_mark: Upload profile photo
+- :white_circle: Upload description
 
-### Perfil do Usuário
-- :white_check_mark: Dados do usuário
-- :white_check_mark: Foto de perfil
-- :white_check_mark: Redações enviadas
-- :white_check_mark: Redações destaque do usuário
+### UserPage
+- :white_check_mark: User data
+- :white_check_mark: Profile photo
+- :white_check_mark: Uploaded essays/compositions
+- :white_check_mark: Highlight essays/compositions
 
-### Página Principal
-- :white_circle: Redações destaque
-- :white_circle: Visualizar outras redações
-- :white_circle: Avaliar outras redações
+### MainPage
+- :white_check_mark: View essays/compositions
+- :white_check_mark: View the latest registered users
 
-### Página da Redação
-- :white_check_mark: Título da redação
-- :white_check_mark: Conteúdo da redação
-- :white_check_mark: Autor da redação
-- :white_circle: Data de criação da redação
+### EssayPage
+- :white_check_mark: Essay/composition title
+- :white_check_mark: Essay/composition content
+- :white_check_mark: Essay/composition author
+- :white_check_mark: Evaluate the essay/composition
+- :white_check_mark: Comments
+- :white_check_mark: View comments
 
-## :book: Páginas
+## :book: Pages
 
-### Página de Login
+### LoginPage
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/LoginPage.png" />
 	<br />
 </div>
 
-
-Nesta página é possível realizar login para poder ter acesso às funcionalidades da aplicação
-
-### Página de Cadastro
+### JoinUsPage
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/JoinUsPage.png" />
 	<br />
 </div>
 
-
-Nesta página é possível realizar o cadastro (atualmente, apenas com email e senha). Após se cadastrar, o usuário é redirecionado para sua página de usuário, podendo ter acesso às outras páginas da aplicação.
-
-### Página de Usuário
+### UserPage
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/UserPage.png" />
 	<br />
 </div>
 
-
-Nesta página, o usuário pode ver seus dados, como username, avatar, redações destaque e todas as redações, assim como a quantidade de caracteres de cada uma de suas redações.
-
-Se o usuário acessar a página de outro, também poderá ver os mesmos dados do outro, pois não há nenhuma informação secreta ou sensível neste local.
-
-### Página de Nova Redação
+### NewEssayPage
 
 <div align="center">
 	<img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/pages/NewEssayPage.png" />
 	<br />
 </div>
 
-
-Nesta página é possível adicionar novas redações. Existem alguns processos de validação para que, somente ao passar por eles, a redação possa ser enviada.
-
-## :space_invader: Principais Dependências
+## :space_invader: Main dependencies
 - React
 - React Router DOM
 - SASS
 - React Hot Toast
 - Firebase
+- Firebase tools
