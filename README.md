@@ -29,7 +29,7 @@ To activate the project locally, download it and use `yarn start` command with t
 
 The project will be inicialized. Access it at `http://localhost:5000`
 
-## :wrench: planned features
+## :wrench: Planned features
 
 ### LoginPage
 - :white_check_mark: Authentication with e-mail and password
