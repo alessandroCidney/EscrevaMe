@@ -11,9 +11,6 @@ import { Button } from '../../components/Button';
 // React Router DOM
 import { useHistory } from 'react-router-dom';
 
-// React Hot Toast
-import toast from 'react-router-dom';
-
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
 
@@ -28,6 +25,7 @@ export function MainHeader() {
 	const history = useHistory();
 
 	const [search, setSearch] = useState('');
+	const [showSearch, setShowSearch] = useState(false);
 
 	const { emailUser, removeUserContextData } = useEmailAuth();
 
@@ -51,39 +49,54 @@ export function MainHeader() {
 
 	return (
 		<header className="main-header">
-			<div className="logo dont-show-if-mobile">
+
+			<div className={`logo ${emailUser && 'dont-show-if-mobile'}`}>
 				<img onClick={() => history.push('/')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
 			</div>
 
-			<div className="search">
-				<input
-					type="text"
-					placeholder="@username"
-					onChange={event => setSearch(event.target.value)}
-					value={search}
-				/>
-				<Button 
-					className="header-search-button"
-					onClick={searchNow}
-				>
-					<FontAwesomeIcon iconName="fas fa-search" />
-				</Button>
-			</div>
-			
+			{
+				showSearch &&
+					<div className="search">
+						<input
+							type="text"
+							placeholder="@username"
+							onChange={event => setSearch(event.target.value)}
+							value={search}
+						/>
+						<Button 
+							className="header-search-button"
+							onClick={searchNow}
+						>
+							<FontAwesomeIcon iconName="fas fa-search" />
+						</Button>
+					</div>
+			}
+
 			{
 				emailUser &&
 				<nav className="options">
 					<button
-						onClick={() => history.push('/main')}
+						onClick={() => setShowSearch(showSearch ? false : true)}
 					>
-						<FontAwesomeIcon iconName="fas fa-home" />
+						<FontAwesomeIcon iconName="fas fa-search" />
 					</button>
 
-					<button
-						onClick={signOutForEmailMethod}
-					>
-						<FontAwesomeIcon iconName="fas fa-sign-out-alt" />
-					</button>
+					{
+						!showSearch &&
+						<>
+							<button
+								onClick={() => history.push('/main')}
+							>
+								<FontAwesomeIcon iconName="fas fa-home" />
+							</button>
+
+							<button
+								onClick={signOutForEmailMethod}
+							>
+								<FontAwesomeIcon iconName="fas fa-sign-out-alt" />
+							</button>
+						</>
+					}
 
 					<button
 						onClick={() => history.push(`/users/${emailUser.username}`)}

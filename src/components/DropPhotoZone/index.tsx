@@ -13,11 +13,11 @@ import photoImg from '../../assets/images/icons/photo-icon.png';
 type DropPhotoZoneProps = {
 	functionToExecuteOnSubmit: (profilePhoto: File | undefined) => Promise<void>;
 	textForButton: string;
+	buttonDisabled?: boolean;
 }
 
-export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton }: DropPhotoZoneProps) {
+export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton, buttonDisabled=false }: DropPhotoZoneProps) {
 	const [file, setFile] = useState<File>();
-	const [fileURL, setFileURL] = useState();
 
 	const [dragOver, setDragOver] = useState(false);
 	const [showSpan, setShowSpan] = useState(true);
@@ -86,7 +86,9 @@ export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton }: Drop
 	return (
 		<form className="drop-photo-form" onSubmit={event => {
 			event.preventDefault();
-			functionToExecuteOnSubmit(file);
+			if(!buttonDisabled) {
+				functionToExecuteOnSubmit(file);
+			}
 		}}>
 			<div 
 				className={`drop-zone ${dragOver && 'dragover'}`}
@@ -131,7 +133,7 @@ export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton }: Drop
 					
 				}} />
 			</div>
-			<Button type="submit">{textForButton}</Button>
+			<Button type="submit" disabled={buttonDisabled}>{textForButton}</Button>
 		</form>
 	);
 }

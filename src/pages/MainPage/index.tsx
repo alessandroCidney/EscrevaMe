@@ -1,6 +1,5 @@
 // Components
 import { MainHeader } from '../../components/MainHeader';
-import { MainFooter } from '../../components/MainFooter';
 import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
 
 // React
@@ -14,6 +13,9 @@ import { useEmailAuth } from '../../hooks/useEmailAuth';
 
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
+
+// Util
+import { reduceTextWithThreePoints } from '../../util/reduceTextWithThreePoints';
 
 // SASS
 import './styles.scss';
@@ -121,12 +123,12 @@ export function MainPage() {
 										/>
 									</div>
 									<div className="username">
-										@{essay.author}
+										@{essay.author} postou uma nova redação
 									</div>
 								</div>
 
 								<div className="essay-data">
-									<p className="title">{essay.essay_title}</p>
+									<p className="title">{reduceTextWithThreePoints(essay.essay_title, 40)}</p>
 									<div>
 										
 										<p><FontAwesomeIcon iconName="fas fa-feather" />{essay.essay_content.length}</p> 

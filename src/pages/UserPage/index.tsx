@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
 
 // React Router DOM
 import { useHistory } from 'react-router-dom';
@@ -37,7 +37,7 @@ type UserPageParams = {
 export function UserPage() {
 	const history = useHistory();
 
-	const { emailUser,  addUserDataToContext } = useEmailAuth();
+	const { emailUser } = useEmailAuth();
 
 	const [userPhotoURL, setUserPhotoURL] = useState('')
 	const [essaysData, setEssaysData] = useState([] as Record<string, string>[]);

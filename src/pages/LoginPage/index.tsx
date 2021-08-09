@@ -27,7 +27,6 @@ import { useState, FormEvent } from 'react';
 // Images
 import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
 import googleIconImg from '../../assets/images/icons/google-icon.png';
-import facebookIconImg from '../../assets/images/icons/facebook-icon.png';
 
 export function LoginPage() {
   // Aciona o useHistory do React Router DOM

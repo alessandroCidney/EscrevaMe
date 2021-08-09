@@ -83,7 +83,7 @@ export function EssayPage() {
 					const newArr = [] as string[];
 
 					essayLikes.forEach(author => {
-						if(author != emailUser.username) newArr.push(author);
+						if(author !== emailUser.username) newArr.push(author);
 					});
 
 					await essayRef.update({

@@ -32,7 +32,7 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 export function JoinUsPage() {
 	const history = useHistory();
 
-	const { emailUser,  addUserDataToContext } = useEmailAuth();
+	const { emailUser } = useEmailAuth();
 
 	if(emailUser) {
 	    history.push(`/main`);
@@ -47,6 +47,8 @@ export function JoinUsPage() {
 	const [joinUsername, setJoinUsername] = useState('');
 	const [joinEmail, setJoinEmail] = useState('');
 	const [joinPassword, setJoinPassword] = useState('');
+
+	const [checkboxValue, setCheckboxValue] = useState(false);
 
 	function testInputValues() {
 
@@ -103,8 +105,6 @@ export function JoinUsPage() {
 			}
 		}
 
-		
-
 		const usersInDatabase = [] as Record<string, string>[];
 		const emailsInDatabase = [] as Record<string, string>[];
 
@@ -133,12 +133,7 @@ export function JoinUsPage() {
 
 				// Detectando se o email já foi utilizado por outro usuário
 				usersColection
-				.where("email", "==", 
-					joinEmail
-					.normalize('NFD')
-					.replace(/[\u0300-\u036f]/g, "")
-					.replace(/[^ a-zA-Z0-9]/g, '')
-					.toLowerCase())
+				.where("email", "==", joinEmail.trim())
 				.get()
 					.then(emailsQuerySnapshot => {
 						emailsQuerySnapshot.forEach(emailsDoc => {
@@ -256,7 +251,16 @@ export function JoinUsPage() {
 								<DropPhotoZone 
 									functionToExecuteOnSubmit={joinUs}
 									textForButton="Cadastrar"
+									buttonDisabled={!checkboxValue}
 								/>
+
+								<div className="policies-checkbox">
+									<input type="checkbox" id="accept-checkbox" onClick={() => setCheckboxValue(checkboxValue ? false : true)} checked={checkboxValue} />
+									<label htmlFor="accept-checkbox">
+										Li e concordo com a <Link to="/privacypolicy">Política de privacidade </Link>
+										 e com a <Link to="/datapolicy">Política de tratamento e segurança de dados</Link>.
+									</label>
+								</div>
 							</>
 					}
 

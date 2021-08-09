@@ -1,3 +1,6 @@
+// React Router DOM
+import { Link } from 'react-router-dom';
+
 // SASS
 import './styles.scss';
 
@@ -9,7 +12,7 @@ export function MainFooter() {
 				<h6>Sobre o Projeto</h6>
 				<ul>
 					<li><a target="_blank" href="https://github.com/alessandroCidney/EscrevaMe">GitHub</a></li>
-					<li><a href="https://github.com/alessandroCidney/EscrevaMe">Guia</a></li>
+					<li><a target="_blank" href="https://github.com/alessandroCidney/EscrevaMe">Guia</a></li>
 				</ul>
 			</div>
 
@@ -20,12 +23,11 @@ export function MainFooter() {
 					<li><a target="_blank" href="https://www.linkedin.com/in/acidn">LinkedIn</a></li>
 				</ul>
 			</div>
-
 			<div className="footer-list">
 				<h6>Importante</h6>
 				<ul>
-					<li><a href="#">Política de Privacidade</a></li>
-					<li><a href="#">Política de tratamento e segurança de dados</a></li>
+					<li><Link to="/privacypolicy">Política de Privacidade</Link></li>
+					<li><Link to="/datapolicy">Política de tratamento e segurança de dados</Link></li>
 				</ul>
 			</div>
 

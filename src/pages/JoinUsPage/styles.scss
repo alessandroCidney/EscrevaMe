@@ -9,6 +9,16 @@ div.join-us {
 		width: 50%;
 		height: 100%;
 
+		.policies-checkbox {
+			width: 70%;
+
+			text-align: center;
+
+			> input {
+				margin-right: 10px;
+			}
+		}
+
 		> div {
 			display: flex;
 			align-items: center;

@@ -1,5 +1,5 @@
 // React
-import { useState, CSSProperties } from 'react';
+import { useState } from 'react';
 
 // React Router DOM
 import { useHistory } from 'react-router-dom';
@@ -37,7 +37,7 @@ export function NewEssayPage() {
 	const [essayTitle, setEssayTitle] = useState('');
 	const [essayContent, setEssayContent] = useState('');
 
-	const { emailUser, addUserDataToContext } = useEmailAuth();
+	const { emailUser } = useEmailAuth();
 
 	function validateValues() {
 		if(essayTitle.trim() === '' || essayContent.trim() === '') {
@@ -72,7 +72,7 @@ export function NewEssayPage() {
 			return false;
 		}
 
-		if(essayTitle.trim().length > 42 || essayContent.trim().length > 2900) {
+		if(essayTitle.trim().length > 52 || essayContent.trim().length > 2900) {
 			return false;
 		}
 

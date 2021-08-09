@@ -13,6 +13,9 @@ import { FontAwesomeIcon } from '../FontAwesomeIcon';
 // React Router DOM
 import { useHistory } from 'react-router-dom';
 
+// Util
+import { reduceTextWithThreePoints } from '../../util/reduceTextWithThreePoints';
+
 // Types
 type EssayProps = {
 	title?: string;
@@ -40,7 +43,7 @@ export function EssayOfUserPage({ formated_title="", title="Sem título", highli
 				});
 
 				essayData.forEach(essay => {
-					if(essay.formated_essay_title == formated_title) {
+					if(essay.formated_essay_title === formated_title) {
 						setCharactersNumber(essay.essay_content.length);
 					}
 				})
@@ -55,7 +58,7 @@ export function EssayOfUserPage({ formated_title="", title="Sem título", highli
 
 	return (
 		<button className={`essay-of-user-page ${highlight && 'highlight'}`} onClick={redirectToEssay}>
-			<h3>{title}</h3>
+			<h3>{reduceTextWithThreePoints(title, 35)}</h3>
 			<div className="image">
 				{ icon==="quote" ? (
 					<FontAwesomeIcon iconName="fas fa-quote-left" />
