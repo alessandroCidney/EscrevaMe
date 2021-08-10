@@ -24,6 +24,7 @@ import { firebase } from '../../services/firebaseService/firebase';
 
 // Util
 import { validateEmail } from '../../util/validateEmail';
+import { testUsernameEmailAndPasswordInputValues } from '../../util/testUsernameEmailAndPasswordInputValues';
 
 // Images
 import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
@@ -50,31 +51,10 @@ export function JoinUsPage() {
 
 	const [checkboxValue, setCheckboxValue] = useState(false);
 
-	function testInputValues() {
-
-		if(!joinUsername || joinUsername.trim()==='' || !joinEmail || joinEmail.trim()==='' || !joinPassword || joinPassword.trim()==='' || joinPassword.trim().length<6) {
-			return false;
-		}
-
-		if(joinUsername.trim().split(" ").length > 1) {
-			return false;
-		}
-
-		if(joinUsername.trim().length > 16) {
-			return false;
-		}
-
-		if(!validateEmail(joinEmail)) {
-			return false;
-		}
-
-		return true;
-	}
-
 	// Essa função é enviada pelas props do componente DropPhotoZone
 	// e ele a aciona quando se clica no botão do componente
 
-	async function joinUs(profilePhoto: File | undefined) {
+	async function joinUsWithEmailAndPassword(profilePhoto: File | undefined) {
 
 		const usersColection = firestore.collection("users");
 
@@ -206,7 +186,7 @@ export function JoinUsPage() {
 							<form onSubmit={event => {
 								event.preventDefault()
 
-								if(testInputValues()) {
+								if(testUsernameEmailAndPasswordInputValues(joinUsername, joinEmail, joinPassword)) {
 									setShowButtons(false);
 						    		setShowInputs(false);
 						    		setShowPhotoZone(true); 
@@ -234,10 +214,10 @@ export function JoinUsPage() {
 								/>
 								<Button
 									type="submit"
-									disabled={((!validateEmail(joinEmail) && joinEmail!=='') || !testInputValues()) ? true : false}
-									onClick={() => { 
-										
-									}}
+									disabled={
+										((!validateEmail(joinEmail) && joinEmail!=='') || 
+											!testUsernameEmailAndPasswordInputValues(joinUsername, joinEmail, joinPassword)
+										) ? true : false}
 								>
 									Próximo
 								</Button>
@@ -249,7 +229,7 @@ export function JoinUsPage() {
 							<>
 								<h1>Envie uma foto de perfil</h1>
 								<DropPhotoZone 
-									functionToExecuteOnSubmit={joinUs}
+									functionToExecuteOnSubmit={joinUsWithEmailAndPassword}
 									textForButton="Cadastrar"
 									buttonDisabled={!checkboxValue}
 								/>
