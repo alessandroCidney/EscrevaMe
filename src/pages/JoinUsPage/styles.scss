@@ -24,6 +24,7 @@ div.join-us {
 			align-items: center;
 			justify-content: center;
 			flex-direction: column;
+			flex-wrap: wrap;
 			gap: 20px;
 
 			width: 100%;
@@ -116,6 +117,8 @@ div.join-us {
 				align-items: center;
 				justify-content: center;
 				gap: 5px;
+				
+				text-align: center;
 
 				color: #737380;
 
@@ -124,6 +127,11 @@ div.join-us {
 				a {
 					color: #1e017d;
 				}
+			}
+
+			> hr {
+				width: 334px;
+				margin-bottom: 20px;
 			}
 		}
 	}

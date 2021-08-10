@@ -84,6 +84,8 @@ div.login {
 				align-items: center;
 				justify-content: center;
 				gap: 5px;
+				
+				text-align: center;
 
 				color: #737380;
 
@@ -92,6 +94,11 @@ div.login {
 				a {
 					color: #1e017d;
 				}
+			}
+
+			> hr {
+				width: 334px;
+				margin-bottom: 20px;
 			}
 		}
 	}

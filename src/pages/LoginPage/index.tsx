@@ -126,19 +126,11 @@ export function LoginPage() {
           <img src={logoWithNameImg} alt="Logo do EscrevaMe" />
           { !loginWithEmail ? (
             <>  
-              <Button className="red" disabled>
-                <div>
-                  <img src={googleIconImg} alt="Logo do Google" />
-                </div>
-                <span>Continuar com o Google</span>
-              </Button>
-
-              <Button className="blue" disabled>
-                <div>
-                  <FontAwesomeIcon iconName="fab fa-twitter" />
-                </div>
-                <span>Continuar com o Twitter</span>
-              </Button>
+              <span className="title-span">
+                Faça login para ter acesso à plataforma
+              </span>
+              
+              <hr />
 
               <Button
                 onClick={toggleButtonsWhenDoLoginWithEmailAndPassword}

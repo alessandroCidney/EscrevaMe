@@ -33,13 +33,9 @@ O projeto será inicializado e ficará disponível em `http://localhost:5000`.
 
 ### LoginPage
 - :white_check_mark: Autenticação por email e senha 
-- :white_circle: Autenticação com o Google
-- :white_circle: Autenticação com o Twitter
 
 ### JoinUsPage
 - :white_check_mark: Cadastro com email e senha
-- :white_circle: Cadastro com o Google
-- :white_circle: Cadastro com o Twitter
 - :white_check_mark: Envio de foto de perfil
 - :white_circle: Enviar descrição do perfil
 

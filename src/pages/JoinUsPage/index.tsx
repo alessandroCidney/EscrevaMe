@@ -152,20 +152,8 @@ export function JoinUsPage() {
 
 					{ showButtons && 
 						<>
-							<Button className="red" disabled>
-				                <div>
-				                  <img src={googleIconImg} alt="Logo do Google" />
-				              	</div>
-				              	<span>Continuar com o Google</span>
-				            </Button>
-
-				            <Button className="blue" disabled>
-				                <div>
-				                  <FontAwesomeIcon iconName="fab fa-twitter" />
-				                </div>
-				              <span>Continuar com o Twitter</span>
-				            </Button>
-
+							<span className="title-span">Junte-se a nós e obtenha acesso à plataforma</span>
+							<hr />
 				            <Button
 				            	onClick={() => {
 				            		setShowButtons(false);

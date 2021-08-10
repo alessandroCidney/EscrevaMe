@@ -33,13 +33,9 @@ The project will be inicialized. Access it at `http://localhost:5000`
 
 ### LoginPage
 - :white_check_mark: Authentication with e-mail and password
-- :white_circle: Authentication with Google
-- :white_circle: Authentication with Twitter
 
 ### JoinUsPage
 - :white_check_mark: Sign Up with e-mail and password
-- :white_circle: Sign Up with Google
-- :white_circle: Sign Up with Twitter
 - :white_check_mark: Upload profile photo
 - :white_circle: Upload description
 
