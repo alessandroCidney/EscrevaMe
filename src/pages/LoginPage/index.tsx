@@ -90,30 +90,18 @@ export function LoginPage() {
     
     event.preventDefault();
 
-    // Testando se o usuário está cadastrado
-    usersColection.where("email", "==", emailValue.trim()).get()
-        .then(usersQuerySnapshot => {
-          const userData = [] as Record<string, string>[];
-
-          usersQuerySnapshot.forEach(usersDoc => {
-            userData.push(usersDoc.data());
-          });
-
-          if(userData[0]) {
-            firebase.auth().signInWithEmailAndPassword(emailValue.trim(), passwordValue.trim())
-              .then(() => {
-                addUserDataToContext(userData[0].username, userData[0].avatar);
-                
-                history.push(`/main`);
-              })
-              .catch((err) => {
-                console.log(err)
-                toast.error("Não foi possível conectar o usuário");
-              })
-          } else {
-            toast.error("Dados incorretos!");
-          }
-        })
+    firebase.auth().signInWithEmailAndPassword(emailValue.trim(), passwordValue.trim())
+    .then(({ user }) => {
+      if(user && user.uid && user.displayName && user.photoURL) {
+        addUserDataToContext(user.uid, user.displayName, user.photoURL);  
+      }
+      
+      history.push(`/main`);
+    })
+    .catch((err) => {
+      console.log(err)
+      toast.error("Não foi possível conectar o usuário");
+    })
   }
 
   return (

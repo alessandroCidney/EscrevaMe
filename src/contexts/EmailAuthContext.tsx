@@ -5,14 +5,14 @@ import { createContext, useEffect, ReactNode, useState } from 'react';
 import { firebase } from '../services/firebaseService/firebase';
 
 type EmailUser = {
+	user_id: string;
 	username: string;
-	avatar: string;
-	user_id?: string;
+	avatar: string | null;
 }
 
 type EmailAuthContextType = {
 	emailUser: EmailUser | undefined;
-	addUserDataToContext: (username: string, avatar: string) => void;
+	addUserDataToContext: (user_id: string, username: string, avatar: string) => void;
 	removeUserContextData: () => void;
 }
 
@@ -26,33 +26,19 @@ export function EmailAuthContextProvider(props: EmailAuthContextProviderProps) {
 
 	const [emailUser, setEmailUser] = useState<EmailUser>();
 
-	const firestore = firebase.firestore();
-	const usersColection = firestore.collection("users");
-
 	useEffect(() => {
 		const unsubscribe = firebase.auth().onAuthStateChanged(user => {
 			if(user) {
-				const { email } = user;
+				const { displayName, uid, photoURL } = user;
 
-				if(!email) {
+				if(!displayName || !uid || !photoURL) {
 					throw new Error("Missing information from account");
 				} else {
-					console.log("Informações recebidas", email)
-					usersColection.where("email", "==", email).get()
-					.then(usersQuerySnapshot => {
 
-						const userData = [] as Record<string, string>[];
-
-						usersQuerySnapshot.forEach(usersDoc => {
-							userData.push(usersDoc.data());
-						})
-
-						if(userData[0]) {
-							setEmailUser({
-								username: userData[0].username,
-								avatar: userData[0].avatar
-							})
-						}
+					setEmailUser({
+						user_id: uid,
+						username: displayName,
+						avatar: photoURL 
 					})
 				}	
 			}
@@ -63,11 +49,12 @@ export function EmailAuthContextProvider(props: EmailAuthContextProviderProps) {
 		}
 	}, []);
 
-	function addUserDataToContext(username: string, avatar: string) {
+	function addUserDataToContext(user_id: string, username: string, avatar: string) {
 		setEmailUser({
+			user_id: user_id,
 			username: username,
-			avatar: avatar
-		});
+			avatar: avatar 
+		})
 	}
 
 	function removeUserContextData() {
