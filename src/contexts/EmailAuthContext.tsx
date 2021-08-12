@@ -7,6 +7,7 @@ import { firebase } from '../services/firebaseService/firebase';
 type EmailUser = {
 	username: string;
 	avatar: string;
+	user_id: string;
 }
 
 type EmailAuthContextType = {
