@@ -58,6 +58,9 @@ export function JoinUsPage() {
 
 		async function registerUser(photoURL: string) {
 
+			// É necessário ter uma coleção de usuários para as páginas de usuário (UserPages)
+			const usersColection = firestore.collection("users");
+
 			try {
 				await firebase.auth().createUserWithEmailAndPassword(joinEmail.trim(), joinPassword.trim());	
 				
@@ -70,8 +73,6 @@ export function JoinUsPage() {
 						  photoURL: photoURL
 						});
 
-						console.log(currentUser)
-
 						let photoURLString;
 
 						if(currentUser.photoURL === null) {
@@ -82,20 +83,28 @@ export function JoinUsPage() {
 
 						if(
 							currentUser &&
-							currentUser.uid &&
 							currentUser.displayName 
 						) {
-							addUserDataToContext(currentUser.uid, currentUser.displayName, photoURLString);
+							
+							const { id } = await usersColection.add({
+								avatar: photoURLString,
+								username: currentUser.displayName,
+								email: currentUser.email
+							});
+
+							addUserDataToContext(id, currentUser.displayName, photoURLString);
 						}
 
 						history.push('/login');
 					}
-				} catch {
-					toast.error("Não foi possível cadastrar o usuário");
+				} catch(err) {
+					toast.error("Houve um erro durante o cadastro");
+					console.log(err);
 				}
 
-			} catch {
+			} catch(err) {
 				toast.error("Não foi possível cadastrar o usuário");
+				console.log(err);
 			}
 
 		}

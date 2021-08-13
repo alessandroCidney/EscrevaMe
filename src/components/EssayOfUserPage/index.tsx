@@ -20,28 +20,55 @@ import { reduceTextWithThreePoints } from '../../util/reduceTextWithThreePoints'
 type EssayProps = {
 	title?: string;
 	formated_title?: string;
-	author?: string | undefined;
+	author_id?: string | undefined;
 	highlight?: boolean;
 	icon?: string;
 };
 
-export function EssayOfUserPage({ formated_title="", title="Sem título", highlight=false, icon="text", author=undefined }: EssayProps) {
+type CommentType = {
+	comment_author: string;
+	comment_author_avatar: string;
+	comment_content: string;
+	created_at: number;
+}
+
+type EssayType = {
+	essay_title: string;
+	formated_essay_title: string;
+	essay_content: string;
+	author_username: string;
+	author_id: string;
+	author_avatar: string;
+	created_at: number;
+	likes: string[];
+	comments: CommentType[];
+}
+
+export function EssayOfUserPage({ formated_title="Sem título", title="Sem título", highlight=false, icon="text", author_id=undefined }: EssayProps) {
+	// Usando o hook useHistory
 	const history = useHistory();
 
+	// Estados para o número de caracteres da redação
 	const [charactersNumber, setCharactersNumber] = useState(0);
 
+	// Iniciando o firestore e captando a coleção "essays"
 	const firestore = firebase.firestore();
 	const essaysCollection = firestore.collection("essays");
 
-	let essayData = [] as Record<string, string>[];
+	let essayData = [] as EssayType[];
 
-	if(author) {
-		essaysCollection.where("author", "==", author).get()
+	if(author_id) {
+		// Pegando todas as redações do usuário
+		essaysCollection.where("author_id", "==", author_id).get()
 			.then((essaysQuerySnapshot => {
+
+				// Inserindo os dados de cada redação no array
 				essaysQuerySnapshot.forEach(essaysDoc => {
-					essayData.push(essaysDoc.data());
+					let data = essaysDoc.data() as EssayType;
+					essayData.push(data);
 				});
 
+				// Pegando o número 
 				essayData.forEach(essay => {
 					if(essay.formated_essay_title === formated_title) {
 						setCharactersNumber(essay.essay_content.length);
@@ -49,10 +76,10 @@ export function EssayOfUserPage({ formated_title="", title="Sem título", highli
 				})
 			}));
 	}
-
+	
 	function redirectToEssay() {
-		if(author) {
-			history.push(`/essays/${author}/${formated_title}`);
+		if(author_id) {
+			history.push(`/essays/${author_id}/${formated_title}`);
 		}
 	}
 

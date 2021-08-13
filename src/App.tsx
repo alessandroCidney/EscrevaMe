@@ -31,9 +31,9 @@ function App() {
             <Route path="/login" exact component={LoginPage} />
             <Route path="/joinus" exact component={JoinUsPage} />
             <Route path="/main" exact component={MainPage} />
-            <Route path="/users/:username" component={UserPage} />
+            <Route path="/users/:id" component={UserPage} />
             <Route path="/essays/new" exact component={NewEssayPage} />
-            <Route path="/essays/:username/:title" exact component={EssayPage} />
+            <Route path="/essays/:id/:title" exact component={EssayPage} />
             <Route path="/privacypolicy" exact component={PrivacyPolicyPage} />
             <Route path="/datapolicy" exact component={DataPolicyPage} />
             <Route path="/" component={Error404Page} />

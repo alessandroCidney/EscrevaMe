@@ -99,7 +99,7 @@ export function MainHeader() {
 					}
 
 					<button
-						onClick={() => history.push(`/users/${emailUser.username}`)}
+						onClick={() => history.push(`/users/${emailUser.user_id}`)}
 					>
 						<img src={emailUser.avatar ? emailUser.avatar : profilePhotoImg} alt={`Foto de perfil${emailUser.username? ` de ${emailUser.username}` : ''}`} />
 					</button>

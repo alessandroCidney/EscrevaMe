@@ -27,21 +27,23 @@ type CommentType = {
 	comment_author: string;
 	comment_author_avatar: string;
 	comment_content: string;
-	created_at: Date;
+	created_at: number;
 }
 
 type EssayType = {
 	essay_title: string;
 	formated_essay_title: string;
 	essay_content: string;
-	author: string;
+	author_username: string;
+	author_id: string;
 	author_avatar: string;
-	created_at: Record<string, number>;
+	created_at: number;
 	likes: string[];
 	comments: CommentType[];
 }
 
 type UserType = {
+	id: string;
 	avatar: string;
 	email: string;
 	username: string;
@@ -69,7 +71,7 @@ export function MainPage() {
 					}
 				});
 
-				essaysData.sort((a, b) => b.created_at.seconds - a.created_at.seconds);
+				essaysData.sort((a, b) => b.created_at - a.created_at);
 
 				setEssays(essaysData);
 			});
@@ -82,7 +84,12 @@ export function MainPage() {
 					let data = usersDoc.data() as UserType;
 
 					if(data) {
-						usersData.push(data);
+						usersData.push({
+							id: usersDoc.id,
+							avatar: data.avatar,
+							email: data.email,
+							username: data.username
+						});
 					}
 				});
 
@@ -102,7 +109,7 @@ export function MainPage() {
 						<ul>
 							<li><Link to="/main">Página Principal</Link></li>
 							<li><Link to="/essays/new">Nova Redação</Link></li>
-							<li><Link to={`/users/${emailUser.username}`}>Perfil</Link></li>
+							<li><Link to={`/users/${emailUser.user_id}`}>Perfil</Link></li>
 						</ul>
 					</div>
 				}
@@ -113,7 +120,7 @@ export function MainPage() {
 						essays.map(essay => 
 							<button 
 								className="essay"
-								onClick={() => history.push(`/essays/${essay.author}/${essay.formated_essay_title}`)}
+								onClick={() => history.push(`/essays/${essay.author_id}/${essay.formated_essay_title}`)}
 							>
 								<div className="essay-author">
 									<div className="profile-photo">
@@ -123,7 +130,7 @@ export function MainPage() {
 										/>
 									</div>
 									<div className="username">
-										@{essay.author} postou uma nova redação
+										@{essay.author_username} postou uma nova redação
 									</div>
 								</div>
 
@@ -150,7 +157,7 @@ export function MainPage() {
 							
 								<button 
 									className="user"
-									onClick={event => history.push(`/users/${u.username}`)}
+									onClick={event => history.push(`/users/${u.id}`)}
 								>
 									<div className="profile-photo">
 										<img 

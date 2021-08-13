@@ -39,6 +39,10 @@ div.user-page {
 
 			transform: translateY(-100px);
 
+			> p {
+				text-align: center;
+			}
+
 			> div.profile-photo {
 				width: 200px;
 				height: 200px;

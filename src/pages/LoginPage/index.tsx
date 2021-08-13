@@ -92,8 +92,20 @@ export function LoginPage() {
 
     firebase.auth().signInWithEmailAndPassword(emailValue.trim(), passwordValue.trim())
     .then(({ user }) => {
-      if(user && user.uid && user.displayName && user.photoURL) {
-        addUserDataToContext(user.uid, user.displayName, user.photoURL);  
+
+      if(user && user.displayName && user.photoURL) {
+        usersColection.where("email", "==", emailValue.trim()).get()
+        .then(usersQuerySnapshot => {
+          let id = '';
+
+          usersQuerySnapshot.forEach(usersDoc => {
+            id = usersDoc.id
+          });
+
+          if(user.displayName !== null && user.photoURL !== null) {
+            addUserDataToContext(id, user.displayName, user.photoURL); 
+          } 
+        })
       }
       
       history.push(`/main`);
