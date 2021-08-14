@@ -1,6 +1,9 @@
 # EscrevaMe
 EscrevaMe é uma plataforma onde usuários podem se cadastrar e postar suas redações, interagindo com pessoas de todo o mundo e promovendo a difusão de conhecimentos.
 
+### Veja o projeto funcionando agora!
+- [Clique aqui](https://escrevame-f86c1.web.app/login) para acessar a página de login
+
 <img src="https://github.com/alessandroCidney/EscrevaMe/blob/master/src/assets/images/designs/design.jpg" />
 
 ## :computer: Como funciona?
@@ -28,6 +31,10 @@ Após realizar o login, os usuários são redirecionados para suas respectivas p
 Para ativar o projeto localmente, basta baixá-lo e utilizar o comando `yarn start` na pasta do projeto através do terminal.
 
 O projeto será inicializado e ficará disponível em `http://localhost:5000`. 
+
+
+#### IMPORTANTE
+- É necessário adicionar as credenciais do Firebase no arquivo `firebase.ts` localizado em `src/services/firebaseService/firebase.ts` para rodar o projeto.
 
 ## :wrench: Funcionalidades planejadas
 
