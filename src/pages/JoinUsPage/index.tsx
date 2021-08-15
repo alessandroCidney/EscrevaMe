@@ -54,6 +54,10 @@ export function JoinUsPage() {
 	// Essa função é enviada pelas props do componente DropPhotoZone
 	// e ele a aciona quando se clica no botão do componente
 
+	async function joinUsWithGoogle(profilePhoto: File | undefined) {
+		
+	}
+
 	async function joinUsWithEmailAndPassword(profilePhoto: File | undefined) {
 
 		async function registerUser(photoURL: string) {
@@ -137,6 +141,16 @@ export function JoinUsPage() {
 						<>
 							<span className="title-span">Junte-se a nós e obtenha acesso à plataforma</span>
 							<hr />
+
+							<Button
+								className="red"
+							>
+								<div>
+									<FontAwesomeIcon iconName="fab fa-google" />
+								</div>
+								<span>Continuar com o Google</span>
+							</Button>
+
 				            <Button
 				            	onClick={() => {
 				            		setShowButtons(false);

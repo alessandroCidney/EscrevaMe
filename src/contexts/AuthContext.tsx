@@ -12,6 +12,7 @@ type User = {
 
 type AuthContextType = {
 	authUser: User | undefined;
+	signInWithGoogle: () => Promise<void>;
 	addUserDataToContext: (user_id: string, username: string | null, avatar: string | null) => void;
 	removeUserContextData: () => void;
 }
@@ -43,7 +44,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 
 					usersColection.where("email", "==", email).get()
 						.then(usersQuerySnapshot => {
-							let id = ''
+							let id = '';
 
 							usersQuerySnapshot.forEach(usersDoc => {
 								id = usersDoc.id;
@@ -54,9 +55,9 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 									user_id: id,
 									username: displayName,
 									avatar: photoURL 
-								})
+								});
 							}
-						})
+						});
 				}	
 			}
 		});
@@ -65,6 +66,60 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 			unsubscribe();
 		}
 	}, []);
+
+	async function signInWithGoogle() {
+
+		// Fazendo login com o Google
+		const googleProvider = new firebase.auth.GoogleAuthProvider();
+		const result = await firebase.auth().signInWithPopup(googleProvider);
+
+		if(result.user) {
+
+			// As credenciais são obtidas
+			const { displayName, photoURL, email } = result.user;
+
+			// Testando se elas estão preenchidas
+			if(!displayName || !photoURL || !email) {
+				throw new Error('Missing information from Google account');
+			}
+
+			const usersColection = firebase.firestore().collection("users");
+
+			// Checando na coleção de usuários se o usuário já existe
+			const usersQuerySnapshot = await usersColection.where("email", "==", email).get();
+
+			// Se não existir, ele é adicionado e recuperamos o ID do documento
+			if(usersQuerySnapshot.empty) {
+				const { id } = await usersColection.add({
+					avatar: photoURL,
+					username: displayName,
+					email: email
+				});
+
+				setAuthUser({
+					user_id: id,
+					username: displayName,
+					avatar: photoURL
+				});
+			} else {
+
+				// Se existir, recuperamos diretamente o ID do documento
+				let userDocumentID = '';
+
+				usersQuerySnapshot.forEach(usersDoc => {
+					userDocumentID = usersDoc.id;
+				});
+
+				if(userDocumentID !== '') {
+					setAuthUser({
+						user_id: userDocumentID,
+						username: displayName,
+						avatar: photoURL 
+					});
+				}
+			}
+		}
+	}
 
 	function addUserDataToContext(user_id: string, username: string | null, avatar: string | null) {
 		// Função para adicionar as informações do usuário ao contexto
@@ -80,7 +135,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 	}
 
 	return (
-		<AuthContext.Provider value={{authUser, addUserDataToContext, removeUserContextData}}>
+		<AuthContext.Provider value={{authUser, signInWithGoogle, addUserDataToContext, removeUserContextData}}>
 			{props.children}
 		</AuthContext.Provider>	
 	)
