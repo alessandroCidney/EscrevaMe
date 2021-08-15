@@ -146,7 +146,10 @@ export function JoinUsPage() {
 								className="red"
 							>
 								<div>
-									<FontAwesomeIcon iconName="fab fa-google" />
+									<FontAwesomeIcon 
+										noChange 
+										iconName="fab fa-google" 
+									/>
 								</div>
 								<span>Continuar com o Google</span>
 							</Button>
@@ -159,7 +162,10 @@ export function JoinUsPage() {
 				            	}}
 				            >
 				              <div>
-				                <FontAwesomeIcon iconName="fas fa-envelope" />
+				                <FontAwesomeIcon 
+				                	noChange 
+				                	iconName="fas fa-envelope" 
+				                />
 				              </div>
 				              <span>Cadastre-se com email</span>
 				            </Button>

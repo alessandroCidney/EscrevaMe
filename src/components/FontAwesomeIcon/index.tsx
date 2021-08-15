@@ -5,9 +5,15 @@ type FontAwesomeIconProps = {
 	iconName: string;
 	onHoverTransformToSolidVersion?: boolean;
 	alwaysSolid?: boolean;
+	noChange?: boolean
 }
 
-export function FontAwesomeIcon({iconName, onHoverTransformToSolidVersion=false, alwaysSolid=false }: FontAwesomeIconProps) {
+export function FontAwesomeIcon({
+	iconName, 
+	onHoverTransformToSolidVersion=false, 
+	alwaysSolid=false,
+	noChange=false
+}: FontAwesomeIconProps) {
 	const [solid, setSolid] = useState(false);
 
 	function transformToSolidVersion() {
@@ -20,7 +26,7 @@ export function FontAwesomeIcon({iconName, onHoverTransformToSolidVersion=false,
 
 	return (
 		<i 
-			className={!solid && !alwaysSolid ? iconName : `fas ${iconName.split(" ")[1]}`} 
+			className={!solid && !alwaysSolid || noChange ? iconName : `fas ${iconName.split(" ")[1]}`} 
 			
 			onMouseOver={() => {
 				if(!alwaysSolid) {
