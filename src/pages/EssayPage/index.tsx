@@ -14,7 +14,7 @@ import { firebase } from '../../services/firebaseService/firebase';
 import './styles.scss';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { useEssay } from '../../hooks/useEssay';
 
 // Components
@@ -56,7 +56,7 @@ export function EssayPage() {
 	const id = params.id;
 	const essayFormatedTitle = params.title;
 
-	const { emailUser } = useEmailAuth();
+	const { authUser } = useAuth();
 	const { essay } = useEssay(id, essayFormatedTitle, update);
 
 	async function handleLikeQuestion(id: string, essayLikes: string[]) {
@@ -65,13 +65,13 @@ export function EssayPage() {
 			essayLikes = [];
 		}
 
-		if(emailUser && essay) {
+		if(authUser && essay) {
 			const essayRef = essaysCollection.doc(id);
 
-			if(essayLikes.indexOf(emailUser.user_id) === -1) {
+			if(essayLikes.indexOf(authUser.user_id) === -1) {
 
 				if(typeof(essay.likes) != "string") {
-					const newLikes = [...essayLikes, emailUser.user_id];
+					const newLikes = [...essayLikes, authUser.user_id];
 
 					await essayRef.update({
 						likes: newLikes
@@ -83,7 +83,7 @@ export function EssayPage() {
 					const newArr = [] as string[];
 
 					essayLikes.forEach(author => {
-						if(author !== emailUser.user_id) newArr.push(author);
+						if(author !== authUser.user_id) newArr.push(author);
 					});
 
 					await essayRef.update({
@@ -130,7 +130,7 @@ export function EssayPage() {
 				return;
 			}
 
-			if(!emailUser) {
+			if(!authUser) {
 				toast.error("Você precisa fazer login para comentar");
 				return;
 			}
@@ -138,9 +138,9 @@ export function EssayPage() {
 			const essayRef = essaysCollection.doc(essay.id);
 
 			const newComment = {
-				comment_author_id: emailUser.user_id,
-				comment_author: emailUser.username,
-				comment_author_avatar: emailUser.avatar,
+				comment_author_id: authUser.user_id,
+				comment_author: authUser.username,
+				comment_author_avatar: authUser.avatar,
 				comment_content: commentText,
 				created_at: new Date()
 			};
@@ -186,7 +186,7 @@ export function EssayPage() {
 			return true;
 		}
 
-		if(!emailUser) {
+		if(!authUser) {
 			toast.error("Você precisa fazer login para comentar");
 			return;
 		} else {
@@ -209,15 +209,15 @@ export function EssayPage() {
 	}
 
 	async function deleteEssay() {
-		if(emailUser && essay) {
-			if(emailUser.user_id === essay.author_id) {
+		if(authUser && essay) {
+			if(authUser.user_id === essay.author_id) {
 				let essayRef = essaysCollection.doc(essay.id);
 
 				await essayRef.delete();
 
 				toast.success("Redação removida com sucesso");
 
-				history.push(`/users/${emailUser.user_id}`);
+				history.push(`/users/${authUser.user_id}`);
 			}
 		}
 	}
@@ -264,7 +264,7 @@ export function EssayPage() {
 
 				<div className="user-actions">
 					{
-						(emailUser 
+						(authUser 
 							&& essay.essay_title 
 							&& typeof(essay.essay_title)=="string" 
 							&& essay.essay_title.trim().length > 2) 
@@ -274,7 +274,7 @@ export function EssayPage() {
 								onClick={() => handleLikeQuestion(essay.id, essay.likes)}
 							>
 								<FontAwesomeIcon 
-									alwaysSolid={emailUser && emailUser.username !== null && essay.likes && essay.likes.indexOf(emailUser.user_id) !== -1 ? true : false} 
+									alwaysSolid={authUser && authUser.username !== null && essay.likes && essay.likes.indexOf(authUser.user_id) !== -1 ? true : false} 
 									onHoverTransformToSolidVersion 
 									iconName="far fa-heart" 
 								/>
@@ -296,7 +296,7 @@ export function EssayPage() {
 							</button>
 
 							{
-								(emailUser.user_id === essay.author_id) &&
+								(authUser.user_id === essay.author_id) &&
 								<button
 									onClick={deleteEssay}
 								>

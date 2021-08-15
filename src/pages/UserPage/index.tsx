@@ -24,8 +24,7 @@ import { useParams } from 'react-router-dom';
 import { firebase } from '../../services/firebaseService/firebase';
 
 // Hooks
-// import { useGoogleAuth } from '../../hooks/useGoogleAuth';
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // Images
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
@@ -56,7 +55,7 @@ type EssayType = {
 export function UserPage() {
 	const history = useHistory();
 
-	const { emailUser } = useEmailAuth();
+	const { authUser } = useAuth();
 
 	const [userPhotoURL, setUserPhotoURL] = useState('')
 	const [essaysData, setEssaysData] = useState([] as Record<string, string>[]);
@@ -129,7 +128,7 @@ export function UserPage() {
 					<p>Olá! Sou um usuário da plataforma EscrevaMe</p>
 					
 					{
-						(emailUser && emailUser.user_id===paramsUsernameID) &&
+						(authUser && authUser.user_id===paramsUsernameID) &&
 						<Button
 							onClick={() => history.push('/essays/new')}
 						>Nova redação</Button>

@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
@@ -51,6 +51,8 @@ type UserType = {
 
 export function MainPage() {
 	const history = useHistory();
+
+	const { authUser } = useAuth();
 
 	const [essays, setEssays] = useState<EssayType[]>([]);
 	const [users, setUsers] = useState<UserType[]>();
@@ -97,19 +99,17 @@ export function MainPage() {
 			})
 	}, []);
 
-	const { emailUser } = useEmailAuth();
-
 	return (
 		<div className="main-page container-column">
 			<MainHeader />
 
 			<div className="all-content-of-main">
-				{emailUser &&
+				{authUser &&
 					<div className="main-menu dont-show-if-mobile">
 						<ul>
 							<li><Link to="/main">Página Principal</Link></li>
 							<li><Link to="/essays/new">Nova Redação</Link></li>
-							<li><Link to={`/users/${emailUser.user_id}`}>Perfil</Link></li>
+							<li><Link to={`/users/${authUser.user_id}`}>Perfil</Link></li>
 						</ul>
 					</div>
 				}
@@ -152,7 +152,7 @@ export function MainPage() {
 
 				<div className="last-users dont-show-if-mobile">
 				{
-					(emailUser && users && users.length>0) ?
+					(authUser && users && users.length>0) ?
 						users.map(u => 
 							
 								<button 

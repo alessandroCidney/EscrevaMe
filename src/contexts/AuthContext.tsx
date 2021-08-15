@@ -4,28 +4,28 @@ import { createContext, useEffect, ReactNode, useState } from 'react';
 // Firebase
 import { firebase } from '../services/firebaseService/firebase';
 
-type EmailUser = {
+type User = {
 	user_id: string;
 	username: string | null;
 	avatar: string | null;
 }
 
-type EmailAuthContextType = {
-	emailUser: EmailUser | undefined;
+type AuthContextType = {
+	authUser: User | undefined;
 	addUserDataToContext: (user_id: string, username: string | null, avatar: string | null) => void;
 	removeUserContextData: () => void;
 }
 
-type EmailAuthContextProviderProps = {
+type AuthContextProviderProps = {
 	children: ReactNode
 }
 
-export const EmailAuthContext = createContext({} as EmailAuthContextType);
+export const AuthContext = createContext({} as AuthContextType);
 
-export function EmailAuthContextProvider(props: EmailAuthContextProviderProps) {
+export function AuthContextProvider(props: AuthContextProviderProps) {
 
 	// Estado que guarda as informações do usuário
-	const [emailUser, setEmailUser] = useState<EmailUser>();
+	const [authUser, setAuthUser] = useState<User>();
 
 	useEffect(() => {
 
@@ -50,7 +50,7 @@ export function EmailAuthContextProvider(props: EmailAuthContextProviderProps) {
 							});
 
 							if(id !== '') {
-								setEmailUser({
+								setAuthUser({
 									user_id: id,
 									username: displayName,
 									avatar: photoURL 
@@ -68,20 +68,20 @@ export function EmailAuthContextProvider(props: EmailAuthContextProviderProps) {
 
 	function addUserDataToContext(user_id: string, username: string | null, avatar: string | null) {
 		// Função para adicionar as informações do usuário ao contexto
-		setEmailUser({
+		setAuthUser({
 			user_id: user_id,
 			username: username,
 			avatar: avatar 
-		})
+		});
 	}
 
 	function removeUserContextData() {
-		setEmailUser(undefined);
+		setAuthUser(undefined);
 	}
 
 	return (
-		<EmailAuthContext.Provider value={{emailUser, addUserDataToContext, removeUserContextData}}>
+		<AuthContext.Provider value={{authUser, addUserDataToContext, removeUserContextData}}>
 			{props.children}
-		</EmailAuthContext.Provider>	
+		</AuthContext.Provider>	
 	)
 }

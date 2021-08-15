@@ -5,7 +5,7 @@ import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // SASS
 import './styles.scss';
@@ -33,9 +33,9 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 export function JoinUsPage() {
 	const history = useHistory();
 
-	const { emailUser, addUserDataToContext } = useEmailAuth();
+	const { authUser, addUserDataToContext } = useAuth();
 
-	if(emailUser) {
+	if(authUser) {
 		history.push(`/main`);
 	}
 

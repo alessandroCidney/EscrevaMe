@@ -16,7 +16,7 @@ import { MainFooter } from '../../components/MainFooter';
 import { Button } from '../../components/Button';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
@@ -56,7 +56,7 @@ export function NewEssayPage() {
 	const [essayTitle, setEssayTitle] = useState('');
 	const [essayContent, setEssayContent] = useState('');
 
-	const { emailUser } = useEmailAuth();
+	const { authUser } = useAuth();
 
 	function validateValues() {
 		if(essayTitle.trim() === '' || essayContent.trim() === '') {
@@ -101,15 +101,15 @@ export function NewEssayPage() {
 	function validateAndUploadValues() {
 
 		async function uploadEssay() {
-			if(emailUser && validateValues()) {
+			if(authUser && validateValues()) {
 
 				await essaysCollection.add({
 					essay_title: essayTitle,
 					formated_essay_title: adaptEssayNameToURL(essayTitle),
 					essay_content: adaptEssayContentToFirestore(essayContent),
-					author_username: emailUser.username,
-					author_id: emailUser.user_id,
-					author_avatar: emailUser.avatar,
+					author_username: authUser.username,
+					author_id: authUser.user_id,
+					author_avatar: authUser.avatar,
 					created_at: (new Date()).getTime(),
 					likes: [],
 					comments: []
@@ -117,11 +117,11 @@ export function NewEssayPage() {
 			}
 		}
 
-		if(emailUser && validateValues()) {
+		if(authUser && validateValues()) {
 
 			let essayData = [] as EssayType[];
 
-			essaysCollection.where("author_id", "==", emailUser.user_id).get()
+			essaysCollection.where("author_id", "==", authUser.user_id).get()
 				.then(essaysQuerySnapshot => {
 					essaysQuerySnapshot.forEach(essaysDoc => {
 						let data = essaysDoc.data() as EssayType;
@@ -137,7 +137,7 @@ export function NewEssayPage() {
 					});
 
 					if(!essayAlreadyExists) {
-						uploadEssay().then(() => history.push(`/essays/${emailUser.user_id}/${adaptEssayNameToURL(essayTitle)}`));
+						uploadEssay().then(() => history.push(`/essays/${authUser.user_id}/${adaptEssayNameToURL(essayTitle)}`));
 					} else {
 						toast.error("Você já possui uma redação com mesmo título");
 					}
@@ -182,13 +182,13 @@ export function NewEssayPage() {
 				</main>
 
 				{
-					emailUser && 
+					authUser && 
 					<aside className="user-items">
 						<div className="user-data">
 							<div className="profile-photo">
-								<img src={emailUser.avatar?emailUser.avatar:profilePhotoImg} alt={`Foto de perfil de ${emailUser.username? ` de ${emailUser.username}` : ''}`} />
+								<img src={authUser.avatar?authUser.avatar:profilePhotoImg} alt={`Foto de perfil de ${authUser.username? ` de ${authUser.username}` : ''}`} />
 							</div>
-							<div className="username"><p>@{emailUser && emailUser.username}</p><h4>Está escrevendo</h4></div>
+							<div className="username"><p>@{authUser && authUser.username}</p><h4>Está escrevendo</h4></div>
 						</div>
 					</aside>
 				}

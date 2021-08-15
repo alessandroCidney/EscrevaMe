@@ -16,7 +16,7 @@ import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { DataPolicyPage } from './pages/DataPolicyPage';
 import { Error404Page } from './pages/Error404Page';
 
-import { EmailAuthContextProvider } from './contexts/EmailAuthContext';
+import { AuthContextProvider } from './contexts/AuthContext';
 
 // SASS
 import './styles/global.scss';
@@ -25,7 +25,7 @@ import './styles/policies.scss';
 function App() {
   return (
     <BrowserRouter>
-        <EmailAuthContextProvider>
+        <AuthContextProvider>
           <Switch>
             <Route path="/" exact component={HomePage} />
             <Route path="/login" exact component={LoginPage} />
@@ -38,7 +38,7 @@ function App() {
             <Route path="/datapolicy" exact component={DataPolicyPage} />
             <Route path="/" component={Error404Page} />
           </Switch>
-        </EmailAuthContextProvider>
+        </AuthContextProvider>
     </BrowserRouter>
   );
 }

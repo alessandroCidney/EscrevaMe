@@ -8,7 +8,7 @@ import './styles.scss';
 import { useHistory } from 'react-router-dom';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // Images
 import pencilGif from '../../assets/images/animations/pencil.gif';
@@ -17,9 +17,9 @@ import computerImg from '../../assets/images/computer/computer.png';
 export function HomePage() {
 	const history = useHistory();
 	history.push('/login');
-	const { emailUser } = useEmailAuth();
+	const { authUser } = useEmailAuth();
 
-	if(emailUser) {
+	if(authUser) {
 		history.push('/main');
 	}
 

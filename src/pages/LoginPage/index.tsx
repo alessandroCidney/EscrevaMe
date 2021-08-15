@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
 import { firebase } from '../../services/firebaseService/firebase';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // Util
 import { validateEmail } from '../../util/validateEmail';
@@ -38,10 +38,10 @@ export function LoginPage() {
   const usersColection = firestore.collection("users");
 
   // Aciona o hook useEmailAuth e importa as variáveis que ele retorna
-  const { emailUser, addUserDataToContext } = useEmailAuth();
+  const { authUser, addUserDataToContext } = useAuth();
 
   // Se o usuário estiver logado, redireciona para a página dele
-  if(emailUser) {
+  if(authUser) {
     history.push(`/main`);
   }
 
