@@ -14,7 +14,7 @@ type CommentType = {
 	comment_author: string;
 	comment_author_avatar: string;
 	comment_content: string;
-	created_at: Date;
+	created_at: number;
 }
 
 type EssayType = {
@@ -22,26 +22,32 @@ type EssayType = {
 	essay_title: string;
 	formated_essay_title: string;
 	essay_content: string;
-	author: string;
+	author_username: string;
+	author_id: string;
 	author_avatar: string;
-	created_at: Date;
+	created_at: number;
 	likes: string[];
 	comments: CommentType[];
 }
 
-export function useEssay(username: string, essayFormatedTitle: string, update: number) {
+export function useEssay(user_id: string, essayFormatedTitle: string, update: number) {
 	const history = useHistory();
 
+	// Estado para os dados da redação
+	// É diferente da estrutura das redações armazenadas no Firebase
 	let [essay, setEssay] = useState<EssayType>();
 
+	// Iniciando o Firebase
 	const firestore = firebase.firestore();
 	const essaysCollection = firestore.collection("essays");
 
-	const essaysAuthorQuery = essaysCollection.where("author", "==", username);
+	// Definindo as consultas que serão realizadas
+	const essaysAuthorQuery = essaysCollection.where("author_id", "==", user_id);
 	const essaysAuthorAndTitleQuery = essaysAuthorQuery.where("formated_essay_title", "==", essayFormatedTitle);
 
 	useEffect(() => {
 
+		// Captando os dados da redação e adicionando no estado "essay"
 		essaysAuthorAndTitleQuery.get()
 		.then(essaysQuerySnapshot => {
 			if(essaysQuerySnapshot.empty) {
@@ -57,7 +63,8 @@ export function useEssay(username: string, essayFormatedTitle: string, update: n
 					essay_title: data.essay_title,
 					formated_essay_title: data.formated_essay_title,
 					essay_content: data.essay_content,
-					author: data.author,
+					author_username: data.author_username,
+					author_id: data.author_id,
 					author_avatar: data.author_avatar,
 					created_at: data.created_at,
 					likes: data.likes,
@@ -67,5 +74,5 @@ export function useEssay(username: string, essayFormatedTitle: string, update: n
 		})
 	}, [update]);
 
-	return { essay }
+	return { essay };
 }

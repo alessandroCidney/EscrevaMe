@@ -16,7 +16,7 @@ import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { DataPolicyPage } from './pages/DataPolicyPage';
 import { Error404Page } from './pages/Error404Page';
 
-import { EmailAuthContextProvider } from './contexts/EmailAuthContext';
+import { AuthContextProvider } from './contexts/AuthContext';
 
 // SASS
 import './styles/global.scss';
@@ -25,20 +25,20 @@ import './styles/policies.scss';
 function App() {
   return (
     <BrowserRouter>
-        <EmailAuthContextProvider>
+        <AuthContextProvider>
           <Switch>
             <Route path="/" exact component={HomePage} />
             <Route path="/login" exact component={LoginPage} />
             <Route path="/joinus" exact component={JoinUsPage} />
             <Route path="/main" exact component={MainPage} />
-            <Route path="/users/:username" component={UserPage} />
+            <Route path="/users/:id" component={UserPage} />
             <Route path="/essays/new" exact component={NewEssayPage} />
-            <Route path="/essays/:username/:title" exact component={EssayPage} />
+            <Route path="/essays/:id/:title" exact component={EssayPage} />
             <Route path="/privacypolicy" exact component={PrivacyPolicyPage} />
             <Route path="/datapolicy" exact component={DataPolicyPage} />
             <Route path="/" component={Error404Page} />
           </Switch>
-        </EmailAuthContextProvider>
+        </AuthContextProvider>
     </BrowserRouter>
   );
 }

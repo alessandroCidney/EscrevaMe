@@ -5,7 +5,7 @@ import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // SASS
 import './styles.scss';
@@ -33,11 +33,11 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 export function JoinUsPage() {
 	const history = useHistory();
 
-	const { emailUser } = useEmailAuth();
+	const { authUser, addUserDataToContext } = useAuth();
 
-	if(emailUser) {
-	    history.push(`/main`);
-	  }
+	if(authUser) {
+		history.push(`/main`);
+	}
 
 	const firestore = firebase.firestore();
 
@@ -56,24 +56,60 @@ export function JoinUsPage() {
 
 	async function joinUsWithEmailAndPassword(profilePhoto: File | undefined) {
 
-		const usersColection = firestore.collection("users");
+		async function registerUser(photoURL: string) {
 
-		async function registerUser(url: string) {
-			await usersColection.add({
-				username: joinUsername.trim(),
-				email: joinEmail.trim(),
-				avatar: url
-			})
+			// É necessário ter uma coleção de usuários para as páginas de usuário (UserPages)
+			const usersColection = firestore.collection("users");
 
-			await firebase.auth().createUserWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
+			try {
+				await firebase.auth().createUserWithEmailAndPassword(joinEmail.trim(), joinPassword.trim());	
+				
+				try {
+					const currentUser = firebase.auth().currentUser;
 
-			// await firebase.auth().signInWithEmailAndPassword(joinEmail.trim(), joinPassword.trim())
-			// 	.then(() => {
-			// 		addUserDataToContext(joinUsername.trim(), url);
-			// 	});
+					if(currentUser) {
+						await currentUser.updateProfile({
+						  displayName: joinUsername.trim(),
+						  photoURL: photoURL
+						});
+
+						let photoURLString;
+
+						if(currentUser.photoURL === null) {
+							photoURLString = '';
+						} else {
+							photoURLString = currentUser.photoURL;
+						}
+
+						if(
+							currentUser &&
+							currentUser.displayName 
+						) {
+							
+							const { id } = await usersColection.add({
+								avatar: photoURLString,
+								username: currentUser.displayName,
+								email: currentUser.email
+							});
+
+							addUserDataToContext(id, currentUser.displayName, photoURLString);
+						}
+
+						history.push('/login');
+					}
+				} catch(err) {
+					toast.error("Houve um erro durante o cadastro");
+					console.log(err);
+				}
+
+			} catch(err) {
+				toast.error("Não foi possível cadastrar o usuário");
+				console.log(err);
+			}
+
 		}
 
-		async function uploadFile() {
+		async function uploadFileAndCallRegisterUser() {
 			// Realiza o upload da imagem para o storage e capta a URL dela
 			if(profilePhoto) {
 				const storageRef = firebase.storage().ref();
@@ -85,60 +121,7 @@ export function JoinUsPage() {
 			}
 		}
 
-		const usersInDatabase = [] as Record<string, string>[];
-		const emailsInDatabase = [] as Record<string, string>[];
-
-		// A seguir, foi necessário utilizar a sintaxe de funções assíncronas com then(),
-		// pois a versão do Firestore que utilizava async e await estava em beta.
-
-		// Detectando se o usuário já existe no banco
-		usersColection
-		.where("username", "==", 
-			joinUsername
-			.normalize('NFD')
-			.replace(/[\u0300-\u036f]/g, "")
-			.replace(/[^ a-zA-Z0-9]/g, '')
-			.toLowerCase())
-		.get()
-			.then(usersQuerySnapshot => {
-				usersQuerySnapshot.forEach(usersDoc => {
-					usersInDatabase.push(usersDoc.data());
-				});
-
-				if(usersInDatabase.length) {
-					// Se o usuário existir, o processo é interrompido
-					toast.error("O usuário já existe!");
-					return;
-				}
-
-				// Detectando se o email já foi utilizado por outro usuário
-				usersColection
-				.where("email", "==", joinEmail.trim())
-				.get()
-					.then(emailsQuerySnapshot => {
-						emailsQuerySnapshot.forEach(emailsDoc => {
-							emailsInDatabase.push(emailsDoc.data());
-						});
-
-						if(emailsInDatabase.length) {
-							// Se o email já foi utilizado, o processo é interrompido
-							toast.error("O usuário já existe!");
-							return;
-						}
-
-						// Se o usuário não existir e se o email não estiver salvo, os dados do usuário
-						// serão armazenados no Cloud Firestore e a imagem será amrazenada no Storage
-						
-						uploadFile().then(() => {
-							toast.success("Usuário criado com sucesso!");
-							history.push(`/login`);
-						})
-						.catch(() => {
-							toast.error("Não foi possível criar o usuário.")
-						});
-					})
-			});
-
+		uploadFileAndCallRegisterUser();
 	}
 
 	return (

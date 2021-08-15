@@ -15,7 +15,7 @@ import { useHistory } from 'react-router-dom';
 import { firebase } from '../../services/firebaseService/firebase';
 
 // Hooks
-import { useEmailAuth } from '../../hooks/useEmailAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 // Images
 import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
@@ -27,7 +27,7 @@ export function MainHeader() {
 	const [search, setSearch] = useState('');
 	const [showSearch, setShowSearch] = useState(false);
 
-	const { emailUser, removeUserContextData } = useEmailAuth();
+	const { authUser, removeUserContextData } = useAuth();
 
 	async function signOutForEmailMethod() {
 		await firebase.auth().signOut();
@@ -50,7 +50,7 @@ export function MainHeader() {
 	return (
 		<header className="main-header">
 
-			<div className={`logo ${emailUser && 'dont-show-if-mobile'}`}>
+			<div className={`logo ${authUser && 'dont-show-if-mobile'}`}>
 				<img onClick={() => history.push('/')} src={logoWithNameImg} alt="Logo do EscrevaMe" />
 			</div>
 
@@ -73,7 +73,7 @@ export function MainHeader() {
 			}
 
 			{
-				emailUser &&
+				authUser &&
 				<nav className="options">
 					<button
 						onClick={() => setShowSearch(showSearch ? false : true)}
@@ -99,9 +99,9 @@ export function MainHeader() {
 					}
 
 					<button
-						onClick={() => history.push(`/users/${emailUser.username}`)}
+						onClick={() => history.push(`/users/${authUser.user_id}`)}
 					>
-						<img src={emailUser.avatar ? emailUser.avatar : profilePhotoImg} alt={`Foto de perfil${emailUser.username? ` de ${emailUser.username}` : ''}`} />
+						<img src={authUser.avatar ? authUser.avatar : profilePhotoImg} alt={`Foto de perfil${authUser.username? ` de ${authUser.username}` : ''}`} />
 					</button>
 				</nav>
 			}
