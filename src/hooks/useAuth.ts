@@ -2,9 +2,9 @@
 import { useContext } from 'react';
 
 // Contexts
-import { AuthContext } from '../contexts/EmailAuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
-export function useEmailAuth() {
+export function useAuth() {
 	const authData = useContext(AuthContext);
 
 	return authData;

@@ -17,7 +17,7 @@ import computerImg from '../../assets/images/computer/computer.png';
 export function HomePage() {
 	const history = useHistory();
 	history.push('/login');
-	const { authUser } = useEmailAuth();
+	const { authUser } = useAuth();
 
 	if(authUser) {
 		history.push('/main');
