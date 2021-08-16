@@ -14,11 +14,7 @@ export function testUsernameEmailAndPasswordInputValues(
 		return false;
 	}
 
-	if(username.trim().split(" ").length > 1) {
-		return false;
-	}
-
-	if(username.trim().length > 16) {
+	if(username.trim().length > 25) {
 		return false;
 	}
 

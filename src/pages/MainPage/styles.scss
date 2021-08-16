@@ -103,6 +103,8 @@ div.main-page {
 			position: relative;
 
 			> button.essay {
+				animation: showFromBottomToUp .2s ease;
+
 				cursor: pointer;
 
 				border: 0;

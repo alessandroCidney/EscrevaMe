@@ -38,7 +38,7 @@ export function LoginPage() {
   const usersColection = firestore.collection("users");
 
   // Aciona o hook useEmailAuth e importa as variáveis que ele retorna
-  const { authUser, addUserDataToContext } = useAuth();
+  const { authUser, signInWithGoogle, addUserDataToContext } = useAuth();
 
   // Se o usuário estiver logado, redireciona para a página dele
   if(authUser) {
@@ -62,27 +62,19 @@ export function LoginPage() {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
 
-  /**
-   * googleUser e signInWithGoogle contém as informações
-   * do context GoogleAuthContext, obtidas através do hook useGoogleAuth.
-   * 
-   * */
-
-  // const { googleUser, signInWithGoogle } = useGoogleAuth();
-
   function toggleButtonsWhenDoLoginWithEmailAndPassword() {
     setLoginWithEmail(!loginWithEmail ? true : false);
   }
 
-  // async function handleLoginWithGoogle() {
-  //   if(!googleUser) {
-  //     await signInWithGoogle();
-  //   }
+  async function handleLoginWithGoogle() {
+    if(!authUser) {
+      await signInWithGoogle();
+    }
 
-  //   if(googleUser) {
-  //     history.push(`/users/${googleUser.id}`);  
-  //   }
-  // }
+    if(authUser) {
+      history.push('/main');  
+    }
+  }
 
   function handleLoginWithEmailAndPassword(event: FormEvent) {
     // Quando esta função é chamada, emailValue e passwordValue já contém os valores de email
@@ -133,10 +125,26 @@ export function LoginPage() {
               <hr />
 
               <Button
+                className="red"
+                onClick={handleLoginWithGoogle}
+              >
+                <div>
+                  <FontAwesomeIcon 
+                    iconName="fab fa-google"
+                    noChange
+                  />
+                </div>
+                <span>Entrar com o Google</span>
+              </Button>
+
+              <Button
                 onClick={toggleButtonsWhenDoLoginWithEmailAndPassword}
               >
                 <div>
-                  <FontAwesomeIcon iconName="fas fa-envelope" />
+                  <FontAwesomeIcon 
+                    iconName="fas fa-envelope" 
+                    noChange
+                  />
                 </div>
                 <span>Entrar com email e senha</span>
               </Button>

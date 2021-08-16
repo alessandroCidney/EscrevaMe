@@ -130,7 +130,7 @@ export function MainPage() {
 										/>
 									</div>
 									<div className="username">
-										@{essay.author_username} postou uma nova redação
+										{essay.author_username} postou uma nova redação
 									</div>
 								</div>
 
@@ -166,7 +166,7 @@ export function MainPage() {
 										/>
 									</div>
 									<div className="username">
-										@{u.username}
+										{u.username}
 									</div>
 								</button>
 							)	

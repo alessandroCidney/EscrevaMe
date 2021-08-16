@@ -124,7 +124,7 @@ export function UserPage() {
 					<div className="profile-photo">
 						<img src={userPhotoURL ? userPhotoURL : profilePhotoImg} alt={`Foto de perfil de ${username}`} />
 					</div>	
-					<h1>@{ username }</h1>
+					<h1>{ username }</h1>
 					<p>Olá! Sou um usuário da plataforma EscrevaMe</p>
 					
 					{

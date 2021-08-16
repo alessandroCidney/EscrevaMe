@@ -258,7 +258,7 @@ export function EssayPage() {
 					</button>
 					<div className="username">
 						<h4>Escrito por</h4>
-						<p>@{essay.author_username}</p>
+						<p>{essay.author_username}</p>
 					</div>
 				</div>
 
@@ -334,7 +334,7 @@ export function EssayPage() {
 										<div className="profile-photo">
 											<img src={c.comment_author_avatar ? c.comment_author_avatar : profilePhotoImg} alt={`Avatar do usuário ${c.comment_author}`} />	
 										</div>
-										<p>@{c.comment_author}</p>
+										<p>{c.comment_author}</p>
 									</div>
 									<div className="comment-content">
 										{c.comment_content}

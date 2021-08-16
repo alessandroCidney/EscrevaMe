@@ -1,10 +1,16 @@
 // React
 import { createContext, useEffect, ReactNode, useState } from 'react';
 
-import toast from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 // Firebase
 import { firebase } from '../services/firebaseService/firebase';
+
+type FirestoreUser = {
+	avatar: string | null;
+	username: string | null;
+	email: string | null;
+}
 
 type User = {
 	user_id: string;
@@ -109,16 +115,22 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 
 					// Se existir, recuperamos diretamente o ID do documento
 					let userDocumentID = '';
+					let userDocumentDisplayName = '';
+					let userDocumentAvatar = '';
 
 					usersQuerySnapshot.forEach(usersDoc => {
 						userDocumentID = usersDoc.id;
+						let userData = usersDoc.data() as FirestoreUser;
+
+						userDocumentDisplayName = userData.username !== null ? userData.username : '';
+						userDocumentAvatar = userData.avatar !== null ? userData.avatar : '';
 					});
 
-					if(userDocumentID !== '') {
+					if(userDocumentID !== '' && userDocumentDisplayName !== '' && userDocumentAvatar !== '') {
 						setAuthUser({
 							user_id: userDocumentID,
-							username: displayName,
-							avatar: photoURL 
+							username: userDocumentDisplayName,
+							avatar: userDocumentAvatar 
 						});
 					}
 				}

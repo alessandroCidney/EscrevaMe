@@ -188,7 +188,7 @@ export function NewEssayPage() {
 							<div className="profile-photo">
 								<img src={authUser.avatar?authUser.avatar:profilePhotoImg} alt={`Foto de perfil de ${authUser.username? ` de ${authUser.username}` : ''}`} />
 							</div>
-							<div className="username"><p>@{authUser && authUser.username}</p><h4>Está escrevendo</h4></div>
+							<div className="username"><p>{authUser && authUser.username}</p><h4>Está escrevendo</h4></div>
 						</div>
 					</aside>
 				}

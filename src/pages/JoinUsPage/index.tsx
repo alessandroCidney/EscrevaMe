@@ -33,7 +33,7 @@ import googleIconImg from '../../assets/images/icons/google-icon.png';
 export function JoinUsPage() {
 	const history = useHistory();
 
-	const { authUser, addUserDataToContext } = useAuth();
+	const { authUser, signInWithGoogle, addUserDataToContext } = useAuth();
 
 	if(authUser) {
 		history.push(`/main`);
@@ -54,8 +54,12 @@ export function JoinUsPage() {
 	// Essa função é enviada pelas props do componente DropPhotoZone
 	// e ele a aciona quando se clica no botão do componente
 
-	async function joinUsWithGoogle(profilePhoto: File | undefined) {
-		
+	async function joinUsWithGoogle() {
+		if(!authUser) {
+			await signInWithGoogle();
+		}
+
+		history.push('/main');
 	}
 
 	async function joinUsWithEmailAndPassword(profilePhoto: File | undefined) {
@@ -144,6 +148,7 @@ export function JoinUsPage() {
 
 							<Button
 								className="red"
+								onClick={joinUsWithGoogle}
 							>
 								<div>
 									<FontAwesomeIcon 
@@ -187,7 +192,7 @@ export function JoinUsPage() {
 							}}>
 								<input 
 									type="text"
-									placeholder="Digite um nome de usuário"
+									placeholder="Como deseja ser chamado?"
 									onChange={event => setJoinUsername(event.target.value)}
 									value={joinUsername}
 								/>
