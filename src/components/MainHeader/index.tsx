@@ -18,7 +18,7 @@ import { firebase } from '../../services/firebaseService/firebase';
 import { useAuth } from '../../hooks/useAuth';
 
 // Images
-import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
+import logoWithNameImg from '../../assets/images/logos/logoWithName.svg';
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
 
 export function MainHeader() {
@@ -55,7 +55,7 @@ export function MainHeader() {
 			</div>
 
 			{
-				showSearch &&
+				(showSearch && false) &&
 					<div className="search">
 						<input
 							type="text"
@@ -75,14 +75,14 @@ export function MainHeader() {
 			{
 				authUser &&
 				<nav className="options">
-					<button
+					{false && <button
 						onClick={() => setShowSearch(showSearch ? false : true)}
 					>
 						<FontAwesomeIcon iconName="fas fa-search" />
-					</button>
+					</button>}
 
 					{
-						!showSearch &&
+						(!showSearch || true) &&
 						<>
 							<button
 								onClick={() => history.push('/main')}

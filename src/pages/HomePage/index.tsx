@@ -1,5 +1,9 @@
+// React
+import { useState, useEffect } from 'react';
+
 // Components
 import { HomeHeader } from '../../components/HomeHeader';
+import { MainFooter } from '../../components/MainFooter';
 
 // SASS
 import './styles.scss';
@@ -11,52 +15,64 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 // Images
-import pencilGif from '../../assets/images/animations/pencil.gif';
+import logoImg from '../../assets/images/logos/logoWithName.svg';
 import computerImg from '../../assets/images/computer/computer.png';
 
 export function HomePage() {
 	const history = useHistory();
-	history.push('/login');
+	
 	const { authUser } = useAuth();
+
+	const [showImage, setShowImage] = useState(false);
 
 	if(authUser) {
 		history.push('/main');
 	}
 
+	// Responsável pelo aparecimento/desaparecimento da imagem de cmputador
+	useEffect(() => {
+		setInterval(() => {
+			if(window.scrollY + 1/2 * window.innerHeight > window.innerHeight) {
+				if(!showImage) {
+					setShowImage(true);
+				}
+			} else {
+				if(showImage) {
+					setShowImage(false);
+				}
+			}
+		}, 500)
+	}, [showImage]);
+
 	return (
 		<div className="home-page container-column">
 			<HomeHeader />
 
-			<main>
-				<div className="highlight">
-					<img src={pencilGif} alt="Imagem de lápis animada" />
+			<div className="highlight">
+				<img src={logoImg} alt="Logo do EscrevaMe" />
 
-					<div className="text">
-						Estude redação com pessoas de todo o mundo.
+				<h1>
+					O paraíso para leitores e escritores.
+				</h1>
+			</div>
 
-						<input placeholder="Pesquise um tema" />
-					</div>
+			<div className={`test ${!showImage && 'without-image'}`}>
+				<h2>Leve a escrita para o seu cotidiano.</h2>
+
+				<div className="image">
+					{
+						showImage &&
+						<img 
+							src={computerImg} 
+							alt="Imagem de um computador" 
+						/>
+						
+					}
 				</div>
+				
+			</div>
 
-				<div className="initial-info dont-show">
-					<img src={computerImg} className="float-animated" alt="Computador com imagem de uma pessoa escrevendo" />
-
-					<div className="info">
-						<div className="step">
-							<div className="step-number blue">1</div>
-							<div className="step-text">Personalize seu perfil</div>
-						</div>
-						<div className="step translated">
-							<div className="step-number blue">2</div>
-							<div className="step-text">Poste suas redações</div>
-						</div>
-						<div className="step">
-							<div className="step-number blue">3</div>
-							<div className="step-text">Interaja e se desenvolva</div>
-						</div>
-					</div>
-				</div>
-			</main>
+			<MainFooter />
 		</div>
 	);
 }

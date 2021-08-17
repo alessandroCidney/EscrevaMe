@@ -27,8 +27,7 @@ import { validateEmail } from '../../util/validateEmail';
 import { testUsernameEmailAndPasswordInputValues } from '../../util/testUsernameEmailAndPasswordInputValues';
 
 // Images
-import logoWithNameImg from '../../assets/images/logos/logoWithName500px.png';
-import googleIconImg from '../../assets/images/icons/google-icon.png';
+import logoWithNameImg from '../../assets/images/logos/logoWithName.svg';
 
 export function JoinUsPage() {
 	const history = useHistory();
