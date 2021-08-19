@@ -29,7 +29,7 @@ export function HomeHeader() {
 					setHeaderWhite(false);
 				}
 			}	
-		}, [500]);
+		}, 500);
 
 	}, [headerWhite])
 
