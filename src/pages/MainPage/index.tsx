@@ -150,30 +150,34 @@ export function MainPage() {
 					}
 				</div>
 
-				<div className="last-users dont-show-if-mobile">
-				{
-					(authUser && users && users.length>0) ?
-						users.map(u => 
-							
-								<button 
-									className="user"
-									onClick={event => history.push(`/users/${u.id}`)}
-								>
-									<div className="profile-photo">
-										<img 
-											src={u.avatar ? u.avatar : profilePhotoImg} 
-											alt="Foto de perfil" 
-										/>
-									</div>
-									<div className="username">
-										{u.username}
-									</div>
-								</button>
-							)	
-						: (<span>Nenhum novo usuário</span>)
-				}
-				</div>
 				
+				{
+					authUser && (
+						<div className="last-users dont-show-if-mobile">
+						{
+							(users && users.length > 0) ?
+							users.map(u => 
+								
+									<button 
+										className="user"
+										onClick={event => history.push(`/users/${u.id}`)}
+									>
+										<div className="profile-photo">
+											<img 
+												src={u.avatar ? u.avatar : profilePhotoImg} 
+												alt="Foto de perfil" 
+											/>
+										</div>
+										<div className="username">
+											{u.username}
+										</div>
+									</button>
+								)
+							: (<span>Nenhum novo usuário</span>)
+						}
+						</div>
+					)
+				}
 
 			</div>
 		</div>

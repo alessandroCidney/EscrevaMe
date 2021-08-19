@@ -82,8 +82,6 @@ export function HomePage() {
 		history.push('/joinus');
 	}
 
-	console.log("Render", showComputerImage, showStudyImage)
-
 	return (
 		<>
 			<HomeHeader />

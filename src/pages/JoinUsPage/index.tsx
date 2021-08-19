@@ -250,10 +250,10 @@ export function JoinUsPage() {
 									Já possui uma conta? <Link to="/login">Faça login</Link>
 								</span>
 								<div className="warning">
-					            	Ao clicar em um dos botões de cadastro acima, você aceita nossa&nbsp;  
+					            	Ao clicar em um dos botões de cadastro acima, você aceita e concorda com nossa&nbsp;  
 					            	<Link to="/privacypolicy">
 					            		Política de privacidade&nbsp; 
-					            	</Link> e nossa&nbsp; 
+					            	</Link> e com nossa&nbsp; 
 					            	<Link to="/datapolicy">
 					            		Política de tratamento e segurança de dados
 					            	</Link>
