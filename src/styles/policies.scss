@@ -21,3 +21,18 @@
 		padding: 50px 0;
 	}
 }
+
+@media (max-width: 760px) {
+	.policy {
+
+		> div {
+			width: 90%;
+
+			> h1, h2, h3 {
+				text-align: center;
+
+				width: 100%;
+			}
+		}
+	}
+}

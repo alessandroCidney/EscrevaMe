@@ -55,10 +55,14 @@ export function JoinUsPage() {
 
 	async function joinUsWithGoogle() {
 		if(!authUser) {
-			await signInWithGoogle();
+			const results = await signInWithGoogle() as boolean;
+			
+			if(results) {
+				history.push('/main');
+			} else {
+				toast.error("Não foi possível cadastrar o usuário");
+			}
 		}
-
-		history.push('/main');
 	}
 
 	async function joinUsWithEmailAndPassword(profilePhoto: File | undefined) {
@@ -241,9 +245,20 @@ export function JoinUsPage() {
 
 					{
 						showButtons ?
-							(<span>
-								Já possui uma conta? <Link to="/login">Faça login</Link>
-							</span>)
+							(<>
+								<span>
+									Já possui uma conta? <Link to="/login">Faça login</Link>
+								</span>
+								<div className="warning">
+					            	Ao clicar em um dos botões de cadastro acima, você aceita nossa&nbsp;  
+					            	<Link to="/privacypolicy">
+					            		Política de privacidade&nbsp; 
+					            	</Link> e nossa&nbsp; 
+					            	<Link to="/datapolicy">
+					            		Política de tratamento e segurança de dados
+					            	</Link>
+								</div>
+							</>)
 						:  	(
 								<span>
 									Deseja voltar para o início? 

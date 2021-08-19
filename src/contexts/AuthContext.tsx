@@ -20,7 +20,7 @@ type User = {
 
 type AuthContextType = {
 	authUser: User | undefined;
-	signInWithGoogle: () => Promise<void>;
+	signInWithGoogle: () => Promise<boolean>;
 	addUserDataToContext: (user_id: string, username: string | null, avatar: string | null) => void;
 	removeUserContextData: () => void;
 }
@@ -135,9 +135,10 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
 					}
 				}
 			}
+
+			return true;
 		} catch (err) {
-			toast.error("Não foi possível conectar o usuário");
-			console.log(err);
+			return false;
 		}
 
 		
