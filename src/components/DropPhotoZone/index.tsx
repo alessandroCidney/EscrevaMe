@@ -1,5 +1,5 @@
 // React
-import { useState, CSSProperties, useEffect } from 'react';
+import { useState, CSSProperties, useEffect, useCallback } from 'react';
 
 // Components
 import { Button } from '../Button';
@@ -35,7 +35,7 @@ export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton, button
 		backgroundRepeat: 'no-repeat'
 	});
 
-	function updateThumb() {
+	const updateThumb = useCallback(() => {
 		if(showSpan) {
 			setShowSpan(false);
 		}
@@ -79,9 +79,9 @@ export function DropPhotoZone({ functionToExecuteOnSubmit, textForButton, button
 				});
 			}
 		}
-	}
+	}, [file, showSpan, showThumb]);
 
-	useEffect(() => updateThumb(), [file]);
+	useEffect(() => updateThumb(), [updateThumb]);
 
 	return (
 		<form className="drop-photo-form" onSubmit={event => {

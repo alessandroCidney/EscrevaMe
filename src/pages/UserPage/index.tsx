@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // React Router DOM
 import { useHistory } from 'react-router-dom';
@@ -33,25 +33,6 @@ type UserPageParams = {
 	id: string;
 }
 
-type CommentType = {
-	comment_author: string;
-	comment_author_avatar: string;
-	comment_content: string;
-	created_at: number;
-}
-
-type EssayType = {
-	essay_title: string;
-	formated_essay_title: string;
-	essay_content: string;
-	author_username: string;
-	author_id: string;
-	author_avatar: string;
-	created_at: Date;
-	likes: string[];
-	comments: CommentType[];
-}
-
 export function UserPage() {
 	const history = useHistory();
 
@@ -61,17 +42,16 @@ export function UserPage() {
 	const [essaysData, setEssaysData] = useState([] as Record<string, string>[]);
 	const [username, setUsername] = useState('');
 
-	const firestore = firebase.firestore();
-	const usersColection = firestore.collection("users");
-	const essaysCollection = firestore.collection("essays");
-
 	const params = useParams<UserPageParams>();
 	const paramsUsernameID = params.id;
 
-	const findUserQuery = usersColection.doc(paramsUsernameID);
-	const findEssaysQuery = essaysCollection.where("author_id", "==", paramsUsernameID);
+	const fetchUsersAndEssaysData = useCallback(() => {
+		const firestore = firebase.firestore();
+		const usersColection = firestore.collection("users");
+		const essaysCollection = firestore.collection("essays");
 
-	useEffect(() => {
+		const findUserQuery = usersColection.doc(paramsUsernameID);
+		const findEssaysQuery = essaysCollection.where("author_id", "==", paramsUsernameID);
 
 		findUserQuery.get()
 			.then(doc => {
@@ -87,7 +67,6 @@ export function UserPage() {
 				history.push('/main');
 			});
 
-
 		const essayData = [] as Record<string, string>[];
 
 		findEssaysQuery.get()
@@ -98,8 +77,11 @@ export function UserPage() {
 
 				setEssaysData(essayData.length > 0 ? essayData : []);
 			});
+	}, [paramsUsernameID, history])
 
-	}, [paramsUsernameID]);
+	useEffect(() => {
+		fetchUsersAndEssaysData();
+	}, [fetchUsersAndEssaysData]);
 
 	let bestEssays = [] as Record<string, string>[];
 

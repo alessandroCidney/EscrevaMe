@@ -328,8 +328,8 @@ export function EssayPage() {
 						<h2>Comentários</h2>
 
 						<div className="comments-list">
-							{essay.comments.map(c => 
-								<div className="comment">
+							{essay.comments.map((c, index) => 
+								<div className="comment" key={index}>
 									<div className="comment-author">
 										<div className="profile-photo">
 											<img src={c.comment_author_avatar ? c.comment_author_avatar : profilePhotoImg} alt={`Avatar do usuário ${c.comment_author}`} />	

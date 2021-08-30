@@ -1,8 +1,6 @@
 // React
 import { createContext, useEffect, ReactNode, useState } from 'react';
 
-import toast from 'react-hot-toast';
-
 // Firebase
 import { firebase } from '../services/firebaseService/firebase';
 

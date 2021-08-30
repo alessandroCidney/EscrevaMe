@@ -1,12 +1,12 @@
-// Components
-import { MainHeader } from '../../components/MainHeader';
-import { FontAwesomeIcon } from '../../components/FontAwesomeIcon';
-
 // React
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // React Router DOM
 import { Link, useHistory } from 'react-router-dom';
+
+// Components
+import { MainHeader } from '../../components/MainHeader';
+import { EssayOfMainPage } from '../../components/EssayOfMainPage';
 
 // Hooks
 import { useAuth } from '../../hooks/useAuth';
@@ -14,33 +14,14 @@ import { useAuth } from '../../hooks/useAuth';
 // Firebase
 import { firebase } from '../../services/firebaseService/firebase';
 
-// Util
-import { reduceTextWithThreePoints } from '../../util/reduceTextWithThreePoints';
+// Types
+import { EssayType } from '../../types/types';
 
 // SASS
 import './styles.scss';
 
 // Images
 import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
-
-type CommentType = {
-	comment_author: string;
-	comment_author_avatar: string;
-	comment_content: string;
-	created_at: number;
-}
-
-type EssayType = {
-	essay_title: string;
-	formated_essay_title: string;
-	essay_content: string;
-	author_username: string;
-	author_id: string;
-	author_avatar: string;
-	created_at: number;
-	likes: string[];
-	comments: CommentType[];
-}
 
 type UserType = {
 	id: string;
@@ -57,11 +38,12 @@ export function MainPage() {
 	const [essays, setEssays] = useState<EssayType[]>([]);
 	const [users, setUsers] = useState<UserType[]>();
 
-	const firestore = firebase.firestore();
-	const essaysCollection = firestore.collection("essays");
-	const usersColection = firestore.collection("users");
+	const fetchUsersAndEssays = useCallback(() => {
 
-	useEffect(() => {
+		const firestore = firebase.firestore();
+		const essaysCollection = firestore.collection("essays");
+		const usersColection = firestore.collection("users");
+
 		let essaysData = [] as EssayType[];
 
 		essaysCollection.get()
@@ -96,8 +78,12 @@ export function MainPage() {
 				});
 
 				setUsers(usersData);
-			})
+			});
 	}, []);
+
+	useEffect(() => {
+		fetchUsersAndEssays();
+	}, [fetchUsersAndEssays]);
 
 	return (
 		<div className="main-page container-column">
@@ -115,38 +101,10 @@ export function MainPage() {
 				}
 
 				<div className="last-essays">
-
-					{essays.length>0 ?
-						essays.map(essay => 
-							<button 
-								className="essay"
-								onClick={() => history.push(`/essays/${essay.author_id}/${essay.formated_essay_title}`)}
-							>
-								<div className="essay-author">
-									<div className="profile-photo">
-										<img 
-											src={essay.author_avatar ? essay.author_avatar : profilePhotoImg} 
-											alt="Foto de perfil" 
-										/>
-									</div>
-									<div className="username">
-										{essay.author_username} postou uma nova redação
-									</div>
-								</div>
-
-								<div className="essay-data">
-									<p className="title">{reduceTextWithThreePoints(essay.essay_title, 40)}</p>
-									<div>
-										
-										<p><FontAwesomeIcon iconName="fas fa-feather" />{essay.essay_content.length}</p> 
-										
-										<p><FontAwesomeIcon iconName="fas fa-heart" />{essay.likes.length}</p>
-										
-										<p><FontAwesomeIcon iconName="fas fa-comment-alt" />{essay.comments.length}</p>
-									</div>
-								</div>
-							</button>)
-						: (<span>Nenhuma redação encontrada.</span>)
+					{
+						essays.length > 0 
+						? essays.map((essay, index) => <EssayOfMainPage key={index} essay={essay} />)
+						: <span>Nenhuma redação encontrada.</span>
 					}
 				</div>
 
@@ -156,9 +114,10 @@ export function MainPage() {
 						<div className="last-users dont-show-if-mobile">
 						{
 							(users && users.length > 0) ?
-							users.map(u => 
+							users.map((u, index) => 
 								
 									<button 
+										key={index}
 										className="user"
 										onClick={event => history.push(`/users/${u.id}`)}
 									>

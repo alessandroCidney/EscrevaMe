@@ -26,7 +26,7 @@ export function FontAwesomeIcon({
 
 	return (
 		<i 
-			className={!solid && !alwaysSolid || noChange ? iconName : `fas ${iconName.split(" ")[1]}`} 
+			className={(!solid && !alwaysSolid) || noChange ? iconName : `fas ${iconName.split(" ")[1]}`} 
 			
 			onMouseOver={() => {
 				if(!alwaysSolid) {

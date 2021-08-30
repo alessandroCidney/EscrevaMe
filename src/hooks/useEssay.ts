@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // React Router DOM
 import { useHistory } from 'react-router-dom';
@@ -37,15 +37,15 @@ export function useEssay(user_id: string, essayFormatedTitle: string, update: nu
 	// É diferente da estrutura das redações armazenadas no Firebase
 	let [essay, setEssay] = useState<EssayType>();
 
-	// Iniciando o Firebase
-	const firestore = firebase.firestore();
-	const essaysCollection = firestore.collection("essays");
+	const fetchEssay = useCallback(() => {
 
-	// Definindo as consultas que serão realizadas
-	const essaysAuthorQuery = essaysCollection.where("author_id", "==", user_id);
-	const essaysAuthorAndTitleQuery = essaysAuthorQuery.where("formated_essay_title", "==", essayFormatedTitle);
+		// Iniciando o Firebase
+		const firestore = firebase.firestore();
+		const essaysCollection = firestore.collection("essays");
 
-	useEffect(() => {
+		// Definindo as consultas que serão realizadas
+		const essaysAuthorQuery = essaysCollection.where("author_id", "==", user_id);
+		const essaysAuthorAndTitleQuery = essaysAuthorQuery.where("formated_essay_title", "==", essayFormatedTitle);
 
 		// Captando os dados da redação e adicionando no estado "essay"
 		essaysAuthorAndTitleQuery.get()
@@ -72,7 +72,11 @@ export function useEssay(user_id: string, essayFormatedTitle: string, update: nu
 				});
 			})
 		})
-	}, [update]);
+	}, [history, essayFormatedTitle, user_id]);
+
+	useEffect(() => {
+		fetchEssay();
+	}, [fetchEssay, update]);
 
 	return { essay };
 }
