@@ -16,3 +16,10 @@ export type EssayType = {
 	likes: string[];
 	comments: CommentType[];
 }
+
+export type UserType = {
+	id: string;
+	avatar: string;
+	email: string;
+	username: string;
+}

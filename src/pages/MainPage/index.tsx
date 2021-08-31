@@ -2,11 +2,12 @@
 import { useState, useEffect, useCallback } from 'react';
 
 // React Router DOM
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // Components
 import { MainHeader } from '../../components/MainHeader';
 import { EssayOfMainPage } from '../../components/EssayOfMainPage';
+import { UserOfMainPage } from '../../components/UserOfMainPage';
 
 // Hooks
 import { useAuth } from '../../hooks/useAuth';
@@ -15,24 +16,12 @@ import { useAuth } from '../../hooks/useAuth';
 import { firebase } from '../../services/firebaseService/firebase';
 
 // Types
-import { EssayType } from '../../types/types';
+import { EssayType, UserType } from '../../types/types';
 
 // SASS
 import './styles.scss';
 
-// Images
-import profilePhotoImg from '../../assets/images/icons/profile-photo-icon.png';
-
-type UserType = {
-	id: string;
-	avatar: string;
-	email: string;
-	username: string;
-}
-
 export function MainPage() {
-	const history = useHistory();
-
 	const { authUser } = useAuth();
 
 	const [essays, setEssays] = useState<EssayType[]>([]);
@@ -103,7 +92,10 @@ export function MainPage() {
 				<div className="last-essays">
 					{
 						essays.length > 0 
-						? essays.map((essay, index) => <EssayOfMainPage key={index} essay={essay} />)
+						? essays.map((essay, index) => <EssayOfMainPage 
+															key={`${index}-essay`} 
+															essay={essay} 
+														/>)
 						: <span>Nenhuma redação encontrada.</span>
 					}
 				</div>
@@ -113,25 +105,11 @@ export function MainPage() {
 					authUser && (
 						<div className="last-users dont-show-if-mobile">
 						{
-							(users && users.length > 0) ?
-							users.map((u, index) => 
-								
-									<button 
-										key={index}
-										className="user"
-										onClick={event => history.push(`/users/${u.id}`)}
-									>
-										<div className="profile-photo">
-											<img 
-												src={u.avatar ? u.avatar : profilePhotoImg} 
-												alt="Foto de perfil" 
-											/>
-										</div>
-										<div className="username">
-											{u.username}
-										</div>
-									</button>
-								)
+							(users && users.length > 0) 
+							? users.map((user, index) => <UserOfMainPage 
+															key={`${index}-user`}
+															user={user}
+														/>)
 							: (<span>Nenhum novo usuário</span>)
 						}
 						</div>
