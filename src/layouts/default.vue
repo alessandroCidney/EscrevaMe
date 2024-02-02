@@ -7,7 +7,19 @@
         />
       </template>
 
-      <h1 class="logoArea text-primary">escreva.me</h1>
+      <h1 class="logoArea text-primary">
+        escreva.me
+      </h1>
+
+      <template #append>
+        <v-btn
+          prepend-icon="mdi-login"
+          color="primary"
+          variant="flat"
+        >
+          Login
+        </v-btn>
+      </template>
     </v-app-bar>
 
     <v-main>
@@ -32,9 +44,18 @@
 
       .v-toolbar__prepend {
         margin-inline: 0 0 !important;
-        
+
         position: absolute;
         left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .v-toolbar__append {
+        margin-inline: 0 0 !important;
+
+        position: absolute;
+        right: 10px;
         top: 50%;
         transform: translateY(-50%);
       }
