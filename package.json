@@ -30,6 +30,12 @@
   },
   "dependencies": {
     "@mdi/font": "^7.3.67",
+    "@tiptap/pm": "^2.2.1",
+    "@tiptap/starter-kit": "^2.2.1",
+    "@tiptap/vue-3": "^2.2.1",
     "moment": "^2.30.1"
+  },
+  "resolutions": {
+    "string-width": "4.2.3"
   }
 }

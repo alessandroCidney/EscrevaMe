@@ -7,7 +7,7 @@
       cols="4"
     >
       <v-card
-        to=" "
+        :to="`/posts/${post.id}`"
         width="400px"
         shaped
         flat

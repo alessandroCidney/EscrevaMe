@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   srcDir: './src',
 
   css: [
-    '@/assets/scss/global.scss'
+    '@/assets/scss/global.scss',
   ],
 
   build: {
@@ -23,7 +23,6 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    //...
   ],
 
   vite: {

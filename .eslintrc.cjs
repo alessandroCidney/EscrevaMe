@@ -19,5 +19,6 @@ module.exports = {
   rules: {
     'comma-dangle': ['error', 'always-multiline'],
     'import/no-named-as-default-member': 'off',
+    'import/no-named-as-default': 'off',
   },
 }
