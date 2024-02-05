@@ -7,7 +7,10 @@
         />
       </template>
 
-      <h1 class="logoArea text-primary">
+      <h1
+        class="logoArea text-primary cursorPointer"
+        @click="$router.push('/')"
+      >
         escreva.me
       </h1>
 

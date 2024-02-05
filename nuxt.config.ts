@@ -8,6 +8,14 @@ export default defineNuxtConfig({
 
   srcDir: './src',
 
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      title: 'escreva.me',
+    },
+  },
+
   css: [
     '@/assets/scss/global.scss',
   ],

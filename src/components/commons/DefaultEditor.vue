@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, defineEmits, onMounted, onUnmounted, watch } from 'vue'
+import { defineModel, defineEmits, onMounted, onUnmounted, watch, defineProps } from 'vue'
 
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
@@ -13,8 +13,12 @@ import StarterKit from '@tiptap/starter-kit'
 const model = defineModel<string>({ default: '' })
 const emit = defineEmits(['update:modelValue'])
 
+const props = defineProps({ editable: { type: Boolean, default: true } })
+
 const editor = useEditor({
   content: model.value,
+
+  editable: props.editable,
 
   extensions: [
     StarterKit,

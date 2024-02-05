@@ -1,5 +1,5 @@
 <template>
-  <section class="postCreationPage ">
+  <section class="postPage">
     <div class="postEditor">
       <div class="d-flex align-center justify-end mb-6">
         <v-btn
@@ -21,42 +21,34 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from '#imports'
+
+import { usePostsCrud } from '@/composables/usePostsCrud'
 
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
 
-const content = ref('test')
+const router = useRouter()
 
-function save () {
-  console.log(content.value)
+const postsCrud = usePostsCrud()
+
+const content = ref('')
+
+async function save () {
+  const newId = `test-${(await postsCrud.list()).length}`
+
+  await postsCrud.create({
+    id: newId,
+
+    title: `Test ${(await postsCrud.list()).length}`,
+    description: '',
+
+    content: content.value,
+
+    createdAt: new Date(),
+
+    tags: [],
+  })
+
+  await router.push(`/posts/${newId}`)
 }
 </script>
-
-<style lang="scss">
-.postCreationPage {
-  min-height: calc(100vh - 64px);
-
-  .postEditor {
-    width: 70%;
-    max-width: 1000px;
-
-    min-height: calc(100vh);
-    margin: 50px auto 0 auto;
-
-    .tiptapPostEditor {
-      width: 100%;
-      min-height: calc(100vh);
-
-      background-color: white;
-
-      > div {
-        padding: 20px !important;
-        min-height: calc(100vh) !important;
-
-        &:focus {
-          outline: none !important;
-        }
-      }
-    }
-  }
-}
-</style>

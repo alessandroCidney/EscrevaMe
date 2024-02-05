@@ -8,10 +8,42 @@ body {
   background-color: #f8f8f8;
 }
 
+.cursorPointer {
+  cursor: pointer !important;
+}
+
 .fillWidth {
   width: 100% !important;
 }
 
 .fillHeight {
   height: 100% !important;
+}
+
+.postPage {
+  min-height: calc(100vh - 64px);
+
+  .postEditor {
+    width: 70%;
+    max-width: 1000px;
+
+    min-height: calc(100vh);
+    margin: 50px auto 0 auto;
+
+    .tiptapPostEditor {
+      width: 100%;
+      min-height: calc(100vh);
+
+      background-color: white;
+
+      > div {
+        padding: 20px !important;
+        min-height: calc(100vh) !important;
+
+        &:focus {
+          outline: none !important;
+        }
+      }
+    }
+  }
 }

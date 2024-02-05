@@ -1,7 +1,7 @@
 <template>
-  <v-row class="py-10 px-10">
+  <v-row class="py-10 px-16">
     <v-col
-      v-for="post of posts"
+      v-for="post of props.posts"
       :key="`postListItem${post.id}`"
       class="d-flex align-center justify-center"
       cols="4"
@@ -40,17 +40,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { defineProps } from 'vue'
+import type { IPost } from '@/types/post'
 
-const postsArr = Array.from(Array(9).keys())
-  .map(index => ({
-    id: `test-${index}`,
-    title: `Test ${index}`,
-    description: 'This is a incredible test of an incredible blog application.',
-    picture: 'https://cdn.pixabay.com/photo/2017/10/10/07/48/beach-2836300_1280.jpg',
-    tags: ['nature', 'paradise'],
-    createdAt: new Date().toISOString(),
-  }))
-
-const posts = ref(postsArr)
+const props = defineProps<{ posts: IPost[] }>()
 </script>
