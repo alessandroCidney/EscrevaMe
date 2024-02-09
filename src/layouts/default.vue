@@ -15,7 +15,22 @@
       </h1>
 
       <template #append>
+        <v-avatar
+          v-if="accountStore.isAuthenticated"
+          size="40"
+        >
+          <v-img
+            v-if="accountStore.authUser?.photoURL"
+            :src="accountStore.authUser.photoURL"
+          />
+
+          <span v-else>
+            {{ accountStore.databaseUser?.name[0] }}
+          </span>
+        </v-avatar>
+
         <v-btn
+          v-else
           prepend-icon="mdi-login"
           color="primary"
           variant="flat"
@@ -30,6 +45,12 @@
     </v-main>
   </v-layout>
 </template>
+
+<script setup lang="ts">
+import { useAccountStore } from '@/store/account'
+
+const accountStore = useAccountStore()
+</script>
 
 <style lang="scss">
 .defaultLayout {
