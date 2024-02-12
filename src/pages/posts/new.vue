@@ -11,9 +11,16 @@
         </v-btn>
       </div>
 
+      <v-text-field
+        v-model="title"
+        placeholder="Crie um título para seu novo post"
+        class="bg-white px-5 mb-5 text-h4"
+        variant="plain"
+      />
+
       <default-editor
         v-model="content"
-        class="tiptapPostEditor"
+        class="tiptapPostEditor bg-white"
       />
     </div>
   </section>
@@ -31,15 +38,12 @@ const router = useRouter()
 
 const postsCrud = usePostsCrud()
 
+const title = ref('')
 const content = ref('')
 
 async function save () {
-  const newId = `test-${(await postsCrud.list()).length}`
-
-  await postsCrud.create({
-    id: newId,
-
-    title: `Test ${(await postsCrud.list()).length}`,
+  const savedPost = await postsCrud.create({
+    title: title.value,
     description: '',
 
     content: content.value,
@@ -49,6 +53,6 @@ async function save () {
     tags: [],
   })
 
-  await router.push(`/posts/${newId}`)
+  await router.push(`/posts/${savedPost._id}`)
 }
 </script>

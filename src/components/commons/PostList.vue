@@ -2,12 +2,12 @@
   <v-row class="py-10 px-16">
     <v-col
       v-for="post of props.posts"
-      :key="`postListItem${post.id}`"
+      :key="`postListItem${post._id}`"
       class="d-flex align-center justify-center"
       cols="4"
     >
       <v-card
-        :to="`/posts/${post.id}`"
+        :to="`/posts/${post._id}`"
         width="400px"
         shaped
         flat

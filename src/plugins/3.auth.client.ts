@@ -16,8 +16,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   await new Promise<void>((resolve, reject) => {
     auth.onAuthStateChanged(async (authUser) => {
       try {
-        if (authUser && authUser.email) {
-          const databaseUser = await usersCrud.get(authUser.email)
+        if (authUser) {
+          const databaseUser = await usersCrud.get(authUser.uid)
 
           accountStore.setAuthUser(authUser)
           accountStore.setDatabaseUser(databaseUser)

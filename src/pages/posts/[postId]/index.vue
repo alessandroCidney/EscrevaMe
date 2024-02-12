@@ -6,7 +6,7 @@
         class="mb-10"
       />
 
-      <h1 class="bg-white pa-5">
+      <h1 class="pa-5 text-h4 font-weight-bold">
         {{ post.title }}
       </h1>
 

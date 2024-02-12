@@ -7,6 +7,8 @@ export interface IDatabaseUser {
   name: string
   role: string
   createdAt: Date
+
+  photoUrl: string
 }
 
 export const useAccountStore = defineStore('account', {
@@ -18,6 +20,10 @@ export const useAccountStore = defineStore('account', {
   getters: {
     isAuthenticated (state) {
       return !!state.databaseUser
+    },
+
+    userProfilePhotoUrl (state) {
+      return state.databaseUser?.photoUrl || state.authUser?.photoURL
     },
   },
 

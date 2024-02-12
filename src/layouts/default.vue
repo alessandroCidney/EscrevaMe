@@ -18,10 +18,13 @@
         <v-avatar
           v-if="accountStore.isAuthenticated"
           size="40"
+          @click="$router.push(`/users/${accountStore.authUser?.uid}`)"
         >
           <v-img
-            v-if="accountStore.authUser?.photoURL"
-            :src="accountStore.authUser.photoURL"
+            v-if="accountStore.userProfilePhotoUrl"
+            :src="accountStore.userProfilePhotoUrl"
+            alt="Avatar"
+            cover
           />
 
           <span v-else>
