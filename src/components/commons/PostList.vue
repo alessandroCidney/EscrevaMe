@@ -13,7 +13,8 @@
         flat
       >
         <v-img
-          :src="post.picture"
+          v-if="post.backgroundPhotoUrl"
+          :src="post.backgroundPhotoUrl"
           max-height="300px"
           max-width="100%"
           cover

@@ -8,6 +8,10 @@ export interface IPost {
 
   content: string
 
+  backgroundPhotoUrl?: string
+
+  authorId: string
+
   tags: string[]
 
   createdAt: Date

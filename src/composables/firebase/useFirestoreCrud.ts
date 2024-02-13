@@ -1,10 +1,10 @@
-import { doc, collection, getDoc, getDocs, addDoc, setDoc, query, type QueryConstraint, updateDoc } from 'firebase/firestore'
+import { doc, collection, getDoc, getDocs, setDoc, query, type QueryConstraint, updateDoc } from 'firebase/firestore'
 
 import { useNuxtApp } from '#imports'
 
 type TFirestoreItemBase = Record<string, any>
 
-type TDefaultFirestoreItem <T> = T & {
+type TDefaultFirestoreItem <T> = Omit<T, '_id'> & {
   _id: string
 }
 
@@ -15,16 +15,10 @@ type TPartialDefaultFirestoreItem <T> = Omit<Partial<T>, '_id'> & {
 export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFirestoreItemBase>> (basePath: string) {
   const nuxtApp = useNuxtApp()
 
-  async function create (data: TPartialDefaultFirestoreItem<TBaseType>, _id?: string) {
-    if (_id) {
-      const docRef = doc(nuxtApp.$firestore, basePath, _id)
-      await setDoc(docRef, data)
-      return { ...data, _id } as TBaseType
-    } else {
-      const collectionRef = collection(nuxtApp.$firestore, basePath)
-      const docRef = await addDoc(collectionRef, data)
-      return { ...data, _id: docRef.id } as TBaseType
-    }
+  async function create (_id: string, data: TDefaultFirestoreItem<TBaseType>) {
+    const docRef = doc(nuxtApp.$firestore, basePath, _id)
+    await setDoc(docRef, data)
+    return { ...data, _id } as TBaseType
   }
 
   async function get (_id: string) {

@@ -1,5 +1,6 @@
 <template>
   <editor-content
+    class="editorContentArea"
     :editor="editor"
   />
 </template>
@@ -7,6 +8,7 @@
 <script setup lang="ts">
 import { defineModel, defineEmits, onMounted, onUnmounted, watch, defineProps } from 'vue'
 
+import Placeholder from '@tiptap/extension-placeholder'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -22,6 +24,9 @@ const editor = useEditor({
 
   extensions: [
     StarterKit,
+    Placeholder.configure({
+      placeholder: 'Escreva aqui o conteúdo do seu post',
+    }),
   ],
 
   onUpdate () {
@@ -47,3 +52,15 @@ onUnmounted(() => {
   editor.value?.destroy()
 })
 </script>
+
+<style lang="scss">
+.editorContentArea {
+  .tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #9A9A9A;
+    pointer-events: none;
+    height: 0;
+  }
+}
+</style>
