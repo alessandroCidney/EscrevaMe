@@ -1,4 +1,4 @@
-import { doc, collection, getDoc, getDocs, setDoc, query, type QueryConstraint, updateDoc } from 'firebase/firestore'
+import { doc, collection, getDoc, getDocs, setDoc, query, type QueryConstraint, updateDoc, type FirestoreDataConverter } from 'firebase/firestore'
 
 import { useNuxtApp } from '#imports'
 
@@ -12,7 +12,10 @@ type TPartialDefaultFirestoreItem <T> = Omit<Partial<T>, '_id'> & {
   _id?: string
 }
 
-export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFirestoreItemBase>> (basePath: string) {
+export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFirestoreItemBase>> (
+  basePath: string,
+  converter?: FirestoreDataConverter<TBaseType>,
+) {
   const nuxtApp = useNuxtApp()
 
   async function create (_id: string, data: TDefaultFirestoreItem<TBaseType>) {
@@ -22,7 +25,10 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
   }
 
   async function get (_id: string) {
-    const docRef = doc(nuxtApp.$firestore, basePath, _id)
+    const docRef = converter
+      ? doc(nuxtApp.$firestore, basePath, _id).withConverter(converter)
+      : doc(nuxtApp.$firestore, basePath, _id)
+
     const docSnap = await getDoc(docRef)
     const docData = docSnap.data()
 
@@ -34,7 +40,10 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
   }
 
   async function list (...customQuery: QueryConstraint[]) {
-    const collectionRef = collection(nuxtApp.$firestore, basePath)
+    const collectionRef = converter
+      ? collection(nuxtApp.$firestore, basePath).withConverter(converter)
+      : collection(nuxtApp.$firestore, basePath)
+
     const queryRef = query(collectionRef, ...customQuery)
     const querySnapshot = await getDocs(queryRef)
 

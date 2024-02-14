@@ -1,18 +1,40 @@
 <template>
   <div
-    class="uploadDropzone d-flex align-center justify-center py-5"
-    v-bind="$attrs"
+    :style="{
+      backgroundImage: `url('${getFileUrl()}')`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center, center',
+    }"
+    class="d-flex align-center fillHeight"
     @dragover.prevent="isDragging = true"
     @dragleave="isDragging = false"
     @dragend="isDragging = false"
     @drop.prevent="handleDrop"
   >
-    <v-icon>
-      mdi-upload
-    </v-icon>
-  </div>
+    <template v-if="!model?.length">
+      <v-divider color="primary" :thickness="3" />
 
-  <input :multiple="props.limit !== 1" type="file" @change="handleInput">
+      <v-btn
+        prepend-icon="mdi-image-plus"
+        color="primary"
+        class="mx-6"
+        @click="fileInputRef?.click()"
+      >
+        Adicionar imagem
+      </v-btn>
+
+      <v-divider color="primary" :thickness="3" />
+
+      <input
+        v-show="false"
+        ref="fileInputRef"
+        :multiple="props.limit !== 1"
+        type="file"
+        @change="handleInput"
+      >
+    </template>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -23,6 +45,8 @@ const model = defineModel<File[]>()
 const props = defineProps({
   limit: { type: Number, default: undefined },
 })
+
+const fileInputRef = ref<HTMLInputElement | null>(null)
 
 const isDragging = ref(false)
 
@@ -40,6 +64,10 @@ function handleInput (event: Event) {
   if (event.target instanceof HTMLInputElement) {
     handleUpdate(event.target.files ?? undefined)
   }
+}
+
+function getFileUrl () {
+  return model.value?.length ? URL.createObjectURL(model.value[0]) : ''
 }
 </script>
 

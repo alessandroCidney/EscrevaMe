@@ -1,10 +1,10 @@
-import type { IPost } from '@/types/post'
+import { type IPost, postConverter } from '@/types/post'
 
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
 export function usePostsCrud () {
-  const firestoreCrud = useFirestoreCrud<IPost>('posts')
+  const firestoreCrud = useFirestoreCrud<IPost>('posts', postConverter)
 
   async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto?: File) {
     const savedPost = await firestoreCrud.create(_id, data)

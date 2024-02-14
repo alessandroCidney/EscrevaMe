@@ -2,8 +2,10 @@
   <section class="postPage">
     <div class="postEditor">
       <v-img
-        :src="post.picture"
+        :src="post.backgroundPhotoUrl"
+        height="400px"
         class="mb-10"
+        cover
       />
 
       <h1 class="pa-5 text-h4 font-weight-bold">

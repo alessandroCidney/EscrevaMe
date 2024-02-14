@@ -1,11 +1,23 @@
 <template>
   <section class="postPage">
     <div class="postEditor">
-      <upload-dropzone
-        v-model="photoFiles"
-      />
+      <div :style="{ height: photoFiles.length ? '200px' : '50px' }" class="mb-5 px-5">
+        <v-hover>
+          <template #default="{ isHovering, props }">
+            <div class="fillHeight" v-bind="props">
+              <v-fade-transition hide-on-leave>
+                <upload-dropzone
+                  v-if="isHovering || photoFiles.length"
+                  v-model="photoFiles"
+                  class="mb-10"
+                />
+              </v-fade-transition>
+            </div>
+          </template>
+        </v-hover>
+      </div>
 
-      <div class="d-flex align-center mb-6 px-5">
+      <div class="d-flex align-center mb-6 px-5 test">
         <div class="mr-6">
           <v-btn width="160px" variant="flat" color="#eee">
             Parágrafo
