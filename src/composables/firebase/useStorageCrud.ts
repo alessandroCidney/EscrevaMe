@@ -21,8 +21,16 @@ export function useStorageCrud (basePath: string) {
     return savedFilename
   }
 
+  async function update (_id: string, file: File, customFilename?: string) {
+    const savedFilename = customFilename || `${_id}.${getFilenameExtension(file.name)}`
+    const storageRef = ref(nuxtApp.$storage, `${basePath}/${savedFilename}`)
+    await uploadBytes(storageRef, file)
+    return savedFilename
+  }
+
   return {
     getFileUrl,
     create,
+    update,
   }
 }

@@ -9,7 +9,7 @@
                 <upload-dropzone
                   v-if="isHovering || photoFiles.length"
                   v-model:files="photoFiles"
-                  :background-image="getFileUrl()"
+                  :background-image="getPostBackgroundImage()"
                   class="mb-10"
                 />
               </v-fade-transition>
@@ -69,11 +69,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
-import { v4 as uuidv4 } from 'uuid'
-
-import { useRouter } from '#imports'
+import { useRouter, useRoute } from '#imports'
 
 import { useAccountStore } from '@/store/account'
 
@@ -82,46 +80,60 @@ import { usePostsCrud } from '@/composables/usePostsCrud'
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
 import UploadDropzone from '@/components/commons/UploadDropzone.vue'
 
+import type { IPost } from '@/types/post'
+
 const accountStore = useAccountStore()
 
 const router = useRouter()
+const route = useRoute()
 
 const postsCrud = usePostsCrud()
+
+const postData = ref<IPost | undefined>(undefined)
 
 const title = ref('')
 const content = ref('')
 
 const photoFiles = ref<File[]>([])
 
+onMounted(async () => {
+  await getPost()
+})
+
+async function getPost () {
+  postData.value = await postsCrud.get(route.params.postId as string)
+
+  title.value = postData.value.title
+  content.value = postData.value.content
+}
+
 async function save () {
-  if (accountStore.authUser?.uid) {
-    const postId = uuidv4()
-
-    const savedPost = await postsCrud.createPost(
-      postId,
+  if (accountStore.authUser?.uid && postData.value?._id) {
+    await postsCrud.updatePost(
+      postData.value._id,
       {
-        _id: postId,
-
         title: title.value,
         description: '',
 
         content: content.value,
 
-        createdAt: new Date(),
+        updatedAt: new Date(),
 
         tags: [],
-
-        authorId: accountStore.authUser?.uid,
       },
       photoFiles.value[0],
     )
 
-    await router.push(`/posts/${savedPost._id}`)
+    await router.push(`/posts/${postData.value?._id}`)
   }
 }
 
-function getFileUrl () {
-  return photoFiles.value?.length ? URL.createObjectURL(photoFiles.value[0]) : ''
+function getPostBackgroundImage () {
+  if (photoFiles.value.length > 0) {
+    return URL.createObjectURL(photoFiles.value[0])
+  }
+
+  return postData.value?.backgroundPhotoUrl
 }
 </script>
 

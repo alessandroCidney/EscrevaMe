@@ -11,6 +11,7 @@
         :to="`/posts/${post._id}`"
         class="rounded-lg pb-2"
         width="400px"
+        height="450px"
         shaped
         flat
       >
@@ -18,6 +19,7 @@
           v-if="post.backgroundPhotoUrl"
           :src="post.backgroundPhotoUrl"
           max-height="300px"
+          min-height="300px"
           max-width="100%"
           class="mb-2"
           cover
@@ -33,7 +35,7 @@
           </div>
         </v-card-text>
 
-        <v-card-title class="mb-10">
+        <v-card-title class="mb-6">
           {{ post.title }}
         </v-card-title>
 

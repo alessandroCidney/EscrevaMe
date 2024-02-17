@@ -21,8 +21,22 @@ export function usePostsCrud () {
     return savedPost
   }
 
+  async function updatePost (_id: string, data: Parameters<typeof firestoreCrud.update>[1], backgroundPhoto?: File) {
+    await firestoreCrud.update(_id, data)
+
+    if (backgroundPhoto) {
+      const storageCrud = useStorageCrud(`posts/${_id}/data`)
+      await storageCrud.update(_id, backgroundPhoto, 'background_photo')
+
+      const backgroundPhotoUrl = await storageCrud.getFileUrl('background_photo')
+
+      await firestoreCrud.update(_id, { backgroundPhotoUrl })
+    }
+  }
+
   return {
     createPost,
+    updatePost,
     ...firestoreCrud,
   }
 }

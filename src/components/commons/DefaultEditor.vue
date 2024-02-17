@@ -55,6 +55,8 @@ onUnmounted(() => {
 
 <style lang="scss">
 .editorContentArea {
+  width: 90% !important;
+
   .tiptap p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     float: left;

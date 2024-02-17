@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 * {
-  font-family: Inter, sans-serif;
+  font-family: 'DM Sans', sans-serif !important;
+  letter-spacing: -.5px;
 }
 
 body {
@@ -9,11 +10,11 @@ body {
 }
 
 .normalLetterSpacing {
-  letter-spacing: 0 !important;
+  // letter-spacing: 0 !important;
 }
 
 .v-btn {
-  letter-spacing: 0 !important;
+  // letter-spacing: 0 !important;
 }
 
 .cursorPointer {
@@ -38,9 +39,22 @@ body {
     min-height: calc(100vh);
     margin: 50px auto 0 auto;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     .tiptapPostEditor {
       width: 100%;
       min-height: calc(100vh);
+      line-height: 30px;
+
+      h1, h2, h3, h4, h5, h6, p {
+        margin-bottom: 20px;
+      }
+
+      ul {
+        transform: translateX(20px);
+      }
 
       > div {
         padding: 20px !important;

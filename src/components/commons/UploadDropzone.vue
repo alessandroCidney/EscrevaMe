@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{
-      backgroundImage: `url('${getFileUrl()}')`,
+      backgroundImage: `url('${backgroundImageModel}')`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       backgroundPosition: 'center, center',
@@ -12,7 +12,7 @@
     @dragend="isDragging = false"
     @drop.prevent="handleDrop"
   >
-    <template v-if="!model?.length">
+    <template v-if="!backgroundImage">
       <v-divider color="primary" :thickness="3" />
 
       <v-btn
@@ -40,7 +40,9 @@
 <script setup lang="ts">
 import { defineModel, ref, defineProps } from 'vue'
 
-const model = defineModel<File[]>()
+const filesModel = defineModel<File[]>('files')
+
+const backgroundImageModel = defineModel<string | undefined>('backgroundImage')
 
 const props = defineProps({
   limit: { type: Number, default: undefined },
@@ -52,7 +54,7 @@ const isDragging = ref(false)
 
 function handleUpdate (files?: FileList) {
   if (files && (!props.limit || files?.length < props.limit)) {
-    model.value = Array.from(files)
+    filesModel.value = Array.from(files)
   }
 }
 
@@ -64,10 +66,6 @@ function handleInput (event: Event) {
   if (event.target instanceof HTMLInputElement) {
     handleUpdate(event.target.files ?? undefined)
   }
-}
-
-function getFileUrl () {
-  return model.value?.length ? URL.createObjectURL(model.value[0]) : ''
 }
 </script>
 
