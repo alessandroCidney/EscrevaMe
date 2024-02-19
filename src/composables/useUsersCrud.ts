@@ -6,22 +6,40 @@ import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 export function useUsersCrud () {
   const firestoreCrud = useFirestoreCrud<IDatabaseUser>('users')
 
-  function getProfilePhoto (userId: string) {
+  function getPhoto (userId: string, path: string) {
     const storageCrud = useStorageCrud(`users/${userId}/profile`)
-    return storageCrud.getFileUrl('profile_photo')
+    return storageCrud.getFileUrl(path)
   }
 
-  async function updateProfilePhoto (userId: string, file: File) {
+  async function updatePhoto (userId: string, path: string, property: string, file: File) {
     const storageCrud = useStorageCrud(`users/${userId}/profile`)
-    await storageCrud.create(file, 'profile_photo')
+    await storageCrud.create(file, path)
 
-    const photoUrl = await storageCrud.getFileUrl('profile_photo')
-    await firestoreCrud.update(userId, { photoUrl })
+    const profilePhotoUrl = await storageCrud.getFileUrl(path)
+    await firestoreCrud.update(userId, { [property]: profilePhotoUrl })
+  }
+
+  function getProfilePhoto (userId: string) {
+    return getPhoto(userId, 'profile_photo')
+  }
+
+  function updateProfilePhoto (userId: string, file: File) {
+    return updatePhoto(userId, 'profile_photo', 'profilePhotoUrl', file)
+  }
+
+  function getBackgroundImage (userId: string) {
+    return getPhoto(userId, 'background_image')
+  }
+
+  function updateBackgroundImage (userId: string, file: File) {
+    return updatePhoto(userId, 'background_image', 'backgroundImageUrl', file)
   }
 
   return {
     ...firestoreCrud,
     getProfilePhoto,
     updateProfilePhoto,
+    getBackgroundImage,
+    updateBackgroundImage,
   }
 }

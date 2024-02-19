@@ -8,7 +8,8 @@ export interface IDatabaseUser {
   role: string
   createdAt: Date
 
-  photoUrl: string
+  profilePhotoUrl: string
+  backgroundImageUrl?: string
 }
 
 export const useAccountStore = defineStore('account', {
@@ -23,7 +24,11 @@ export const useAccountStore = defineStore('account', {
     },
 
     userProfilePhotoUrl (state) {
-      return state.databaseUser?.photoUrl || state.authUser?.photoURL
+      return state.databaseUser?.profilePhotoUrl || state.authUser?.photoURL
+    },
+
+    userBackgroundImageUrl (state) {
+      return state.databaseUser?.backgroundImageUrl
     },
   },
 
