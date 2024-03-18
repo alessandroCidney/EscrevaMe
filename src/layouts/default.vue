@@ -1,18 +1,13 @@
 <template>
   <v-layout ref="app" class="defaultLayout">
-    <v-app-bar name="app-bar" class="appBar" flat>
+    <v-app-bar name="app-bar" class="appBar px-8" flat>
       <template #prepend>
-        <v-btn
-          icon="mdi-menu"
+        <v-img
+          src="@/assets/images/logos/black_logo.svg"
+          width="130px"
+          @click="$router.push('/')"
         />
       </template>
-
-      <h1
-        class="logoArea text-primary cursorPointer"
-        @click="$router.push('/')"
-      >
-        escreva.me
-      </h1>
 
       <template #append>
         <v-avatar
@@ -58,11 +53,11 @@ const accountStore = useAccountStore()
 <style lang="scss">
 .defaultLayout {
   .appBar {
-    border-bottom: 1px solid rgb(219, 219, 219);
+    // border-bottom: 1px solid rgb(219, 219, 219);
     position: relative;
 
-    background-color: rgb(255, 255, 255, .9) !important;
-    backdrop-filter: blur(5px);
+    background-color: rgb(255, 255, 255) !important;
+    // backdrop-filter: blur(5px);
 
     > .v-toolbar__content {
       display: flex !important;

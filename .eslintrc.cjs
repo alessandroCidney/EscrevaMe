@@ -20,6 +20,7 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     'import/no-named-as-default-member': 'off',
     'tvue/no-multiple-template-root': 'off',
+    'vue/multi-word-component-names': 'off',
     'vue/no-multiple-template-root': 'off',
     'import/no-named-as-default': 'off',
   },

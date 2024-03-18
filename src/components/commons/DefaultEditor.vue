@@ -25,7 +25,7 @@ const editor = useEditor({
   extensions: [
     StarterKit,
     Placeholder.configure({
-      placeholder: 'Escreva aqui o conteúdo do seu post',
+      placeholder: 'Write your post content here',
     }),
   ],
 

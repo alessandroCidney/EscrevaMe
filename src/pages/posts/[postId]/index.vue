@@ -1,7 +1,7 @@
 <template>
   <section class="postPage">
     <div class="postEditor pb-10">
-      <h1 class="pa-5 mb-5 text-h4 font-weight-bold text-center">
+      <h1 class="pa-5 mb-2 text-h4 font-weight-medium text-center">
         {{ post.title }}
       </h1>
 

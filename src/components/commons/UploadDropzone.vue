@@ -5,26 +5,25 @@
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       backgroundPosition: 'center, center',
+      height: backgroundImageModel ? '400px' : 'auto',
     }"
-    class="d-flex align-center fillHeight"
+    class="d-flex align-center fillWidth"
     @dragover.prevent="isDragging = true"
     @dragleave="isDragging = false"
     @dragend="isDragging = false"
     @drop.prevent="handleDrop"
   >
     <template v-if="!backgroundImage">
-      <v-divider color="primary" :thickness="3" />
-
       <v-btn
         prepend-icon="mdi-image-plus"
-        color="primary"
+        color="#eee"
+        elevation="0"
         class="mx-6"
+        block
         @click="fileInputRef?.click()"
       >
         Adicionar imagem
       </v-btn>
-
-      <v-divider color="primary" :thickness="3" />
 
       <input
         v-show="false"

@@ -2,7 +2,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  // devtools: { enabled: true },
 
   ssr: false,
 
@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '@/assets/scss/global.scss',
+    '@/assets/styles/global.scss',
   ],
 
   build: {
