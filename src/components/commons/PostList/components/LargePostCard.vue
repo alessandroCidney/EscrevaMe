@@ -48,3 +48,9 @@ const vuetifyDisplay = useDisplay()
 
 const isLargeScreen = computed(() => vuetifyDisplay.mdAndUp.value)
 </script>
+
+<style lang="scss" scoped>
+.largePostCard {
+  box-shadow: 0px 4px 10px rgb(0, 0, 0, .05);
+}
+</style>

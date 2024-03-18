@@ -1,8 +1,9 @@
 <template>
   <v-layout ref="app" class="defaultLayout">
-    <v-app-bar name="app-bar" class="appBar px-8" flat>
+    <v-app-bar name="app-bar" class="appBar px-6" flat>
       <template #prepend>
         <v-img
+          class="cursorPointer"
           src="@/assets/images/logos/black_logo.svg"
           width="130px"
           @click="$router.push('/')"
@@ -10,9 +11,32 @@
       </template>
 
       <template #append>
+        <v-btn
+          variant="text"
+          class="text-none"
+        >
+          <v-icon class="mr-1">
+            mdi-home
+          </v-icon>
+
+          <span>Home</span>
+        </v-btn>
+
+        <v-btn
+          variant="text"
+          class="text-none"
+        >
+          <v-icon class="mr-1">
+            mdi-plus-box
+          </v-icon>
+
+          <span>New Post</span>
+        </v-btn>
+
         <v-avatar
           v-if="accountStore.isAuthenticated"
           size="40"
+          class="ml-5"
           @click="$router.push(`/users/${accountStore.authUser?.uid}`)"
         >
           <v-img
@@ -57,6 +81,8 @@ const accountStore = useAccountStore()
     position: relative;
 
     background-color: rgb(255, 255, 255) !important;
+
+    border-bottom: 1px solid #e5e5e5;
     // backdrop-filter: blur(5px);
 
     > .v-toolbar__content {
