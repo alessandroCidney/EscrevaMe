@@ -17,6 +17,11 @@ export default defineNuxtPlugin((app) => {
           dark: false,
           colors: {
             primary: '#0A014F',
+
+            white: '#FFFFFF',
+
+            black: '#000000',
+            'black-lighten-1': '#212121',
           },
         },
       },
