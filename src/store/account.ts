@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 
 import type { User } from 'firebase/auth'
 
+import { useNuxtApp } from '#imports'
+
 export interface IDatabaseUser {
   _id: string
   name: string
@@ -30,6 +32,18 @@ export const useAccountStore = defineStore('account', {
     userBackgroundImageUrl (state) {
       return state.databaseUser?.backgroundImageUrl
     },
+
+    userDisplayName (state) {
+      return state.databaseUser?.name
+    },
+
+    userEmail (state) {
+      return state.authUser?.email
+    },
+
+    userId (state) {
+      return state.databaseUser?._id
+    },
   },
 
   actions: {
@@ -39,6 +53,16 @@ export const useAccountStore = defineStore('account', {
 
     setDatabaseUser (value: typeof this.databaseUser) {
       this.databaseUser = value
+    },
+
+    async signOut () {
+      const nuxtApp = useNuxtApp()
+      await nuxtApp.$auth.signOut()
+
+      this.authUser = undefined
+      this.databaseUser = undefined
+
+      nuxtApp.$router.push('/login')
     },
   },
 })

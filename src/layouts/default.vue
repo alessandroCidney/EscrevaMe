@@ -5,61 +5,13 @@
       'defaultLayout flex-column': true,
     }"
   >
-    <v-app-bar name="app-bar" class="appBar px-6" flat>
-      <template #prepend>
-        <v-img
-          class="cursorPointer"
-          src="@/assets/images/logos/black_logo.svg"
-          width="130px"
-          @click="$router.push('/')"
-        />
-      </template>
-
-      <template #append>
-        <v-btn
-          variant="text"
-        >
-          <v-icon class="mr-1">
-            mdi-home
-          </v-icon>
-
-          <span>Home</span>
-        </v-btn>
-
-        <v-avatar
-          v-if="accountStore.isAuthenticated"
-          size="40"
-          class="ml-5"
-          @click="$router.push(`/users/${accountStore.authUser?.uid}`)"
-        >
-          <v-img
-            v-if="accountStore.userProfilePhotoUrl"
-            :src="accountStore.userProfilePhotoUrl"
-            alt="Avatar"
-            cover
-          />
-
-          <span v-else>
-            {{ accountStore.databaseUser?.name[0] }}
-          </span>
-        </v-avatar>
-
-        <v-btn
-          v-else
-          prepend-icon="mdi-login"
-          color="primary"
-          variant="flat"
-        >
-          Login
-        </v-btn>
-      </template>
-    </v-app-bar>
+    <top-bar />
 
     <v-main>
       <slot />
     </v-main>
 
-    <v-footer class="footerContainer py-10">
+    <v-footer class="footerContainer py-16">
       <div
         :class="{
           'footerContent d-flex align-start justify-center flex-md-row flex-column': true,
@@ -130,15 +82,15 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
 
-import { useAccountStore } from '@/store/account'
-
-const accountStore = useAccountStore()
+import TopBar from '@/components/layouts/TopBar/index.vue'
 
 const { mobile: isMobile } = useDisplay()
 </script>
 
 <style lang="scss">
 .defaultLayout {
+  min-height: 100vh;
+
   .appBar {
     // border-bottom: 1px solid rgb(219, 219, 219);
     position: relative;
@@ -181,6 +133,8 @@ const { mobile: isMobile } = useDisplay()
   .footerContainer {
     background-color: rgb(var(--v-theme-black-lighten-1));
     color: rgb(var(--v-theme-white));
+
+    max-height: 500px;
 
     .footerContent {
       max-width: 1200px;

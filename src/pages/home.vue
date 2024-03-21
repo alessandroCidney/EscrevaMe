@@ -3,7 +3,7 @@
     :style="{ width: '100%' }"
     class="py-10 homePage"
   >
-    <v-tabs v-model="postTab" class="mb-6">
+    <v-tabs v-model="postTab" class="mb-6 px-16">
       <v-tab>
         Recent
       </v-tab>
@@ -17,7 +17,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-window v-model="postTab">
+    <v-window v-model="postTab" class="px-16">
       <v-window-item>
         <v-row class="mb-10">
           <v-col
