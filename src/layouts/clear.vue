@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <v-layout ref="app" class="clearLayout">
     <slot />
-  </div>
+  </v-layout>
 </template>
+
+<style lang="scss" scoped>
+.clearLayout {
+  width: 100vw;
+  height: 100vh;
+}
+</style>

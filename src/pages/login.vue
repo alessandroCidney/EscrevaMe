@@ -1,18 +1,91 @@
 <template>
-  <div>
-    {{ accountStore.isAuthenticated }}
-    <div>Necessário fazer login:</div>
+  <v-row
+    class="loginPage filWidth fillHeight"
+  >
+    <v-col
+      class="d-md-flex d-none bg-primary px-0 imageSection align-center justify-center"
+      cols="6"
+    >
+      <div class="imageArea d-flex align-center justify-center">
+        <v-img
+          src="@/assets/images/illustrations/wireframe.svg"
+        />
+      </div>
+    </v-col>
 
-    <v-btn @click="handleLogin">
-      Fazer login
-    </v-btn>
-  </div>
+    <v-col
+      class="px-0 loginSection d-flex align-center justify-center"
+      cols="12"
+      md="6"
+    >
+      <v-form
+        class="loginForm"
+      >
+        <v-img
+          src="@/assets/images/logos/black_logo.svg"
+          width="200px"
+          class="logo mb-8"
+        />
+
+        <v-btn
+          :loading="loadingGoogleLogin"
+          :disabled="loadingEmailLogin"
+          prepend-icon="mdi-google"
+          color="error"
+          block
+          @click="handleLoginWithGoogle"
+        >
+          Sign in with Google
+        </v-btn>
+
+        <div class="d-flex align-center justify-center orArea py-7">
+          <v-divider />
+
+          <div class="text-center">
+            or
+          </div>
+
+          <v-divider />
+        </div>
+
+        <v-text-field
+          v-model="email"
+          :readonly="loadingEmailLogin || loadingGoogleLogin"
+          label="Email"
+          variant="outlined"
+          type="email"
+        />
+
+        <v-text-field
+          v-model="password"
+          :readonly="loadingEmailLogin || loadingGoogleLogin"
+          label="Password"
+          variant="outlined"
+          type="password"
+        />
+
+        <v-btn
+          :loading="loadingEmailLogin"
+          :disabled="loadingGoogleLogin"
+          prepend-icon="mdi-email"
+          color="primary"
+          block
+          @click="handleLoginWithEmail"
+        >
+          Sign in with Email
+        </v-btn>
+      </v-form>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup lang="ts">
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { ref } from 'vue'
+
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth'
 
 import { useAccountStore } from '@/store/account'
+import { useUsersCrud } from '@/composables/useUsersCrud'
 
 import { useNuxtApp, definePageMeta } from '#imports'
 
@@ -21,10 +94,80 @@ definePageMeta({
 })
 
 const accountStore = useAccountStore()
+const usersCrud = useUsersCrud()
+
+const loadingGoogleLogin = ref(false)
+const loadingEmailLogin = ref(false)
+
+const email = ref('')
+const password = ref('')
+
 const nuxtApp = useNuxtApp()
 
-async function handleLogin () {
-  const provider = new GoogleAuthProvider()
-  await signInWithPopup(nuxtApp.$auth, provider)
+async function handleLoginWithGoogle () {
+  try {
+    loadingGoogleLogin.value = true
+
+    const provider = new GoogleAuthProvider()
+
+    const userCredential = await signInWithPopup(nuxtApp.$auth, provider)
+
+    const databaseUser = await usersCrud.get(userCredential.user.uid)
+
+    accountStore.setAuthUser(userCredential.user)
+    accountStore.setDatabaseUser(databaseUser)
+    await nuxtApp.$router.push('home')
+  } catch (err) {
+    console.error(err)
+  } finally {
+    loadingGoogleLogin.value = false
+  }
+}
+
+async function handleLoginWithEmail () {
+  try {
+    loadingEmailLogin.value = true
+
+    await signInWithEmailAndPassword(nuxtApp.$auth, email.value, password.value)
+
+    await nuxtApp.$router.push('home')
+  } catch (err) {
+    console.error(err)
+  } finally {
+    loadingEmailLogin.value = false
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.loginPage {
+  margin: 0;
+
+  .imageSection {
+    .imageArea {
+      width: 600px;
+      height: 600px;
+
+      border-radius: 16px;
+
+      background-color: #251a7e;
+    }
+  }
+
+  .loginSection {
+    .loginForm {
+      width: 400px;
+
+      .orArea {
+        > * {
+          width: 33%;
+        }
+      }
+
+      .logo {
+        margin: 0 auto;
+      }
+    }
+  }
+}
+</style>

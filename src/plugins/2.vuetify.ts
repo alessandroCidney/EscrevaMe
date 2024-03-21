@@ -22,6 +22,8 @@ export default defineNuxtPlugin((app) => {
 
             black: '#000000',
             'black-lighten-1': '#212121',
+
+            error: '#ff4545',
           },
         },
       },
