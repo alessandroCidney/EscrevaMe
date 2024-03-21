@@ -2,7 +2,7 @@
   <v-card
     :to="`/posts/${props.post._id}`"
     :width="props.width ?? '100%'"
-    class="rounded-lg pb-2 postCard"
+    class="pb-2 postCard rounded-0"
     shaped
     flat
   >
@@ -12,23 +12,23 @@
       :max-height="props.imageHeight ?? '250px'"
       :min-height="props.imageHeight ?? '250px'"
       max-width="100%"
-      class="mb-2 rounded-lg"
+      class="mb-2"
       cover
     />
 
-    <v-card-text class=" py-0 px-2 mt-5 font-weight-medium">
+    <v-card-text class="px-4 py-0 mt-5 font-weight-medium">
       Programação
     </v-card-text>
 
-    <v-card-title class="font-weight-bold titleLetterSpacing px-2">
+    <v-card-title class="px-4 font-weight-bold titleLetterSpacing">
       {{ props.post.title }}
     </v-card-title>
 
-    <v-card-text class="px-2">
+    <v-card-text class="px-4">
       Esta é a descrição de um post incrível
     </v-card-text>
 
-    <v-card-text class="px-2">
+    <v-card-text class="px-4">
       {{ getFromNowDate(props.post.createdAt) }}
     </v-card-text>
   </v-card>

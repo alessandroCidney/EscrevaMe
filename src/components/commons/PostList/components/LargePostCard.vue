@@ -2,7 +2,7 @@
   <v-card
     :to="`/posts/${props.post._id}`"
     width="100%"
-    class="rounded-lg"
+    class="rounded-0"
     shaped
     flat
   >
@@ -13,7 +13,6 @@
         :max-height="'300px'"
         :min-height="'300px'"
         :width="isLargeScreen ? '50%' : '100%'"
-        class="rounded-lg"
         cover
       />
 

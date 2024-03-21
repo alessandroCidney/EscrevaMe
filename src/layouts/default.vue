@@ -18,24 +18,12 @@
       <template #append>
         <v-btn
           variant="text"
-          class="text-none"
         >
           <v-icon class="mr-1">
             mdi-home
           </v-icon>
 
           <span>Home</span>
-        </v-btn>
-
-        <v-btn
-          variant="text"
-          class="text-none"
-        >
-          <v-icon class="mr-1">
-            mdi-plus-box
-          </v-icon>
-
-          <span>New Post</span>
         </v-btn>
 
         <v-avatar
@@ -78,7 +66,7 @@
           isMobile,
         }"
       >
-        <div :class="{ 'footerSection text-center': true, isMobile }">
+        <div :class="{ 'footerSection text-md-left text-center': true, isMobile }">
           <div class="footerSectionTitle mb-1">
             <v-img
               src="@/assets/images/logos/white_logo.svg"
@@ -88,18 +76,18 @@
             />
           </div>
 
-          <div>Alessandro Cídney &copy; 2024</div>
-
-          <div>Todos os direitos reservados</div>
+          <div>Alessandro Cídney &copy; 2024 - Todos os direitos reservados</div>
         </div>
 
-        <div class="footerSection text-md-left text-center">
+        <div :class="{ 'footerSection text-md-left text-center': true, isMobile }">
           <div class="footerSectionTitle text-h6 font-weight-bold">
             Contato
           </div>
 
           <ul>
-            <li>preencherdepois@exemplo.com</li>
+            <li>
+              preencherdepois@exemplo.com
+            </li>
           </ul>
         </div>
 
@@ -203,21 +191,23 @@ const { mobile: isMobile } = useDisplay()
 
       &.isMobile {
         gap: 50px;
+
+        .footerLogo {
+          margin: 0 auto;
+        }
       }
 
       .footerSection {
+        max-width: calc(100% / 3);
+
         &.isMobile {
           margin: 0 auto;
+          max-width: 100%;
         }
 
         .footerSectionTitle {
           height: 30px;
           line-height: 20px;
-
-          .footerLogo {
-            display: block;
-            margin: 0 auto;
-          }
         }
       }
     }
