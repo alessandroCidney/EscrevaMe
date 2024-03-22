@@ -13,23 +13,39 @@
         :style="{
           width: '90%'
         }"
-        class="text-left px-5"
+        class="text-left px-5 d-flex align-center justify-space-between"
       >
-        Nome do Autor - {{ formatDate(post.createdAt) }}
+        <div>
+          Nome do Autor - {{ formatDate(post.createdAt) }}
+        </div>
+
+        <div v-if="accountStore.userId === post.authorId">
+          <v-btn
+            icon="mdi-pencil"
+            variant="text"
+            size="small"
+            @click="$router.push(`/posts/${post._id}/update`)"
+          />
+
+          <v-btn
+            icon="mdi-delete"
+            variant="text"
+            size="small"
+          />
+        </div>
       </div>
 
       <h1
         :style="{
           width: '90%'
         }"
-        class="pa-5 mb-2 text-h4 font-weight-medium text-left"
+        class="pa-5 mb-2 text-h4 font-weight-bold text-left"
       >
-        {{ post.title }}
+        {{ titleModel }}
       </h1>
 
       <default-editor
-        v-model="post.content"
-        :editable="false"
+        :editor="tiptapEditor.editor"
         class="tiptapPostEditor"
       />
     </div>
@@ -37,18 +53,33 @@
 </template>
 
 <script setup lang="ts">
+import { defineModel, ref } from 'vue'
+
 import moment from 'moment'
+
+import { useAccountStore } from '@/store/account'
 
 import { useRoute } from '#imports'
 import { usePostsCrud } from '@/composables/usePostsCrud'
+import { useTiptapEditor } from '@/composables/useTiptapEditor'
 
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
+
+const accountStore = useAccountStore()
 
 const postsCrud = usePostsCrud()
 
 const route = useRoute()
 
-const post = await postsCrud.get(route.params.postId as string)
+const post = ref(await postsCrud.get(route.params.postId as string))
+
+const titleModel = defineModel<string>('title', { default: '' })
+const contentModel = defineModel<string>('content', { default: '' })
+
+titleModel.value = post.value.title
+contentModel.value = post.value.content
+
+const tiptapEditor = useTiptapEditor(contentModel, { editable: false })
 
 function formatDate (createdAt: Date) {
   return moment(createdAt).format('MMMM Do YYYY, h:mm a')
