@@ -71,6 +71,15 @@
         transform: translateX(20px);
       }
 
+      pre {
+        padding: 20px 10px;
+
+        border-radius: 8px;
+
+        background-color: rgb(var(--v-theme-black-lighten-1));
+        color: rgb(var(--v-theme-white));
+      }
+
       > div {
         padding: 20px !important;
         min-height: calc(100vh) !important;

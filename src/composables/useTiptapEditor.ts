@@ -49,10 +49,25 @@ export function useTiptapEditor (contentModel: ModelRef<string, string>, editorP
     editor.value?.chain().focus().setParagraph().run()
   }
 
+  function toggleBold () {
+    editor.value?.chain().focus().toggleBold().run()
+  }
+
+  function toggleItalic () {
+    editor.value?.chain().focus().toggleItalic().run()
+  }
+
+  function toggleCodeBlock () {
+    editor.value?.chain().focus().toggleCodeBlock().run()
+  }
+
   return {
     editor,
     contentModel,
     toggleHeading,
     setParagraph,
+    toggleBold,
+    toggleItalic,
+    toggleCodeBlock,
   }
 }
