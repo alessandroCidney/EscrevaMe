@@ -1,21 +1,31 @@
 <template>
   <section class="postPage">
     <div class="postEditor pb-10">
-      <h1 class="pa-5 mb-2 text-h4 font-weight-medium text-center">
-        {{ post.title }}
-      </h1>
-
-      <div class="mb-14">
-        {{ formatDate(post.createdAt) }}
-      </div>
-
       <v-img
         :src="post.backgroundPhotoUrl"
-        height="500px"
-        width="100%"
+        height="400px"
+        width="calc(90% - 40px)"
         class="mb-10"
         cover
       />
+
+      <div
+        :style="{
+          width: '90%'
+        }"
+        class="text-left px-5"
+      >
+        Nome do Autor - {{ formatDate(post.createdAt) }}
+      </div>
+
+      <h1
+        :style="{
+          width: '90%'
+        }"
+        class="pa-5 mb-2 text-h4 font-weight-medium text-left"
+      >
+        {{ post.title }}
+      </h1>
 
       <default-editor
         v-model="post.content"

@@ -1,26 +1,32 @@
 <template>
   <section class="postPage">
     <div class="postEditor">
-      <div :style="{ width: '90%' }" class="mb-5">
-        <upload-dropzone
-          v-model:files="photoFiles"
-          :background-image="getFileUrl()"
-          class="mb-10"
-        />
-      </div>
-
       <div :style="{ width: '90%' }" class="d-flex align-center justify-space-between mb-6 px-5">
         <div class="d-flex align-center">
           <div class="mr-6">
-            <v-btn width="160px" variant="flat" color="#eee">
-              Paragraph
-
-              <template #append>
-                <v-icon size="small">
-                  mdi-chevron-down
-                </v-icon>
+            <v-menu>
+              <template #activator="{ props, isActive }">
+                <v-btn
+                  width="150px"
+                  color="#eee"
+                  elevation="0"
+                  :append-icon="isActive ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                  v-bind="props"
+                >
+                  {{ selectedFormatOption?.title }}
+                </v-btn>
               </template>
-            </v-btn>
+
+              <v-list>
+                <v-list-item
+                  v-for="(formatOption, formatOptionIndex) in formatOptions"
+                  :key="formatOptionIndex"
+                  @click="formatOption.action"
+                >
+                  {{ formatOption.title }}
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
 
           <v-divider class="mx-5" vertical />
@@ -56,7 +62,7 @@
       </div>
 
       <default-editor
-        v-model="content"
+        v-model:editor="tiptapEditor.editor"
         class="tiptapPostEditor"
       />
     </div>
@@ -64,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, defineModel, computed } from 'vue'
 
 import { v4 as uuidv4 } from 'uuid'
 
@@ -73,9 +79,31 @@ import { useRouter } from '#imports'
 import { useAccountStore } from '@/store/account'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
+import { useTiptapEditor } from '@/composables/useTiptapEditor'
 
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
-import UploadDropzone from '@/components/commons/UploadDropzone.vue'
+
+const contentModel = defineModel<string>({ default: '' })
+const tiptapEditor = useTiptapEditor(contentModel)
+
+const levelsArr: (1 | 2 | 3 | 4 | 5 | 6)[] = [1, 2, 3, 4, 5, 6]
+
+const formatOptions = reactive([
+  {
+    title: 'Paragraph',
+    action: () => tiptapEditor.setParagraph(),
+    isActive: () => tiptapEditor.editor.value?.isActive('paragraph'),
+  },
+  ...(
+    levelsArr.map(level => ({
+      title: `Heading ${level}`,
+      action: () => tiptapEditor.toggleHeading(level),
+      isActive: () => tiptapEditor.editor.value?.isActive('heading', { level }),
+    }))
+  ),
+])
+
+const selectedFormatOption = computed(() => formatOptions.find(formatOption => formatOption.isActive()) || formatOptions[0])
 
 const accountStore = useAccountStore()
 
@@ -84,7 +112,6 @@ const router = useRouter()
 const postsCrud = usePostsCrud()
 
 const title = ref('')
-const content = ref('')
 
 const photoFiles = ref<File[]>([])
 
@@ -100,7 +127,7 @@ async function save () {
         title: title.value,
         description: '',
 
-        content: content.value,
+        content: contentModel.value,
 
         createdAt: new Date(),
 
@@ -115,9 +142,9 @@ async function save () {
   }
 }
 
-function getFileUrl () {
-  return photoFiles.value?.length ? URL.createObjectURL(photoFiles.value[0]) : ''
-}
+// function getFileUrl () {
+//   return photoFiles.value?.length ? URL.createObjectURL(photoFiles.value[0]) : ''
+// }
 </script>
 
 <style lang="scss">

@@ -1,56 +1,16 @@
 <template>
   <editor-content
     class="editorContentArea"
-    :editor="editor"
+    :editor="editorModel?.value"
   />
 </template>
 
 <script setup lang="ts">
-import { defineModel, defineEmits, onMounted, onUnmounted, watch, defineProps } from 'vue'
+import { defineModel, type ShallowRef } from 'vue'
 
-import Placeholder from '@tiptap/extension-placeholder'
-import { useEditor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
+import { EditorContent, Editor } from '@tiptap/vue-3'
 
-const model = defineModel<string>({ default: '' })
-const emit = defineEmits(['update:modelValue'])
-
-const props = defineProps({ editable: { type: Boolean, default: true } })
-
-const editor = useEditor({
-  content: model.value,
-
-  editable: props.editable,
-
-  extensions: [
-    StarterKit,
-    Placeholder.configure({
-      placeholder: 'Write your post content here',
-    }),
-  ],
-
-  onUpdate () {
-    emit('update:modelValue', editor.value?.getHTML() ?? '')
-  },
-})
-
-onMounted(() => {
-  editor.value?.commands.setContent(model.value, false)
-})
-
-watch(model, (value = '') => {
-  const isSame = editor.value?.getHTML() === value
-
-  if (isSame) {
-    return
-  }
-
-  editor.value?.commands.setContent(value, false)
-})
-
-onUnmounted(() => {
-  editor.value?.destroy()
-})
+const editorModel = defineModel<ShallowRef<Editor | undefined>>('editor')
 </script>
 
 <style lang="scss">
