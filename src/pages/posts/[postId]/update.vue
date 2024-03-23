@@ -15,6 +15,7 @@ import { useRouter, useRoute } from '#imports'
 
 import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
+import { usePopupStore } from '@/store/popup'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
@@ -24,6 +25,7 @@ import type { IPost } from '@/types/post'
 
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
+const popupStore = usePopupStore()
 
 const router = useRouter()
 const route = useRoute()
@@ -51,26 +53,34 @@ async function save () {
   try {
     mainStore.setOverlay(true)
 
-    if (accountStore.authUser?.uid && postData.value?._id) {
-      await postsCrud.updatePost(
-        postData.value._id,
-        {
-          title: title.value,
-          description: '',
-
-          content: content.value,
-
-          updatedAt: new Date(),
-
-          tags: [],
-        },
-        photoFile.value,
-      )
-
-      await router.push(`/posts/${postData.value?._id}`)
+    if (!accountStore.authUser?.uid) {
+      throw new Error('The user is not authenticated')
     }
+
+    if (!postData.value?._id) {
+      throw new Error('Unable to find post data')
+    }
+
+    await postsCrud.updatePost(
+      postData.value._id,
+      {
+        title: title.value,
+        description: '',
+
+        content: content.value,
+
+        updatedAt: new Date(),
+
+        tags: [],
+      },
+      photoFile.value,
+    )
+
+    await router.push(`/posts/${postData.value?._id}`)
   } catch (err) {
-    // console.error
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
   } finally {
     mainStore.setOverlay(false)
   }

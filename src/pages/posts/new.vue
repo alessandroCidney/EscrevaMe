@@ -16,6 +16,7 @@ import { useRouter } from '#imports'
 
 import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
+import { usePopupStore } from '@/store/popup'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
@@ -23,6 +24,7 @@ import PostEditPage from '@/components/pages/PostEditPage.vue'
 
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
+const popupStore = usePopupStore()
 
 const postsCrud = usePostsCrud()
 const router = useRouter()
@@ -32,35 +34,39 @@ const content = ref('')
 const photoFile = ref<File | undefined>(undefined)
 
 async function save () {
-  mainStore.setOverlay(true)
-
   try {
-    if (accountStore.authUser?.uid) {
-      const postId = uuidv4()
+    mainStore.setOverlay(true)
 
-      const savedPost = await postsCrud.createPost(
-        postId,
-        {
-          _id: postId,
-
-          title: title.value,
-          description: '',
-
-          content: content.value,
-
-          createdAt: new Date(),
-
-          tags: [],
-
-          authorId: accountStore.authUser?.uid,
-        },
-        photoFile.value,
-      )
-
-      await router.push(`/posts/${savedPost._id}`)
+    if (!accountStore.authUser?.uid) {
+      throw new Error('The user is not authenticated')
     }
+
+    const postId = uuidv4()
+
+    const savedPost = await postsCrud.createPost(
+      postId,
+      {
+        _id: postId,
+
+        title: title.value,
+        description: '',
+
+        content: content.value,
+
+        createdAt: new Date(),
+
+        tags: [],
+
+        authorId: accountStore.authUser?.uid,
+      },
+      photoFile.value,
+    )
+
+    await router.push(`/posts/${savedPost._id}`)
   } catch (err) {
-    // console.error(err)
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
   } finally {
     mainStore.setOverlay(false)
   }
