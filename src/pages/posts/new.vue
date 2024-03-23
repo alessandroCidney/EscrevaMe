@@ -66,6 +66,8 @@ async function save () {
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
     }
   } finally {
     mainStore.setOverlay(false)

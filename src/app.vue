@@ -34,7 +34,7 @@
 
       <template #actions>
         <v-btn
-          :color="popupStore.type"
+          color="white"
           variant="text"
           @click="popupStore.closePopup()"
         >

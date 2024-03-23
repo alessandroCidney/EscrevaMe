@@ -82,9 +82,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { FirebaseError } from 'firebase/app'
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth'
 
 import { useAccountStore } from '@/store/account'
+import { usePopupStore } from '@/store/popup'
+
+import { getFirebaseErrorMessage } from '@/utils/error'
+
 import { useUsersCrud } from '@/composables/useUsersCrud'
 
 import { useNuxtApp, definePageMeta } from '#imports'
@@ -94,6 +99,8 @@ definePageMeta({
 })
 
 const accountStore = useAccountStore()
+const popupStore = usePopupStore()
+
 const usersCrud = useUsersCrud()
 
 const loadingGoogleLogin = ref(false)
@@ -118,7 +125,13 @@ async function handleLoginWithGoogle () {
     accountStore.setDatabaseUser(databaseUser)
     await nuxtApp.$router.push('home')
   } catch (err) {
-    console.error(err)
+    if (err instanceof FirebaseError) {
+      popupStore.showErrorPopup(getFirebaseErrorMessage(err.code))
+    } else if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
   } finally {
     loadingGoogleLogin.value = false
   }
@@ -132,7 +145,13 @@ async function handleLoginWithEmail () {
 
     await nuxtApp.$router.push('home')
   } catch (err) {
-    console.error(err)
+    if (err instanceof FirebaseError) {
+      popupStore.showErrorPopup(getFirebaseErrorMessage(err.code))
+    } else if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
   } finally {
     loadingEmailLogin.value = false
   }
