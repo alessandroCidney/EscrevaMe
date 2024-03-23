@@ -13,6 +13,7 @@ import { ref, onMounted } from 'vue'
 
 import { useRouter, useRoute } from '#imports'
 
+import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
@@ -21,6 +22,7 @@ import PostEditPage from '@/components/pages/PostEditPage.vue'
 
 import type { IPost } from '@/types/post'
 
+const mainStore = useMainStore()
 const accountStore = useAccountStore()
 
 const router = useRouter()
@@ -46,23 +48,31 @@ async function getPost () {
 }
 
 async function save () {
-  if (accountStore.authUser?.uid && postData.value?._id) {
-    await postsCrud.updatePost(
-      postData.value._id,
-      {
-        title: title.value,
-        description: '',
+  try {
+    mainStore.setOverlay(true)
 
-        content: content.value,
+    if (accountStore.authUser?.uid && postData.value?._id) {
+      await postsCrud.updatePost(
+        postData.value._id,
+        {
+          title: title.value,
+          description: '',
 
-        updatedAt: new Date(),
+          content: content.value,
 
-        tags: [],
-      },
-      photoFile.value,
-    )
+          updatedAt: new Date(),
 
-    await router.push(`/posts/${postData.value?._id}`)
+          tags: [],
+        },
+        photoFile.value,
+      )
+
+      await router.push(`/posts/${postData.value?._id}`)
+    }
+  } catch (err) {
+    // console.error
+  } finally {
+    mainStore.setOverlay(false)
   }
 }
 </script>
