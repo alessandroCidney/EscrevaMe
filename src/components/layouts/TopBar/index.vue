@@ -3,9 +3,9 @@
     <template #prepend>
       <v-img
         class="cursorPointer"
-        src="@/assets/images/logos/black_logo.svg"
+        src="@/assets/images/logos/blue_logo.svg"
         width="130px"
-        @click="$router.push('/')"
+        @click="$router.push('/home')"
       />
     </template>
 

@@ -49,6 +49,7 @@
     </v-window>
 
     <v-btn
+      :style="{ zIndex: 10 }"
       location="bottom right"
       position="fixed"
       color="primary"

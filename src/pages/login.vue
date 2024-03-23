@@ -22,7 +22,7 @@
         class="loginForm"
       >
         <v-img
-          src="@/assets/images/logos/black_logo.svg"
+          src="@/assets/images/logos/blue_logo.svg"
           width="200px"
           class="logo mb-8"
         />
@@ -68,7 +68,7 @@
           :loading="loadingEmailLogin"
           :disabled="loadingGoogleLogin"
           prepend-icon="mdi-email"
-          color="primary"
+          color="secondary"
           block
           @click="handleLoginWithEmail"
         >
@@ -95,7 +95,7 @@ import { useUsersCrud } from '@/composables/useUsersCrud'
 import { useNuxtApp, definePageMeta } from '#imports'
 
 definePageMeta({
-  layout: 'clear',
+  layout: 'contained',
 
   requiresAuth: false,
   redirectIfAuthenticated: true,
@@ -172,7 +172,7 @@ async function handleLoginWithEmail () {
 
       border-radius: 16px;
 
-      background-color: #251a7e;
+      background-color: rgb(var(--v-theme-primary));
     }
   }
 

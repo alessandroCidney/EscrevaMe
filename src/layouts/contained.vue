@@ -1,12 +1,12 @@
 <template>
-  <v-layout ref="app" class="clearLayout">
+  <v-layout ref="app" class="containedLayout">
     <slot />
   </v-layout>
 </template>
 
 <style lang="scss" scoped>
-.clearLayout {
+.containedLayout {
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
 }
 </style>
