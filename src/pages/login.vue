@@ -96,6 +96,9 @@ import { useNuxtApp, definePageMeta } from '#imports'
 
 definePageMeta({
   layout: 'clear',
+
+  requiresAuth: false,
+  redirectIfAuthenticated: true,
 })
 
 const accountStore = useAccountStore()

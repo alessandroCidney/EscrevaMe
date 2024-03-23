@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-import { useRouter, useRoute } from '#imports'
+import { useRouter, useRoute, definePageMeta } from '#imports'
 
 import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
@@ -22,6 +22,10 @@ import { usePostsCrud } from '@/composables/usePostsCrud'
 import PostEditPage from '@/components/pages/PostEditPage.vue'
 
 import type { IPost } from '@/types/post'
+
+definePageMeta({
+  requiresAuth: true,
+})
 
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
@@ -43,10 +47,22 @@ onMounted(async () => {
 })
 
 async function getPost () {
-  postData.value = await postsCrud.get(route.params.postId as string)
+  try {
+    mainStore.setOverlay(true)
 
-  title.value = postData.value.title
-  content.value = postData.value.content
+    postData.value = await postsCrud.get(route.params.postId as string)
+
+    title.value = postData.value.title
+    content.value = postData.value.content
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    mainStore.setOverlay(false)
+  }
 }
 
 async function save () {

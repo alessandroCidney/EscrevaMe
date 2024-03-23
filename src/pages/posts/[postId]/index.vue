@@ -59,11 +59,15 @@ import moment from 'moment'
 
 import { useAccountStore } from '@/store/account'
 
-import { useRoute } from '#imports'
+import { useRoute, definePageMeta } from '#imports'
 import { usePostsCrud } from '@/composables/usePostsCrud'
 import { useTiptapEditor } from '@/composables/useTiptapEditor'
 
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
+
+definePageMeta({
+  requiresAuth: true,
+})
 
 const accountStore = useAccountStore()
 

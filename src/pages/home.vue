@@ -67,6 +67,12 @@ import LargePostCard from '@/components/commons/PostList/components/LargePostCar
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
+import { definePageMeta } from '#imports'
+
+definePageMeta({
+  requiresAuth: true,
+})
+
 const postsCrud = usePostsCrud()
 
 const posts = await postsCrud.list()

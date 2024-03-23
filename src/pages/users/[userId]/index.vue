@@ -28,7 +28,11 @@ import { useUsersCrud } from '@/composables/useUsersCrud'
 
 import { useAccountStore } from '@/store/account'
 
-import { useRoute } from '#imports'
+import { useRoute, definePageMeta } from '#imports'
+
+definePageMeta({
+  requiresAuth: true,
+})
 
 const route = useRoute()
 

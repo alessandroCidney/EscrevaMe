@@ -12,7 +12,7 @@ import { ref } from 'vue'
 
 import { v4 as uuidv4 } from 'uuid'
 
-import { useRouter } from '#imports'
+import { useRouter, definePageMeta } from '#imports'
 
 import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
@@ -21,6 +21,10 @@ import { usePopupStore } from '@/store/popup'
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
 import PostEditPage from '@/components/pages/PostEditPage.vue'
+
+definePageMeta({
+  requiresAuth: true,
+})
 
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
