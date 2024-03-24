@@ -19,7 +19,10 @@
 
     <v-window v-model="postTab" class="px-16">
       <v-window-item>
-        <v-row class="mb-10">
+        <v-row
+          v-if="posts.length > 0"
+          class="mb-10"
+        >
           <v-col
             class="d-flex align-center justify-center"
             cols="12"
@@ -61,12 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+
+import { useMainStore } from '@/store/index'
+import { usePopupStore } from '@/store/popup'
 
 import PostList from '@/components/commons/PostList/index.vue'
 import LargePostCard from '@/components/commons/PostList/components/LargePostCard.vue'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
+
+import type { IPost } from '@/types/post'
 
 import { definePageMeta } from '#imports'
 
@@ -74,11 +82,31 @@ definePageMeta({
   requiresAuth: true,
 })
 
+const mainStore = useMainStore()
+const popupStore = usePopupStore()
+
 const postsCrud = usePostsCrud()
 
-const posts = await postsCrud.list()
-
+const posts = ref<IPost[]>([])
 const postTab = ref<number | null>(null)
+
+async function listPosts () {
+  try {
+    mainStore.setOverlay(true)
+
+    posts.value = await postsCrud.list()
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
+  } finally {
+    mainStore.setOverlay(false)
+  }
+}
+
+onMounted(() => {
+  listPosts()
+})
 </script>
 
 <style lang="scss" scoped>

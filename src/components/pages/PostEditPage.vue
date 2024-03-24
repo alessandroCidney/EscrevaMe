@@ -85,7 +85,7 @@
         <v-spacer />
 
         <v-btn
-          color="primary"
+          color="secondary"
           @click="emit('save')"
         >
           Save
