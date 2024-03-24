@@ -1,3 +1,5 @@
+import { where } from 'firebase/firestore'
+
 import { type IPost, postConverter } from '@/types/post'
 
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
@@ -5,6 +7,10 @@ import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
 export function usePostsCrud () {
   const firestoreCrud = useFirestoreCrud<IPost>('posts', postConverter)
+
+  function listPublicPosts () {
+    return firestoreCrud.list(where('private', '==', false))
+  }
 
   async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto?: File) {
     const savedPost = await firestoreCrud.create(_id, data)
@@ -37,6 +43,7 @@ export function usePostsCrud () {
   return {
     createPost,
     updatePost,
+    listPublicPosts,
     ...firestoreCrud,
   }
 }

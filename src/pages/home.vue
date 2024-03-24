@@ -3,7 +3,11 @@
     :style="{ width: '100%' }"
     class="py-10 homePage"
   >
-    <v-tabs v-model="postTab" class="mb-6 px-16">
+    <v-tabs
+      v-if="!loadingPosts"
+      v-model="postTab"
+      class="mb-6 px-16"
+    >
       <v-tab>
         Recent
       </v-tab>
@@ -17,7 +21,11 @@
       </v-tab>
     </v-tabs>
 
-    <v-window v-model="postTab" class="px-16">
+    <v-window
+      v-if="!loadingPosts"
+      v-model="postTab"
+      class="px-16"
+    >
       <v-window-item>
         <v-row
           v-if="posts.length > 0"
@@ -28,13 +36,13 @@
             cols="12"
           >
             <large-post-card
-              :post="posts[1]"
+              :post="posts[0]"
             />
           </v-col>
         </v-row>
 
         <post-list
-          :posts="posts"
+          :posts="posts.slice(1, posts.length)"
         />
       </v-window-item>
 
@@ -52,6 +60,7 @@
     </v-window>
 
     <v-btn
+      v-if="accountStore.isAuthenticated"
       :style="{ zIndex: 10 }"
       location="bottom right"
       position="fixed"
@@ -67,6 +76,7 @@
 import { ref, onMounted } from 'vue'
 
 import { useMainStore } from '@/store/index'
+import { useAccountStore } from '@/store/account'
 import { usePopupStore } from '@/store/popup'
 
 import PostList from '@/components/commons/PostList/index.vue'
@@ -79,10 +89,11 @@ import type { IPost } from '@/types/post'
 import { definePageMeta } from '#imports'
 
 definePageMeta({
-  requiresAuth: true,
+  requiresAuth: false,
 })
 
 const mainStore = useMainStore()
+const accountStore = useAccountStore()
 const popupStore = usePopupStore()
 
 const postsCrud = usePostsCrud()
@@ -90,16 +101,20 @@ const postsCrud = usePostsCrud()
 const posts = ref<IPost[]>([])
 const postTab = ref<number | null>(null)
 
+const loadingPosts = ref(false)
+
 async function listPosts () {
   try {
+    loadingPosts.value = true
     mainStore.setOverlay(true)
 
-    posts.value = await postsCrud.list()
+    posts.value = await postsCrud.listPublicPosts()
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
     }
   } finally {
+    loadingPosts.value = false
     mainStore.setOverlay(false)
   }
 }
@@ -112,6 +127,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .homePage {
   max-width: 1200px;
+  min-height: 100vh;
   margin: 0 auto;
 }
 </style>

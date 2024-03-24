@@ -16,7 +16,7 @@
     </v-col>
   </v-row>
 
-  <v-row>
+  <v-row v-else>
     <v-col
       class="d-flex align-center justify-center flex-column text-center mb-10"
       cols="12"

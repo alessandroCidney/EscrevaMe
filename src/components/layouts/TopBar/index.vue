@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar name="app-bar" class="appBar px-6" flat>
+  <v-app-bar name="app-bar" class="appBar px-5" flat>
     <template #prepend>
       <v-img
         class="cursorPointer"
@@ -10,16 +10,6 @@
     </template>
 
     <template #append>
-      <v-btn
-        variant="text"
-      >
-        <v-icon class="mr-1">
-          mdi-home
-        </v-icon>
-
-        <span>Home</span>
-      </v-btn>
-
       <v-menu v-if="accountStore.isAuthenticated" width="300px">
         <template #activator="{ props }">
           <user-avatar class="cursorPointer" v-bind="props" />
@@ -66,14 +56,23 @@
         </v-list>
       </v-menu>
 
-      <v-btn
-        v-else
-        prepend-icon="mdi-login"
-        color="primary"
-        variant="flat"
-      >
-        Login
-      </v-btn>
+      <template v-else>
+        <v-btn
+          variant="text"
+          color="secondary"
+          @click="$router.push('/login')"
+        >
+          Sign in
+        </v-btn>
+
+        <v-btn
+          variant="text"
+          color="secondary"
+          @click="$router.push('/signup')"
+        >
+          Join us
+        </v-btn>
+      </template>
     </template>
   </v-app-bar>
 </template>
