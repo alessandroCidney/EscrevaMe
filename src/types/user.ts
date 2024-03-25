@@ -3,13 +3,24 @@ import type { FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, Ti
 export interface IDatabaseUser {
   _id: string
   name: string
+  active: boolean
   role: string
 
-  profilePhotoUrl: string
+  profilePhotoUrl?: string
   backgroundImageUrl?: string
 
   createdAt: Date
   updatedAt?: Date
+}
+
+export interface IPrivateDatabaseUserData {
+  _id: string
+  email?: string
+}
+
+export type TPartialNewUser = Omit<IDatabaseUser, '_id'> & {
+  email: string
+  password: string
 }
 
 export interface IFirestoreUser extends Omit<IDatabaseUser, 'createdAt' | 'updatedAt'> {
@@ -20,16 +31,18 @@ export interface IFirestoreUser extends Omit<IDatabaseUser, 'createdAt' | 'updat
 export class UserModel {
   _id!: string
   name!: string
+  active: boolean
   role!: string
   createdAt!: Date
   updatedAt?: Date
 
-  profilePhotoUrl!: string
+  profilePhotoUrl?: string
   backgroundImageUrl?: string
 
   constructor (user: IDatabaseUser) {
     this._id = user._id
     this.name = user.name
+    this.active = user.active
     this.role = user.role
     this.createdAt = user.createdAt
     this.updatedAt = user.updatedAt

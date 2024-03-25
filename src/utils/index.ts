@@ -25,3 +25,13 @@ export function selectFile (callbackFn: (files: File) => Promise<void> | void) {
   document.body.removeEventListener('change', onChange)
   document.body.removeChild(inputElement)
 }
+
+export function removeObjectEmptyValues <T extends { [k: string]: any }> (obj: T) {
+  for (const key in obj) {
+    if ([null, undefined].includes(obj[key])) {
+      delete obj[key]
+    }
+  }
+
+  return obj
+}

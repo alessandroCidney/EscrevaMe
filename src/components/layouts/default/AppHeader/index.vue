@@ -10,6 +10,15 @@
     </template>
 
     <template #append>
+      <v-btn
+        v-if="accountStore.isAuthenticated && accountStore.userRole === 'Admin'"
+        color="secondary"
+        variant="text"
+        @click="$router.push('/admin')"
+      >
+        Admin panel
+      </v-btn>
+
       <v-menu v-if="accountStore.isAuthenticated" width="300px">
         <template #activator="{ props }">
           <user-avatar class="cursorPointer" v-bind="props" />

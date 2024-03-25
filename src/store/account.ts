@@ -40,6 +40,10 @@ export const useAccountStore = defineStore('account', {
     userCreatedAt (state) {
       return state.databaseUser?.createdAt
     },
+
+    userRole (state) {
+      return state.databaseUser?.role
+    },
   },
 
   actions: {

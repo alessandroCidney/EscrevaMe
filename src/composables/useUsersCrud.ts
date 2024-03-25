@@ -1,10 +1,52 @@
-import { type IDatabaseUser, userConverter } from '@/types/user'
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
+
+import { type IDatabaseUser, userConverter, type TPartialNewUser, type IPrivateDatabaseUserData } from '@/types/user'
 
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
+import { removeObjectEmptyValues } from '@/utils'
+
+import { useNuxtApp } from '#imports'
+
 export function useUsersCrud () {
+  const nuxtApp = useNuxtApp()
+
   const firestoreCrud = useFirestoreCrud<IDatabaseUser>('users', userConverter)
+
+  async function create (partialNewUser: TPartialNewUser) {
+    // Secondary app prevents current user logout
+    const secondaryApp = nuxtApp.$initializeFirebaseApp('secondaryApp')
+    const secondaryAuth = nuxtApp.$getAuth(secondaryApp)
+
+    const userCredential = await createUserWithEmailAndPassword(secondaryAuth, partialNewUser.email, partialNewUser.password)
+
+    await signOut(secondaryAuth)
+
+    await nuxtApp.$deleteApp(secondaryApp)
+
+    const payload: IDatabaseUser = {
+      _id: userCredential.user.uid,
+      active: partialNewUser.active,
+      createdAt: partialNewUser.createdAt,
+      name: partialNewUser.name,
+      role: partialNewUser.role,
+      backgroundImageUrl: partialNewUser.backgroundImageUrl,
+      profilePhotoUrl: partialNewUser.profilePhotoUrl,
+      updatedAt: partialNewUser.updatedAt,
+    }
+
+    const createdUser = await firestoreCrud.create(userCredential.user.uid, removeObjectEmptyValues(payload))
+
+    const privateUserDataCrud = useFirestoreCrud<IPrivateDatabaseUserData>(`users/${userCredential.user.uid}/private`)
+
+    await privateUserDataCrud.create('profile', {
+      _id: 'profile',
+      email: userCredential.user.email ?? undefined,
+    })
+
+    return createdUser
+  }
 
   function getPhoto (userId: string, path: string) {
     const storageCrud = useStorageCrud(`users/${userId}/profile`)
@@ -37,6 +79,7 @@ export function useUsersCrud () {
 
   return {
     ...firestoreCrud,
+    create,
     getProfilePhoto,
     updateProfilePhoto,
     getBackgroundImage,
