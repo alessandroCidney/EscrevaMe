@@ -6,12 +6,11 @@
     shaped
     flat
   >
-    <v-img
+    <image-with-loader
       v-if="props.post.backgroundPhotoUrl"
       :src="props.post.backgroundPhotoUrl"
-      :max-height="props.imageHeight ?? '250px'"
-      :min-height="props.imageHeight ?? '250px'"
-      max-width="100%"
+      height="250px"
+      width="100%"
       class="mb-2"
       cover
     />
@@ -37,6 +36,8 @@
 <script setup lang="ts">
 import moment from 'moment'
 
+import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
+
 import type { IPost } from '@/types/post'
 
 moment.locale('pt-BR')
@@ -44,7 +45,6 @@ moment.locale('pt-BR')
 const props = defineProps<{
   post: IPost,
   width?: string,
-  imageHeight?: string
 }>()
 
 function getFromNowDate (date: Date) {

@@ -7,12 +7,11 @@
     flat
   >
     <div class="d-flex align-center justify-start flex-column flex-md-row">
-      <v-img
+      <image-with-loader
         v-if="props.post.backgroundPhotoUrl"
         :src="props.post.backgroundPhotoUrl"
-        :max-height="'300px'"
-        :min-height="'300px'"
         :width="isLargeScreen ? '50%' : '100%'"
+        height="300px"
         cover
       />
 
@@ -36,6 +35,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
+
+import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
 
 import type { IPost } from '@/types/post'
 
