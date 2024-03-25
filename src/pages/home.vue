@@ -83,7 +83,6 @@ import PostList from '@/components/commons/PostList/index.vue'
 import LargePostCard from '@/components/commons/PostList/components/LargePostCard.vue'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
-
 import type { IPost } from '@/types/post'
 
 import { definePageMeta } from '#imports'

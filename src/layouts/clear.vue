@@ -1,5 +1,5 @@
 <template>
-  <v-layout ref="app" class="clearLayout">
+  <v-layout ref="app" class="clearLayout flex-column">
     <slot />
   </v-layout>
 </template>

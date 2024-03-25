@@ -37,12 +37,16 @@
   <v-main class="indexPageMain">
     <start-area />
 
-    Teste<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <posts-area />
   </v-main>
+
+  <app-footer />
 </template>
 
 <script lang="ts" setup>
 import StartArea from '@/components/pages/index/StartArea.vue'
+import PostsArea from '@/components/pages/index/PostsArea.vue'
+import AppFooter from '@/components/layouts/default/AppFooter/index.vue'
 
 import { definePageMeta } from '#imports'
 
