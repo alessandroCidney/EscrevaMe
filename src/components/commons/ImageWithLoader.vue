@@ -1,8 +1,8 @@
 <template>
   <v-skeleton-loader
     v-if="loadingImage"
-    :width="width"
-    :height="height"
+    :width="width ?? '100%'"
+    :height="height ?? '100%'"
   />
 
   <v-img
@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { defineProps, ref } from 'vue'
 
-const props = defineProps<{ width: string, height: string, src: string }>()
+const props = defineProps<{ width?: string, height?: string, src: string }>()
 
 const loadingImage = ref(true)
 </script>

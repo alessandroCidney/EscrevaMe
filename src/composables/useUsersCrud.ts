@@ -1,10 +1,10 @@
-import type { IDatabaseUser } from '@/store/account'
+import { type IDatabaseUser, userConverter } from '@/types/user'
 
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
 export function useUsersCrud () {
-  const firestoreCrud = useFirestoreCrud<IDatabaseUser>('users')
+  const firestoreCrud = useFirestoreCrud<IDatabaseUser>('users', userConverter)
 
   function getPhoto (userId: string, path: string) {
     const storageCrud = useStorageCrud(`users/${userId}/profile`)

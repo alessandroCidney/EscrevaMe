@@ -2,17 +2,9 @@ import { defineStore } from 'pinia'
 
 import type { User } from 'firebase/auth'
 
+import type { IDatabaseUser } from '@/types/user'
+
 import { useNuxtApp } from '#imports'
-
-export interface IDatabaseUser {
-  _id: string
-  name: string
-  role: string
-  createdAt: Date
-
-  profilePhotoUrl: string
-  backgroundImageUrl?: string
-}
 
 export const useAccountStore = defineStore('account', {
   state: () => ({
@@ -43,6 +35,10 @@ export const useAccountStore = defineStore('account', {
 
     userId (state) {
       return state.databaseUser?._id
+    },
+
+    userCreatedAt (state) {
+      return state.databaseUser?.createdAt
     },
   },
 

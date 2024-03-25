@@ -2,7 +2,7 @@
   <div class="indexPagePostsArea">
     <div class="contentContainer">
       <div class="titleArea mb-10">
-        <h2 class="text-h4 mb-5">
+        <h2 class="text-h4 mb-5 font-weight-bold">
           Posts recentes
         </h2>
 
