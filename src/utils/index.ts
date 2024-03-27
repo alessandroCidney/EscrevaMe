@@ -1,3 +1,9 @@
+export function wait (ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 export function getFilenameExtension (filename: string, defaultExtension = 'jpg') {
   return filename.split('.').pop() || defaultExtension
 }

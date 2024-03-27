@@ -21,7 +21,7 @@
         <v-btn
           color="secondary"
           prepend-icon="mdi-plus"
-          @click="openUsersFormDialog()"
+          @click="handleCreate()"
         >
           New user
         </v-btn>
@@ -56,6 +56,7 @@
           color="secondary"
           icon="mdi-pencil"
           variant="text"
+          @click="handleEdit(item.item)"
         />
 
         <v-btn
@@ -67,10 +68,18 @@
       </template>
     </v-data-table>
 
-    <users-form-dialog
-      v-model:open="usersFormDialogIsOpen"
-      v-model:payload="usersFormDialogPayload"
-      :save="handleSave"
+    <users-creation-dialog
+      v-model:open="usersCreationDialogIsOpen"
+      v-model:payload="usersCreationPayload"
+      :save="confirmCreate"
+      :cancel="cancelCreate"
+    />
+
+    <users-edition-dialog
+      v-model:open="usersEditionDialogIsOpen"
+      v-model:payload="usersEditionPayload"
+      :save="confirmEdit"
+      :cancel="cancelEdit"
     />
 
     <form-dialog
@@ -105,7 +114,8 @@ import moment from 'moment'
 
 import { ref, onMounted } from 'vue'
 
-import UsersFormDialog from './components/UsersFormDialog.vue'
+import UsersCreationDialog from './components/UsersCreationDialog.vue'
+import UsersEditionDialog from './components/UsersEditionDialog.vue'
 import FormDialog from '@/components/commons/FormDialog.vue'
 
 import { usePopupStore } from '@/store/popup'
@@ -113,14 +123,16 @@ import { usePopupStore } from '@/store/popup'
 import { useUsersCrud } from '@/composables/useUsersCrud'
 import type { IDatabaseUser, TPartialNewUser } from '@/types/user'
 
+import { removeObjectEmptyValues, wait } from '@/utils/index'
+
 const popupStore = usePopupStore()
 
 const usersCrud = useUsersCrud()
 const users = ref<IDatabaseUser[]>([])
 const loadingListUsers = ref(false)
 
-const usersFormDialogIsOpen = ref(false)
-const usersFormDialogPayload = ref<TPartialNewUser | undefined>(undefined)
+const usersCreationDialogIsOpen = ref(false)
+const usersCreationPayload = ref<TPartialNewUser | null>(null)
 
 onMounted(() => {
   listUsers()
@@ -140,8 +152,8 @@ async function listUsers () {
   }
 }
 
-function openUsersFormDialog () {
-  usersFormDialogPayload.value = {
+function handleCreate () {
+  usersCreationPayload.value = {
     active: true,
     name: '',
     createdAt: new Date(),
@@ -150,10 +162,10 @@ function openUsersFormDialog () {
     password: '',
   }
 
-  usersFormDialogIsOpen.value = true
+  usersCreationDialogIsOpen.value = true
 }
 
-async function handleSave (data: TPartialNewUser) {
+async function confirmCreate (data: TPartialNewUser) {
   try {
     const savedUser = await usersCrud.create(data)
 
@@ -165,6 +177,42 @@ async function handleSave (data: TPartialNewUser) {
       popupStore.showErrorPopup(err.message)
     }
   }
+}
+
+async function cancelCreate () {
+  usersCreationPayload.value = null
+  await wait(200)
+  usersCreationDialogIsOpen.value = true
+}
+
+const usersEditionDialogIsOpen = ref(false)
+const usersEditionPayload = ref<IDatabaseUser | null>(null)
+
+function handleEdit (data: IDatabaseUser) {
+  usersEditionPayload.value = removeObjectEmptyValues({ ...data })
+  usersEditionDialogIsOpen.value = true
+}
+
+async function confirmEdit (data: IDatabaseUser) {
+  try {
+    const savedUser = await usersCrud.update(data._id, data)
+
+    const itemIndex = users.value.findIndex(item => item._id === data._id)
+
+    users.value[itemIndex] = { ...users.value[itemIndex], ...savedUser }
+
+    popupStore.showSuccessPopup('User updated successfully')
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
+  }
+}
+
+async function cancelEdit () {
+  usersEditionDialogIsOpen.value = false
+  await wait(200)
+  usersEditionPayload.value = null
 }
 
 const usersConfirmRemovalDialogIsOpen = ref(false)
@@ -191,9 +239,10 @@ async function confirmRemove (data: IDatabaseUser) {
   }
 }
 
-function cancelRemove () {
-  usersRemovalPayload.value = null
+async function cancelRemove () {
   usersConfirmRemovalDialogIsOpen.value = false
+  await wait(200)
+  usersRemovalPayload.value = null
 }
 
 function formatDate (date: Date) {

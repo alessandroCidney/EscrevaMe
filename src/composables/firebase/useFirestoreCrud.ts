@@ -65,6 +65,7 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
   async function update (_id: string, data: TPartialDefaultFirestoreItem<TBaseType>) {
     const docRef = doc(nuxtApp.$firestore, basePath, _id)
     await updateDoc(docRef, data)
+    return { ...data }
   }
 
   async function remove (_id: string) {
@@ -72,7 +73,7 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
       ? doc(nuxtApp.$firestore, basePath, _id).withConverter(converter)
       : doc(nuxtApp.$firestore, basePath, _id)
 
-    await deleteDoc(docRef)
+    return await deleteDoc(docRef)
   }
 
   return {

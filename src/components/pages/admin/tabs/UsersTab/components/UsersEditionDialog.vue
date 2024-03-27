@@ -4,6 +4,7 @@
     v-model:open="openModel"
     :payload="payloadModel"
     :save="props.save"
+    :cancel="props.cancel"
     title="New user"
   >
     <v-text-field
@@ -11,22 +12,6 @@
       :rules="[rules.required]"
       label="Name"
       variant="underlined"
-    />
-
-    <v-text-field
-      v-model="payloadModel.email"
-      :rules="[rules.required, rules.email]"
-      label="Email"
-      variant="underlined"
-      type="email"
-    />
-
-    <v-text-field
-      v-model="payloadModel.password"
-      :rules="[rules.required, rules.password]"
-      label="Password"
-      variant="underlined"
-      type="password"
     />
 
     <v-select
@@ -49,15 +34,16 @@ import { useRules } from '@/composables/useRules'
 
 import FormDialog from '@/components/commons/FormDialog.vue'
 
-import type { TPartialNewUser } from '@/types/user'
+import type { IDatabaseUser } from '@/types/user'
 
 const openModel = defineModel<boolean>('open')
-const payloadModel = defineModel<TPartialNewUser>('payload')
+const payloadModel = defineModel<IDatabaseUser | null>('payload', { default: null })
 
 const rules = useRules()
 
 interface IUsersFormDialogProps {
-  save: (data: TPartialNewUser) => Promise<void>
+  save: (data: IDatabaseUser) => Promise<void>
+  cancel: () => Promise<void> | void
 }
 
 const props = defineProps<IUsersFormDialogProps>()
