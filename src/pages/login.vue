@@ -83,12 +83,12 @@
 import { ref } from 'vue'
 
 import { FirebaseError } from 'firebase/app'
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 import { useAccountStore } from '@/store/account'
 import { usePopupStore } from '@/store/popup'
 
-import { getFirebaseErrorMessage } from '@/utils/error'
+import { ApplicationError, getFirebaseErrorMessage } from '@/utils/error'
 
 import { useUsersCrud } from '@/composables/useUsersCrud'
 
@@ -124,13 +124,18 @@ async function handleLoginWithGoogle () {
 
     const databaseUser = await usersCrud.get(userCredential.user.uid)
 
+    if (!databaseUser.active) {
+      signOut(nuxtApp.$auth)
+      throw new ApplicationError('Access denied')
+    }
+
     accountStore.setAuthUser(userCredential.user)
     accountStore.setDatabaseUser(databaseUser)
     await nuxtApp.$router.push('home')
   } catch (err) {
     if (err instanceof FirebaseError) {
       popupStore.showErrorPopup(getFirebaseErrorMessage(err.code))
-    } else if (err instanceof Error) {
+    } else if (err instanceof Error || err instanceof ApplicationError) {
       popupStore.showErrorPopup(err.message)
     } else {
       popupStore.showErrorPopup()
@@ -144,13 +149,22 @@ async function handleLoginWithEmail () {
   try {
     loadingEmailLogin.value = true
 
-    await signInWithEmailAndPassword(nuxtApp.$auth, email.value, password.value)
+    const userCredential = await signInWithEmailAndPassword(nuxtApp.$auth, email.value, password.value)
 
+    const databaseUser = await usersCrud.get(userCredential.user.uid)
+
+    if (!databaseUser.active) {
+      signOut(nuxtApp.$auth)
+      throw new ApplicationError('Access denied')
+    }
+
+    accountStore.setAuthUser(userCredential.user)
+    accountStore.setDatabaseUser(databaseUser)
     await nuxtApp.$router.push('home')
   } catch (err) {
     if (err instanceof FirebaseError) {
       popupStore.showErrorPopup(getFirebaseErrorMessage(err.code))
-    } else if (err instanceof Error) {
+    } else if (err instanceof Error || err instanceof ApplicationError) {
       popupStore.showErrorPopup(err.message)
     } else {
       popupStore.showErrorPopup()

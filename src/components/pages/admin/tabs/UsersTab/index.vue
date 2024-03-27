@@ -48,6 +48,7 @@
           :model-value="item.value"
           color="primary"
           hide-details
+          @click.prevent="handleUpdateActive(item.item)"
         />
       </template>
 
@@ -81,6 +82,33 @@
       :save="confirmEdit"
       :cancel="cancelEdit"
     />
+
+    <form-dialog
+      v-model:open="usersConfirmUpdateActiveDialogIsOpen"
+      :payload="usersUpdateActivePayload"
+      :cancel="cancelUpdateActive"
+      :save="confirmUpdateActive"
+      :title="`${ usersUpdateActivePayload?.active ? 'Enable' : 'Disable' } user`"
+      max-width="500"
+    >
+      <p>
+        The user will be {{ usersUpdateActivePayload?.active ? 'enabled' : 'disabled' }}
+        and will {{ usersUpdateActivePayload?.active ? 'gain' : 'lose' }} access to the application.
+        Do you want to continue?
+      </p>
+
+      <template #saveButton="{ loading, save }">
+        <v-btn
+          :loading="loading"
+          color="secondary"
+          variant="text"
+          type="submit"
+          @click="save"
+        >
+          Continue
+        </v-btn>
+      </template>
+    </form-dialog>
 
     <form-dialog
       v-model:open="usersConfirmRemovalDialogIsOpen"
@@ -179,9 +207,7 @@ async function confirmCreate (data: TPartialNewUser) {
   }
 }
 
-async function cancelCreate () {
-  usersCreationPayload.value = null
-  await wait(200)
+function cancelCreate () {
   usersCreationDialogIsOpen.value = true
 }
 
@@ -209,10 +235,26 @@ async function confirmEdit (data: IDatabaseUser) {
   }
 }
 
-async function cancelEdit () {
+function cancelEdit () {
   usersEditionDialogIsOpen.value = false
+}
+
+const usersConfirmUpdateActiveDialogIsOpen = ref(false)
+const usersUpdateActivePayload = ref<IDatabaseUser | null>(null)
+
+function handleUpdateActive (data: IDatabaseUser) {
+  usersUpdateActivePayload.value = removeObjectEmptyValues({ ...data, active: !data.active })
+  usersConfirmUpdateActiveDialogIsOpen.value = true
+}
+
+async function confirmUpdateActive (data: IDatabaseUser) {
+  await confirmEdit(data)
+}
+
+async function cancelUpdateActive () {
+  usersConfirmUpdateActiveDialogIsOpen.value = false
   await wait(200)
-  usersEditionPayload.value = null
+  usersUpdateActivePayload.value = null
 }
 
 const usersConfirmRemovalDialogIsOpen = ref(false)
@@ -239,10 +281,8 @@ async function confirmRemove (data: IDatabaseUser) {
   }
 }
 
-async function cancelRemove () {
+function cancelRemove () {
   usersConfirmRemovalDialogIsOpen.value = false
-  await wait(200)
-  usersRemovalPayload.value = null
 }
 
 function formatDate (date: Date) {

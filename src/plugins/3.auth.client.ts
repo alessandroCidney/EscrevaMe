@@ -4,6 +4,8 @@ import { useUsersCrud } from '@/composables/useUsersCrud'
 
 import { useAccountStore } from '@/store/account'
 
+import { ApplicationError } from '@/utils/error'
+
 import { defineNuxtPlugin } from '#imports'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -19,11 +21,18 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         if (authUser) {
           const databaseUser = await usersCrud.get(authUser.uid)
 
+          if (!databaseUser.active) {
+            throw new ApplicationError('Disabled user')
+          }
+
           accountStore.setAuthUser(authUser)
           accountStore.setDatabaseUser(databaseUser)
         }
       } catch (err) {
-        if (authUser) {
+        if (err instanceof ApplicationError) {
+          accountStore.setAuthUser(undefined)
+          accountStore.setDatabaseUser(undefined)
+        } else if (authUser) {
           await deleteUser(authUser)
         }
       } finally {
