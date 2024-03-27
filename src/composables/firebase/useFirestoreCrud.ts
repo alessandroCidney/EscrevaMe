@@ -1,4 +1,15 @@
-import { doc, collection, getDoc, getDocs, setDoc, query, type QueryConstraint, updateDoc, type FirestoreDataConverter } from 'firebase/firestore'
+import {
+  doc,
+  collection,
+  getDoc,
+  getDocs,
+  setDoc,
+  query,
+  updateDoc,
+  deleteDoc,
+  type QueryConstraint,
+  type FirestoreDataConverter,
+} from 'firebase/firestore'
 
 import { useNuxtApp } from '#imports'
 
@@ -56,10 +67,19 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
     await updateDoc(docRef, data)
   }
 
+  async function remove (_id: string) {
+    const docRef = converter
+      ? doc(nuxtApp.$firestore, basePath, _id).withConverter(converter)
+      : doc(nuxtApp.$firestore, basePath, _id)
+
+    await deleteDoc(docRef)
+  }
+
   return {
     create,
     get,
     list,
     update,
+    remove,
   }
 }

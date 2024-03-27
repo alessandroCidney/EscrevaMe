@@ -1,4 +1,4 @@
-import type { Auth } from 'firebase/auth'
+import { deleteUser, type Auth } from 'firebase/auth'
 
 import { useUsersCrud } from '@/composables/useUsersCrud'
 
@@ -13,7 +13,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const usersCrud = useUsersCrud()
 
-  await new Promise<void>((resolve, reject) => {
+  await new Promise<void>((resolve) => {
     auth.onAuthStateChanged(async (authUser) => {
       try {
         if (authUser) {
@@ -22,10 +22,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
           accountStore.setAuthUser(authUser)
           accountStore.setDatabaseUser(databaseUser)
         }
-
-        resolve()
       } catch (err) {
-        reject(err)
+        if (authUser) {
+          await deleteUser(authUser)
+        }
+      } finally {
+        resolve()
       }
     })
   })

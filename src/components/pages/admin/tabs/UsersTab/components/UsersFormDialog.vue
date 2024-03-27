@@ -3,17 +3,19 @@
     v-if="payloadModel"
     v-model:open="openModel"
     :payload="payloadModel"
-    :save="handleSave"
+    :save="props.save"
     title="New user"
   >
     <v-text-field
       v-model="payloadModel.name"
+      :rules="[rules.required]"
       label="Name"
       variant="underlined"
     />
 
     <v-text-field
       v-model="payloadModel.email"
+      :rules="[rules.required, rules.email]"
       label="Email"
       variant="underlined"
       type="email"
@@ -21,6 +23,7 @@
 
     <v-text-field
       v-model="payloadModel.password"
+      :rules="[rules.required, rules.password]"
       label="Password"
       variant="underlined"
       type="password"
@@ -28,6 +31,7 @@
 
     <v-select
       v-model="payloadModel.role"
+      :rules="[rules.required]"
       label="Role"
       :items="[
         'Viewer',
@@ -39,30 +43,22 @@
 </template>
 
 <script lang="ts" setup>
-import { defineModel } from 'vue'
+import { defineModel, defineProps } from 'vue'
 
-import { usePopupStore } from '@/store/popup'
+import { useRules } from '@/composables/useRules'
 
 import FormDialog from '@/components/commons/FormDialog.vue'
-
-import { useUsersCrud } from '@/composables/useUsersCrud'
 
 import type { TPartialNewUser } from '@/types/user'
 
 const openModel = defineModel<boolean>('open')
 const payloadModel = defineModel<TPartialNewUser>('payload')
 
-const popupStore = usePopupStore()
+const rules = useRules()
 
-const usersCrud = useUsersCrud()
-
-async function handleSave (data: TPartialNewUser) {
-  try {
-    await usersCrud.create(data)
-  } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    }
-  }
+interface IUsersFormDialogProps {
+  save: (data: TPartialNewUser) => Promise<void>
 }
+
+const props = defineProps<IUsersFormDialogProps>()
 </script>

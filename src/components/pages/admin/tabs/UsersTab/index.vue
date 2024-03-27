@@ -62,6 +62,7 @@
           color="secondary"
           icon="mdi-delete"
           variant="text"
+          @click="handleRemove(item.item)"
         />
       </template>
     </v-data-table>
@@ -69,7 +70,33 @@
     <users-form-dialog
       v-model:open="usersFormDialogIsOpen"
       v-model:payload="usersFormDialogPayload"
+      :save="handleSave"
     />
+
+    <form-dialog
+      v-model:open="usersConfirmRemovalDialogIsOpen"
+      :payload="usersRemovalPayload"
+      :cancel="cancelRemove"
+      :save="confirmRemove"
+      title="Remove user"
+      max-width="500"
+    >
+      <p>
+        The user will be removed and will lose access to the application. Do you want to continue?
+      </p>
+
+      <template #saveButton="{ loading, save }">
+        <v-btn
+          :loading="loading"
+          color="secondary"
+          variant="text"
+          type="submit"
+          @click="save"
+        >
+          Continue
+        </v-btn>
+      </template>
+    </form-dialog>
   </div>
 </template>
 
@@ -79,6 +106,7 @@ import moment from 'moment'
 import { ref, onMounted } from 'vue'
 
 import UsersFormDialog from './components/UsersFormDialog.vue'
+import FormDialog from '@/components/commons/FormDialog.vue'
 
 import { usePopupStore } from '@/store/popup'
 
@@ -123,6 +151,49 @@ function openUsersFormDialog () {
   }
 
   usersFormDialogIsOpen.value = true
+}
+
+async function handleSave (data: TPartialNewUser) {
+  try {
+    const savedUser = await usersCrud.create(data)
+
+    users.value.push(savedUser)
+
+    popupStore.showSuccessPopup('User created successfully')
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
+  }
+}
+
+const usersConfirmRemovalDialogIsOpen = ref(false)
+const usersRemovalPayload = ref<IDatabaseUser | null>(null)
+
+function handleRemove (data: IDatabaseUser) {
+  usersRemovalPayload.value = data
+  usersConfirmRemovalDialogIsOpen.value = true
+}
+
+async function confirmRemove (data: IDatabaseUser) {
+  try {
+    await usersCrud.remove(data._id)
+
+    const itemIndex = users.value.findIndex(item => item._id === data._id)
+
+    users.value.splice(itemIndex, 1)
+
+    popupStore.showSuccessPopup('User removed successfully')
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
+  }
+}
+
+function cancelRemove () {
+  usersRemovalPayload.value = null
+  usersConfirmRemovalDialogIsOpen.value = false
 }
 
 function formatDate (date: Date) {

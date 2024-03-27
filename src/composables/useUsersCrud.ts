@@ -48,6 +48,13 @@ export function useUsersCrud () {
     return createdUser
   }
 
+  async function remove (_id: string) {
+    const privateUserDataCrud = useFirestoreCrud<IPrivateDatabaseUserData>(`users/${_id}/private`)
+    await privateUserDataCrud.remove('profile')
+
+    await firestoreCrud.remove(_id)
+  }
+
   function getPhoto (userId: string, path: string) {
     const storageCrud = useStorageCrud(`users/${userId}/profile`)
     return storageCrud.getFileUrl(path)
@@ -80,6 +87,7 @@ export function useUsersCrud () {
   return {
     ...firestoreCrud,
     create,
+    remove,
     getProfilePhoto,
     updateProfilePhoto,
     getBackgroundImage,

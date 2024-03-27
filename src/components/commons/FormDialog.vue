@@ -2,6 +2,7 @@
   <v-dialog
     :model-value="openModel"
     max-width="700"
+    v-bind="$attrs"
     @update:model-value="!$event && handleCancel()"
   >
     <v-card>
@@ -19,7 +20,7 @@
 
       <v-divider />
 
-      <v-card-text>
+      <v-card-text class="normalLetterSpacing">
         <v-form
           v-model="validModel"
           @submit.prevent="handleSave"
@@ -42,15 +43,23 @@
           Cancel
         </v-btn>
 
-        <v-btn
+        <slot
+          :valid="validModel"
           :loading="loadingSave"
-          color="secondary"
-          variant="text"
-          type="submit"
-          @click="handleSave"
+          :save="handleSave"
+          name="saveButton"
         >
-          Save
-        </v-btn>
+          <v-btn
+            :disabled="!validModel"
+            :loading="loadingSave"
+            color="secondary"
+            variant="text"
+            type="submit"
+            @click="handleSave"
+          >
+            Save
+          </v-btn>
+        </slot>
       </v-card-actions>
     </v-card>
   </v-dialog>
