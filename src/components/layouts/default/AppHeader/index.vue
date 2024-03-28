@@ -21,13 +21,21 @@
 
       <v-menu v-if="accountStore.isAuthenticated" width="300px">
         <template #activator="{ props }">
-          <user-avatar class="cursorPointer" v-bind="props" />
+          <user-avatar
+            :src="accountStore.userProfilePhotoUrl"
+            :name="accountStore.userDisplayName"
+            class="cursorPointer"
+            v-bind="props"
+          />
         </template>
 
         <v-list>
           <v-list-item class="pl-0 mb-4">
             <template #prepend>
-              <user-avatar />
+              <user-avatar
+                :src="accountStore.userProfilePhotoUrl"
+                :name="accountStore.userDisplayName"
+              />
             </template>
 
             <v-list-item-title>

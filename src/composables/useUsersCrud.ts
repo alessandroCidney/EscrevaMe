@@ -5,8 +5,6 @@ import { type IDatabaseUser, userConverter, type TPartialNewUser, type IPrivateD
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
-import { removeObjectEmptyValues } from '@/utils'
-
 import { useNuxtApp } from '#imports'
 
 export function useUsersCrud () {
@@ -34,9 +32,10 @@ export function useUsersCrud () {
       backgroundImageUrl: partialNewUser.backgroundImageUrl,
       profilePhotoUrl: partialNewUser.profilePhotoUrl,
       updatedAt: partialNewUser.updatedAt,
+      firstLogin: partialNewUser.firstLogin,
     }
 
-    const createdUser = await firestoreCrud.create(userCredential.user.uid, removeObjectEmptyValues(payload))
+    const createdUser = await firestoreCrud.create(userCredential.user.uid, payload)
 
     const privateUserDataCrud = useFirestoreCrud<IPrivateDatabaseUserData>(`users/${userCredential.user.uid}/private`)
 

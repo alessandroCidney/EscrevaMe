@@ -6,11 +6,13 @@ export interface IDatabaseUser {
   active: boolean
   role: string
 
-  profilePhotoUrl?: string
-  backgroundImageUrl?: string
+  profilePhotoUrl: string | null
+  backgroundImageUrl: string | null
 
   createdAt: Date
-  updatedAt?: Date
+  updatedAt: Date | null
+
+  firstLogin: boolean
 }
 
 export interface IPrivateDatabaseUserData {
@@ -29,15 +31,17 @@ export interface IFirestoreUser extends Omit<IDatabaseUser, 'createdAt' | 'updat
 }
 
 export class UserModel {
-  _id!: string
-  name!: string
-  active: boolean
-  role!: string
-  createdAt!: Date
-  updatedAt?: Date
+  _id!: IDatabaseUser['_id']
+  name!: IDatabaseUser['name']
+  active: IDatabaseUser['active']
+  role!: IDatabaseUser['role']
+  createdAt!: IDatabaseUser['createdAt']
+  updatedAt: IDatabaseUser['updatedAt']
 
-  profilePhotoUrl?: string
-  backgroundImageUrl?: string
+  profilePhotoUrl: IDatabaseUser['profilePhotoUrl']
+  backgroundImageUrl: IDatabaseUser['backgroundImageUrl']
+
+  firstLogin!: IDatabaseUser['firstLogin']
 
   constructor (user: IDatabaseUser) {
     this._id = user._id
@@ -48,6 +52,7 @@ export class UserModel {
     this.updatedAt = user.updatedAt
     this.profilePhotoUrl = user.profilePhotoUrl
     this.backgroundImageUrl = user.backgroundImageUrl
+    this.firstLogin = user.firstLogin
   }
 }
 
@@ -61,7 +66,7 @@ export const userConverter: FirestoreDataConverter<UserModel> = {
     return new UserModel({
       ...data,
       createdAt: data.createdAt.toDate(),
-      updatedAt: data.updatedAt?.toDate(),
+      updatedAt: data.updatedAt?.toDate() ?? null,
     })
   },
 }

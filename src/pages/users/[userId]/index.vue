@@ -1,81 +1,128 @@
 <template>
-  <div class="userProfilePage">
+  <div
+    v-if="userData"
+    class="userProfilePage"
+  >
     <div :style="{ height: '400px' }">
       <parallax-with-loader
-        v-if="accountStore.userBackgroundImageUrl"
-        :src="accountStore.userBackgroundImageUrl"
+        v-if="userData.backgroundImageUrl"
+        :src="userData.backgroundImageUrl"
       />
     </div>
 
     <div class="detailsSection">
       <div class="startArea">
-        <v-avatar
+        <user-avatar
+          v-if="userData.profilePhotoUrl"
+          :src="userData.profilePhotoUrl"
           class="profilePhoto"
           size="250"
-        >
-          <image-with-loader
-            v-if="accountStore.userProfilePhotoUrl"
-            :src="accountStore.userProfilePhotoUrl"
-            alt="Profile photo"
-            cover
-          />
-        </v-avatar>
+        />
 
         <div class="py-7 ml-6">
           <h2 class="text-h4 font-weight-bold mb-3">
-            {{ accountStore.userDisplayName }}
+            {{ userData.name }}
           </h2>
 
-          <div v-if="accountStore.userCreatedAt">
-            Joined {{ formatDate(accountStore.userCreatedAt) }}
+          <div v-if="userData.createdAt">
+            Joined {{ formatDate(userData.createdAt) }}
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="postsArea">
+      <h2>Posts</h2>
+
+      <post-list
+        :posts="userPosts"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
 import moment from 'moment'
 
-import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
+import UserAvatar from '@/components/layouts/default/AppHeader/components/UserAvatar.vue'
 import ParallaxWithLoader from '@/components/commons/ParallaxWithLoader.vue'
+import PostList from '@/components/commons/PostList/index.vue'
+
+import { useMainStore } from '@/store/index'
+import { usePopupStore } from '@/store/popup'
 
 import { useUsersCrud } from '@/composables/useUsersCrud'
+import { usePostsCrud } from '@/composables/usePostsCrud'
 
-import { useAccountStore } from '@/store/account'
+import type { IDatabaseUser } from '@/types/user'
+import type { IPost } from '@/types/post'
 
-import { useRoute, definePageMeta } from '#imports'
+import { useRoute, definePageMeta, useRouter } from '#imports'
 
 definePageMeta({
   requiresAuth: true,
 })
 
-const route = useRoute()
+const mainStore = useMainStore()
+const popupStore = usePopupStore()
 
-const accountStore = useAccountStore()
+const route = useRoute()
+const router = useRouter()
+
+const routeUserId = route.params.userId
 
 const usersCrud = useUsersCrud()
+const postsCrud = usePostsCrud()
+
+const loadingUserPosts = ref(false)
+
+const userData = ref<IDatabaseUser | null>(null)
+const userPosts = ref<IPost[]>([])
+
+onMounted(async () => {
+  if (typeof routeUserId !== 'string') {
+    return router.push('home')
+  }
+
+  await getUserData(routeUserId)
+  await listUserPosts(routeUserId)
+})
 
 function formatDate (date: Date) {
   return moment(date).format('LL')
 }
 
-async function handleSave (event: Event) {
-  if (event.target instanceof HTMLInputElement && typeof route.params.userId === 'string' && event.target.files?.[0]) {
-    await usersCrud.updateProfilePhoto(route.params.userId, event.target.files[0])
+async function getUserData (userId: string) {
+  try {
+    mainStore.setOverlay(true)
 
-    const updatedUserData = await usersCrud.get(route.params.userId)
-    accountStore.setDatabaseUser(updatedUserData)
+    userData.value = await usersCrud.get(userId)
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    mainStore.setOverlay(false)
   }
 }
 
-async function handleSaveBackground (event: Event) {
-  if (event.target instanceof HTMLInputElement && typeof route.params.userId === 'string' && event.target.files?.[0]) {
-    await usersCrud.updateBackgroundImage(route.params.userId, event.target.files[0])
+async function listUserPosts (userId: string) {
+  try {
+    loadingUserPosts.value = true
 
-    const updatedUserData = await usersCrud.get(route.params.userId)
-    accountStore.setDatabaseUser(updatedUserData)
+    userPosts.value = await postsCrud.listUserPosts(userId)
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingUserPosts.value = false
   }
 }
 </script>

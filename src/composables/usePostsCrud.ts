@@ -12,6 +12,10 @@ export function usePostsCrud () {
     return firestoreCrud.list(where('private', '==', false))
   }
 
+  function listUserPosts (authorId: string) {
+    return firestoreCrud.list(where('authorId', '==', authorId))
+  }
+
   async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto?: File) {
     const savedPost = await firestoreCrud.create(_id, data)
 
@@ -44,6 +48,7 @@ export function usePostsCrud () {
     createPost,
     updatePost,
     listPublicPosts,
+    listUserPosts,
     ...firestoreCrud,
   }
 }

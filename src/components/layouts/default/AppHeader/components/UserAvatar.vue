@@ -5,20 +5,20 @@
     v-bind="$attrs"
   >
     <v-img
-      v-if="accountStore.userProfilePhotoUrl"
-      :src="accountStore.userProfilePhotoUrl"
+      v-if="props.src"
+      :src="props.src"
       alt="Avatar"
       cover
     />
 
     <span v-else>
-      {{ accountStore.databaseUser?.name[0] }}
+      {{ props.name?.[0] ?? '?' }}
     </span>
   </v-avatar>
 </template>
 
 <script lang="ts" setup>
-import { useAccountStore } from '@/store/account'
+import { defineProps } from 'vue'
 
-const accountStore = useAccountStore()
+const props = defineProps<{ src?: string | null, name?: string }>()
 </script>

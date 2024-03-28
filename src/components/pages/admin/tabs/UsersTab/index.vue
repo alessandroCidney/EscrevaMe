@@ -30,6 +30,7 @@
 
     <v-data-table
       :headers="[
+        { title: '', value: 'avatar' },
         { title: 'Name', value: 'name' },
         { title: 'Role', value: 'role' },
         { title: 'Created at', value: 'createdAt' },
@@ -39,6 +40,13 @@
       ]"
       :items="users"
     >
+      <template #[`item.avatar`]="item">
+        <user-avatar
+          :src="item.item.profilePhotoUrl"
+          :name="item.item.name"
+        />
+      </template>
+
       <template #[`item.createdAt`]="item">
         {{ formatDate(item.value) }}
       </template>
@@ -144,6 +152,8 @@ import { ref, onMounted } from 'vue'
 
 import UsersCreationDialog from './components/UsersCreationDialog.vue'
 import UsersEditionDialog from './components/UsersEditionDialog.vue'
+
+import UserAvatar from '@/components/layouts/default/AppHeader/components/UserAvatar.vue'
 import FormDialog from '@/components/commons/FormDialog.vue'
 
 import { usePopupStore } from '@/store/popup'
@@ -188,6 +198,10 @@ function handleCreate () {
     role: 'Viewer',
     email: '',
     password: '',
+    backgroundImageUrl: null,
+    profilePhotoUrl: null,
+    updatedAt: null,
+    firstLogin: true,
   }
 
   usersCreationDialogIsOpen.value = true

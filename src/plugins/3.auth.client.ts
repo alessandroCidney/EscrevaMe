@@ -25,6 +25,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             throw new ApplicationError('Disabled user')
           }
 
+          if (databaseUser.firstLogin) {
+            window.alert('First login')
+
+            databaseUser.profilePhotoUrl = databaseUser.profilePhotoUrl ?? authUser.photoURL
+            databaseUser.firstLogin = false
+
+            await usersCrud.update(databaseUser._id, databaseUser)
+          }
+
           accountStore.setAuthUser(authUser)
           accountStore.setDatabaseUser(databaseUser)
         }

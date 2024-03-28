@@ -18,7 +18,7 @@ export const useAccountStore = defineStore('account', {
     },
 
     userProfilePhotoUrl (state) {
-      return state.databaseUser?.profilePhotoUrl || state.authUser?.photoURL
+      return state.databaseUser?.profilePhotoUrl
     },
 
     userBackgroundImageUrl (state) {
