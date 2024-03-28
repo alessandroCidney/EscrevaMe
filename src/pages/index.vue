@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
     scroll-behavior="fade-image inverted"
-    image="@/assets/images/backgrounds/square.svg"
+    image="@/assets/images/backgrounds/blue_square.svg"
     elevation="0"
     color="transparent"
     class="px-5 indexPageAppBar"

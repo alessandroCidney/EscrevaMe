@@ -1,7 +1,6 @@
 <template>
   <v-avatar
     size="40"
-    class="ml-5"
     v-bind="$attrs"
   >
     <v-img

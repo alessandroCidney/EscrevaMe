@@ -35,6 +35,7 @@
               <user-avatar
                 :src="accountStore.userProfilePhotoUrl"
                 :name="accountStore.userDisplayName"
+                class="ml-3"
               />
             </template>
 

@@ -5,8 +5,7 @@
   >
     <div :style="{ height: '400px' }">
       <parallax-with-loader
-        v-if="userData.backgroundImageUrl"
-        :src="userData.backgroundImageUrl"
+        :src="userData.backgroundImageUrl || '/images/backgrounds/gray_square.svg'"
       />
     </div>
 
@@ -31,12 +30,19 @@
       </div>
     </div>
 
-    <div class="postsArea">
-      <h2>Posts</h2>
+    <div v-if="userPosts.length > 0" class="postsSection">
+      <div class="postsArea">
+        <h2 class="text-h4 mb-5 font-weight-bold">
+          Recent posts
+        </h2>
 
-      <post-list
-        :posts="userPosts"
-      />
+        <v-divider />
+
+        <post-list
+          :posts="userPosts"
+          class="py-16"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -130,6 +136,8 @@ async function listUserPosts (userId: string) {
 <style lang="scss" scoped>
 .userProfilePage {
   .detailsSection {
+    min-height: 90vh;
+
     .startArea {
       display: flex;
       align-items: flex-start;
@@ -144,6 +152,14 @@ async function listUserPosts (userId: string) {
 
         border: 5px solid white;
       }
+    }
+  }
+
+  .postsSection {
+    .postsArea {
+      max-width: 1200px;
+
+      margin: 0 auto;
     }
   }
 }

@@ -15,12 +15,11 @@
         md="6"
       >
         <h1 class="text-h2 font-weight-bold mb-5">
-          Compartilhe seus textos com o mundo
+          Show your texts to the world
         </h1>
 
         <p class="text-h6 mb-10">
-          Mostre suas ideas para o mundo todo por meio de postagens e artigos com o escrevame
-          e obtenha conhecimento gratuito compartilhado pela comunidade da plataforma.
+          Show your ideas to the whole world through posts and articles with escrevame and get free knowledge shared by the platform's community.
         </p>
 
         <v-btn
@@ -31,7 +30,7 @@
           size="large"
           @click="$router.push('/login')"
         >
-          Começar
+          Join us
         </v-btn>
       </v-col>
 

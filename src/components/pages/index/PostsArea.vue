@@ -3,7 +3,7 @@
     <div class="contentContainer">
       <div class="titleArea mb-10">
         <h2 class="text-h4 mb-5 font-weight-bold">
-          Posts recentes
+          Recent posts
         </h2>
 
         <v-divider />
