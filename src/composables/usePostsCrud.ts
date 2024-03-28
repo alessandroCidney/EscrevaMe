@@ -12,8 +12,8 @@ export function usePostsCrud () {
     return firestoreCrud.list(where('private', '==', false))
   }
 
-  function listUserPosts (authorId: string) {
-    return firestoreCrud.list(where('authorId', '==', authorId))
+  function listUserPosts (authorId: string, listPrivate = false) {
+    return firestoreCrud.list(where('authorId', '==', authorId), where('private', '==', listPrivate))
   }
 
   async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto?: File) {

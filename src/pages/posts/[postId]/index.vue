@@ -1,30 +1,54 @@
 <template>
   <section class="postPage">
     <div class="postEditor pb-10">
-      <v-img
-        :src="post.backgroundPhotoUrl"
-        height="400px"
-        width="calc(90% - 40px)"
-        class="mb-10"
-        cover
-      />
+      <div class="fillWidth">
+        <image-with-loader
+          v-if="postData?.backgroundPhotoUrl"
+          :src="postData.backgroundPhotoUrl"
+          height="400px"
+          width="calc(90% - 40px)"
+          class="mb-10 horizontalMarginAuto"
+        />
+      </div>
 
       <div
+        v-if="postData && postAuthorData"
         :style="{
           width: '90%'
         }"
         class="text-left px-5 d-flex align-center justify-space-between"
       >
-        <div>
-          Nome do Autor - {{ formatDate(post.createdAt) }}
+        <div class="d-flex align-center">
+          <div
+            class="d-flex align-center cursorPointer"
+            @click="$router.push(`/users/${postData.authorId}`)"
+          >
+            <user-avatar
+              :src="postAuthorData.profilePhotoUrl"
+            />
+
+            <div class="font-weight-medium ml-3">
+              {{ postAuthorData?.name }}
+            </div>
+          </div>
+
+          <div>
+            <v-icon>
+              mdi-circle-small
+            </v-icon>
+          </div>
+
+          <div>
+            {{ formatDate(postData.createdAt) }}
+          </div>
         </div>
 
-        <div v-if="accountStore.userId === post.authorId">
+        <div v-if="accountStore.userId === postData.authorId">
           <v-btn
             icon="mdi-pencil"
             variant="text"
             size="small"
-            @click="$router.push(`/posts/${post._id}/update`)"
+            @click="$router.push(`/posts/${postData._id}/update`)"
           />
 
           <v-btn
@@ -53,40 +77,82 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel, ref } from 'vue'
+import { defineModel, ref, onMounted } from 'vue'
 
 import moment from 'moment'
 
+import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
+import { usePopupStore } from '@/store/popup'
 
-import { useRoute, definePageMeta } from '#imports'
-import { usePostsCrud } from '@/composables/usePostsCrud'
 import { useTiptapEditor } from '@/composables/useTiptapEditor'
 
+import { usePostsCrud } from '@/composables/usePostsCrud'
+import { useUsersCrud } from '@/composables/useUsersCrud'
+
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
+import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
+import UserAvatar from '@/components/layouts/default/AppHeader/components/UserAvatar.vue'
+
+import type { IPost } from '@/types/post'
+import type { IDatabaseUser } from '@/types/user'
+
+import { useRoute, definePageMeta, useRouter } from '#imports'
 
 definePageMeta({
   requiresAuth: true,
 })
 
+const mainStore = useMainStore()
 const accountStore = useAccountStore()
+const popupStore = usePopupStore()
 
 const postsCrud = usePostsCrud()
+const usersCrud = useUsersCrud()
 
 const route = useRoute()
+const router = useRouter()
 
-const post = ref(await postsCrud.get(route.params.postId as string))
+const routePostId = route.params.postId
+
+const postData = ref<IPost | null>(null)
+const postAuthorData = ref<IDatabaseUser | null>(null)
 
 const titleModel = defineModel<string>('title', { default: '' })
 const contentModel = defineModel<string>('content', { default: '' })
 
-titleModel.value = post.value.title
-contentModel.value = post.value.content
-
 const tiptapEditor = useTiptapEditor(contentModel, { editable: false })
+
+onMounted(async () => {
+  if (typeof routePostId !== 'string') {
+    return router.push('/home')
+  }
+
+  await getPostData(routePostId)
+})
 
 function formatDate (createdAt: Date) {
   return moment(createdAt).format('MMMM Do YYYY, h:mm a')
+}
+
+async function getPostData (postId: string) {
+  try {
+    mainStore.setOverlay(true)
+
+    postData.value = await postsCrud.get(postId)
+    postAuthorData.value = await usersCrud.get(postData.value.authorId)
+
+    titleModel.value = postData.value.title
+    contentModel.value = postData.value.content
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    mainStore.setOverlay(false)
+  }
 }
 </script>
 

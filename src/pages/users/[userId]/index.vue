@@ -1,29 +1,28 @@
 <template>
   <div
-    v-if="userData"
-    class="userProfilePage"
+    class="userProfilePage pb-16"
   >
     <div :style="{ height: '400px' }">
       <parallax-with-loader
-        :src="userData.backgroundImageUrl || '/images/backgrounds/gray_square.svg'"
+        :src="userData?.backgroundImageUrl || '/images/backgrounds/gray_square.svg'"
       />
     </div>
 
     <div class="detailsSection">
       <div class="startArea">
         <user-avatar
-          v-if="userData.profilePhotoUrl"
-          :src="userData.profilePhotoUrl"
+          v-if="userData?.profilePhotoUrl"
+          :src="userData?.profilePhotoUrl"
           class="profilePhoto"
           size="250"
         />
 
         <div class="py-7 ml-6">
           <h2 class="text-h4 font-weight-bold mb-3">
-            {{ userData.name }}
+            {{ userData?.name }}
           </h2>
 
-          <div v-if="userData.createdAt">
+          <div v-if="userData?.createdAt">
             Joined {{ formatDate(userData.createdAt) }}
           </div>
         </div>
@@ -57,6 +56,7 @@ import ParallaxWithLoader from '@/components/commons/ParallaxWithLoader.vue'
 import PostList from '@/components/commons/PostList/index.vue'
 
 import { useMainStore } from '@/store/index'
+import { useAccountStore } from '@/store/account'
 import { usePopupStore } from '@/store/popup'
 
 import { useUsersCrud } from '@/composables/useUsersCrud'
@@ -72,6 +72,7 @@ definePageMeta({
 })
 
 const mainStore = useMainStore()
+const accountStore = useAccountStore()
 const popupStore = usePopupStore()
 
 const route = useRoute()
@@ -89,7 +90,7 @@ const userPosts = ref<IPost[]>([])
 
 onMounted(async () => {
   if (typeof routeUserId !== 'string') {
-    return router.push('home')
+    return router.push('/home')
   }
 
   await getUserData(routeUserId)
@@ -120,7 +121,7 @@ async function listUserPosts (userId: string) {
   try {
     loadingUserPosts.value = true
 
-    userPosts.value = await postsCrud.listUserPosts(userId)
+    userPosts.value = await postsCrud.listUserPosts(userId, accountStore.userId === userId)
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
@@ -135,9 +136,9 @@ async function listUserPosts (userId: string) {
 
 <style lang="scss" scoped>
 .userProfilePage {
-  .detailsSection {
-    min-height: 90vh;
+  min-height: 150vh;
 
+  .detailsSection {
     .startArea {
       display: flex;
       align-items: flex-start;
