@@ -15,7 +15,7 @@
 
       <v-window
         v-model="tabsPageTab"
-        class="py-5 py-md-0 px-10 overflowVisible"
+        class="py-5 py-md-0 px-10"
         :style="{ flex: '1 1 0', minHeight: '90vh' }"
       >
         <slot name="windows" />
@@ -36,7 +36,7 @@ const { mobile: isMobile } = useDisplay()
 <style lang="scss" scoped>
 .tabsPage {
   .contentContainer {
-    max-width: 1500px;
+    max-width: 1000px;
 
     margin: 0 auto;
   }

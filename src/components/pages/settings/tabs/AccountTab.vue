@@ -26,7 +26,7 @@
       </v-form>
 
       <v-row>
-        <v-col cols="6">
+        <v-col cols="8">
           <div :style="{ width: '100%', height: '200px' }">
             <image-with-loader
               :src="currentBackgroundUrl || '/images/backgrounds/gray_square.svg'"
@@ -44,7 +44,7 @@
           </div>
         </v-col>
 
-        <v-col cols="6">
+        <v-col cols="4">
           <v-btn
             color="secondary"
             variant="text"
@@ -71,7 +71,7 @@
         <v-btn
           :disabled="validModel !== true"
           color="secondary"
-          width="200px"
+          block
           @click="save"
         >
           Save
