@@ -56,7 +56,7 @@
 
       <v-window-item>
         <post-list
-          :posts="posts"
+          :posts="savedPosts"
           hide-creation-button
         />
       </v-window-item>
@@ -102,16 +102,17 @@ const postsCrud = usePostsCrud()
 
 const posts = ref<IPost[]>([])
 const followingPosts = ref<IPost[]>([])
+const savedPosts = ref<IPost[]>([])
 
 const postTab = ref<number | null>(null)
 
 const loadingPosts = ref(false)
 const loadingFollowingPosts = ref(false)
+const loadingSavedPosts = ref(false)
 
 async function listPosts () {
   try {
     loadingPosts.value = true
-    mainStore.setOverlay(true)
 
     posts.value = await postsCrud.listPublicPosts()
   } catch (err) {
@@ -120,14 +121,12 @@ async function listPosts () {
     }
   } finally {
     loadingPosts.value = false
-    mainStore.setOverlay(false)
   }
 }
 
 async function listFollowingPosts () {
   try {
     loadingFollowingPosts.value = true
-    mainStore.setOverlay(true)
 
     if (!accountStore.databaseUser) {
       throw new Error('The user is not authenticated')
@@ -140,13 +139,37 @@ async function listFollowingPosts () {
     }
   } finally {
     loadingFollowingPosts.value = false
-    mainStore.setOverlay(false)
   }
 }
 
-onMounted(() => {
-  listPosts()
-  listFollowingPosts()
+async function listSavedPosts () {
+  try {
+    loadingSavedPosts.value = true
+
+    if (!accountStore.databaseUser) {
+      throw new Error('The user is not authenticated')
+    }
+
+    savedPosts.value = await postsCrud.listSavedPosts(accountStore.databaseUser)
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
+  } finally {
+    loadingSavedPosts.value = false
+  }
+}
+
+onMounted(async () => {
+  mainStore.setOverlay(true)
+
+  await Promise.all([
+    listPosts(),
+    listFollowingPosts(),
+    listSavedPosts(),
+  ])
+
+  mainStore.setOverlay(false)
 })
 </script>
 

@@ -35,6 +35,17 @@ export function usePostsCrud () {
     )
   }
 
+  function listSavedPosts (userData: IDatabaseUser) {
+    if (userData.savedPosts.length === 0) {
+      return []
+    }
+
+    return firestoreCrud.list(
+      where('private', '==', false),
+      where('_id', 'in', userData.savedPosts),
+    )
+  }
+
   async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto: File | null) {
     const savedPost = await firestoreCrud.create(_id, data)
 
@@ -92,8 +103,10 @@ export function usePostsCrud () {
   return {
     createPost,
     updatePost,
+
     listPublicPosts,
     listFollowingPosts,
+    listSavedPosts,
     listUserPosts,
 
     like,
