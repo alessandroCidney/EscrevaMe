@@ -15,6 +15,7 @@ export interface IDatabaseUser {
   firstLogin: boolean
 
   following: string[]
+  savedPosts: string[]
 }
 
 export interface IPrivateDatabaseUserData {
@@ -52,6 +53,7 @@ export class UserModel {
   firstLogin!: IDatabaseUser['firstLogin']
 
   following!: IDatabaseUser['following']
+  savedPosts!: IDatabaseUser['savedPosts']
 
   constructor (user: IDatabaseUser) {
     this._id = user._id
@@ -64,6 +66,7 @@ export class UserModel {
     this.backgroundImageUrl = user.backgroundImageUrl
     this.firstLogin = user.firstLogin
     this.following = user.following
+    this.savedPosts = user.savedPosts
   }
 }
 

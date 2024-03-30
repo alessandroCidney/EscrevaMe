@@ -89,9 +89,11 @@
         />
 
         <v-btn
+          :loading="loadingSavePost"
+          :icon="isSaved ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
           color="secondary"
-          icon="mdi-bookmark-outline"
           variant="text"
+          @click="isSaved ? handleRemoveSavedPost() : handleSavePost()"
         />
       </div>
 
@@ -171,6 +173,12 @@ const isLiked = computed(() =>
   postData.value &&
   accountStore.userId &&
   postData.value.likedBy.includes(accountStore.userId),
+)
+
+const isSaved = computed(() =>
+  typeof routePostId === 'string' &&
+  !!accountStore.databaseUser &&
+  accountStore.databaseUser.savedPosts.includes(routePostId),
 )
 
 const titleModel = defineModel<string>('title', { default: '' })
@@ -297,6 +305,60 @@ async function handleUnlike () {
     }
   } finally {
     loadingLike.value = false
+  }
+}
+
+const loadingSavePost = ref(false)
+
+async function handleSavePost () {
+  try {
+    loadingSavePost.value = true
+
+    if (!postData.value) {
+      throw new Error('Post not found')
+    }
+
+    if (!accountStore.databaseUser) {
+      throw new Error('The user is not authenticated')
+    }
+
+    const updatedUser = await usersCrud.savePost(accountStore.databaseUser, postData.value._id)
+
+    accountStore.setDatabaseUser(updatedUser)
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingSavePost.value = false
+  }
+}
+
+async function handleRemoveSavedPost () {
+  try {
+    loadingSavePost.value = true
+
+    if (!postData.value) {
+      throw new Error('Post not found')
+    }
+
+    if (!accountStore.databaseUser) {
+      throw new Error('The user is not authenticated')
+    }
+
+    const updatedUser = await usersCrud.removeSavedPost(accountStore.databaseUser, postData.value._id)
+
+    accountStore.setDatabaseUser(updatedUser)
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingSavePost.value = false
   }
 }
 </script>

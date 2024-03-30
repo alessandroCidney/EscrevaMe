@@ -2,7 +2,6 @@ import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 
 import {
   userConverter,
-  userFollowingDataConverter,
   type IDatabaseUser,
   type TPartialNewUser,
   type IPrivateDatabaseUserData,
@@ -40,6 +39,7 @@ export function useUsersCrud () {
       updatedAt: partialNewUser.updatedAt,
       firstLogin: partialNewUser.firstLogin,
       following: partialNewUser.following,
+      savedPosts: partialNewUser.savedPosts,
     }
 
     const createdUser = await firestoreCrud.create(userCredential.user.uid, payload)
@@ -90,11 +90,6 @@ export function useUsersCrud () {
     return updatePhoto(userId, 'background_image', 'backgroundImageUrl', file)
   }
 
-  function getFollowingData (userId: string, followedUserId: string) {
-    const followersFirestoreCurd = useFirestoreCrud(`users/${userId}/following`, userFollowingDataConverter)
-    return followersFirestoreCurd.get(followedUserId)
-  }
-
   async function follow (userData: IDatabaseUser, followedUserId: string) {
     const followingArr = [...userData.following]
 
@@ -110,16 +105,6 @@ export function useUsersCrud () {
     }
 
     await firestoreCrud.update(userData._id, updatedUserData)
-
-    const followersFirestoreCurd = useFirestoreCrud(`users/${userData._id}/following`, userFollowingDataConverter)
-
-    const payload = {
-      _id: 'following',
-      followedUser: followedUserId,
-      startedFollowingAt: new Date(),
-    }
-
-    await followersFirestoreCurd.create(followedUserId, payload)
 
     return updatedUserData
   }
@@ -142,8 +127,45 @@ export function useUsersCrud () {
 
     await firestoreCrud.update(userData._id, updatedUserData)
 
-    const followersFirestoreCurd = useFirestoreCrud(`users/${userData._id}/following`, userFollowingDataConverter)
-    await followersFirestoreCurd.remove(followedUserId)
+    return updatedUserData
+  }
+
+  async function savePost (userData: IDatabaseUser, postId: string) {
+    const savedPostsArr = [...userData.savedPosts]
+
+    if (savedPostsArr.includes(postId)) {
+      throw new Error('Already saved')
+    }
+
+    savedPostsArr.push(postId)
+
+    const updatedUserData = {
+      ...userData,
+      savedPosts: savedPostsArr,
+    }
+
+    await firestoreCrud.update(userData._id, updatedUserData)
+
+    return updatedUserData
+  }
+
+  async function removeSavedPost (userData: IDatabaseUser, postId: string) {
+    const savedPostsArr = [...userData.savedPosts]
+
+    if (!savedPostsArr.includes(postId)) {
+      throw new Error('Not saved yet')
+    }
+
+    const savedPostIdIndex = savedPostsArr.findIndex(savedPostId => savedPostId === postId)
+
+    savedPostsArr.splice(savedPostIdIndex, 1)
+
+    const updatedUserData = {
+      ...userData,
+      savedPosts: savedPostsArr,
+    }
+
+    await firestoreCrud.update(userData._id, updatedUserData)
 
     return updatedUserData
   }
@@ -157,8 +179,10 @@ export function useUsersCrud () {
     getBackgroundImage,
     updateBackgroundImage,
 
-    getFollowingData,
     follow,
     unfollow,
+
+    savePost,
+    removeSavedPost,
   }
 }

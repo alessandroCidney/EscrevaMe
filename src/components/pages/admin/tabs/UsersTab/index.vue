@@ -202,6 +202,7 @@ function handleCreate () {
     updatedAt: null,
     firstLogin: true,
     following: [],
+    savedPosts: [],
   }
 
   usersCreationDialogIsOpen.value = true
