@@ -8,11 +8,15 @@ export function getFilenameExtension (filename: string, defaultExtension = 'jpg'
   return filename.split('.').pop() || defaultExtension
 }
 
-export function selectFile (callbackFn: (files: File) => Promise<void> | void) {
+export function selectFile (
+  callbackFn: (files: File) => Promise<void> | void,
+  acceptedExtensions = '.png, .jpg, .jpeg',
+) {
   const inputElement = document.createElement('input')
 
   inputElement.style.display = 'none'
   inputElement.setAttribute('type', 'file')
+  inputElement.accept = acceptedExtensions
 
   function onChange (event: Event) {
     const target = event.target

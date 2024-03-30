@@ -13,6 +13,7 @@
       <v-btn
         v-if="accountStore.isAuthenticated && accountStore.userRole === 'Admin'"
         color="secondary"
+        class="mx-2"
         variant="text"
         @click="$router.push('/admin')"
       >
@@ -56,7 +57,19 @@
             </template>
 
             <v-list-item-title>
-              Perfil
+              Profile
+            </v-list-item-title>
+          </v-list-item>
+
+          <v-list-item to="/settings">
+            <template #prepend>
+              <v-icon>
+                mdi-cog
+              </v-icon>
+            </template>
+
+            <v-list-item-title>
+              Settings
             </v-list-item-title>
           </v-list-item>
 

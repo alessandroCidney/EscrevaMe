@@ -8,7 +8,7 @@
       />
     </div>
 
-    <div class="detailsSection">
+    <div class="detailsSection px-16">
       <div class="startArea">
         <user-avatar
           v-if="userData?.profilePhotoUrl"
@@ -29,7 +29,10 @@
       </div>
     </div>
 
-    <div v-if="userPosts.length > 0" class="postsSection">
+    <div
+      v-if="userPosts.length > 0"
+      class="postsSection px-16"
+    >
       <div class="postsArea">
         <h2 class="text-h4 mb-5 font-weight-bold">
           Recent posts
@@ -121,7 +124,9 @@ async function listUserPosts (userId: string) {
   try {
     loadingUserPosts.value = true
 
-    userPosts.value = await postsCrud.listUserPosts(userId, accountStore.userId === userId)
+    const listPrivate = accountStore.userId === userId ? undefined : false
+
+    userPosts.value = await postsCrud.listUserPosts(userId, listPrivate)
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
