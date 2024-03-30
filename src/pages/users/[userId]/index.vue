@@ -10,12 +10,16 @@
 
     <div class="detailsSection px-16">
       <div class="startArea">
-        <user-avatar
-          v-if="userData?.profilePhotoUrl"
-          :src="userData?.profilePhotoUrl"
-          class="profilePhoto"
-          size="250"
-        />
+        <div
+          :style="{ width: '250px', height: '250px' }"
+        >
+          <user-avatar
+            v-if="userData?.profilePhotoUrl"
+            :src="userData?.profilePhotoUrl"
+            class="profilePhoto"
+            size="250"
+          />
+        </div>
 
         <div class="py-7 ml-6">
           <h2 class="text-h4 font-weight-bold mb-3">
@@ -24,6 +28,21 @@
 
           <div v-if="userData?.createdAt">
             Joined {{ formatDate(userData.createdAt) }}
+          </div>
+
+          <div
+            v-if="routeUserId !== accountStore.userId"
+            class="my-5"
+          >
+            <v-btn
+              :loading="loadingFollow"
+              :variant="isFollowing ? 'tonal' : 'elevated'"
+              :prepend-icon="isFollowing ? 'mdi-check-circle' : undefined"
+              color="secondary"
+              @click="isFollowing ? handleUnfollow() : handleFollow()"
+            >
+              {{ isFollowing ? 'Following' : 'Follow' }}
+            </v-btn>
           </div>
         </div>
       </div>
@@ -91,12 +110,19 @@ const loadingUserPosts = ref(false)
 const userData = ref<IDatabaseUser | null>(null)
 const userPosts = ref<IPost[]>([])
 
+const isFollowing = ref(false)
+
 onMounted(async () => {
   if (typeof routeUserId !== 'string') {
     return router.push('/home')
   }
 
+  if (!accountStore.userId) {
+    throw new Error('The user is not authenticated')
+  }
+
   await getUserData(routeUserId)
+  await getFollowingData(accountStore.userId, routeUserId)
   await listUserPosts(routeUserId)
 })
 
@@ -120,6 +146,28 @@ async function getUserData (userId: string) {
   }
 }
 
+async function getFollowingData (userId: string, followedUserId: string) {
+  try {
+    loadingFollow.value = true
+
+    const followingData = await usersCrud.getFollowingData(userId, followedUserId)
+
+    if (followingData) {
+      isFollowing.value = true
+    }
+  } catch (err) {
+    if (err instanceof Error && err.message === 'Not found') {
+      isFollowing.value = false
+    } else if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingFollow.value = false
+  }
+}
+
 async function listUserPosts (userId: string) {
   try {
     loadingUserPosts.value = true
@@ -135,6 +183,60 @@ async function listUserPosts (userId: string) {
     }
   } finally {
     loadingUserPosts.value = false
+  }
+}
+
+const loadingFollow = ref(false)
+
+async function handleFollow () {
+  try {
+    loadingFollow.value = true
+
+    if (!accountStore.userId) {
+      throw new Error('The user is not authenticated')
+    }
+
+    if (typeof routeUserId !== 'string') {
+      throw new TypeError('Invalid user')
+    }
+
+    await usersCrud.follow(accountStore.userId, routeUserId)
+
+    isFollowing.value = true
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingFollow.value = false
+  }
+}
+
+async function handleUnfollow () {
+  try {
+    loadingFollow.value = true
+
+    if (!accountStore.userId) {
+      throw new Error('The user is not authenticated')
+    }
+
+    if (typeof routeUserId !== 'string') {
+      throw new TypeError('Invalid user')
+    }
+
+    await usersCrud.unfollow(accountStore.userId, routeUserId)
+
+    isFollowing.value = false
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingFollow.value = false
   }
 }
 </script>

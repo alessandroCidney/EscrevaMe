@@ -20,6 +20,12 @@ export interface IPrivateDatabaseUserData {
   email?: string
 }
 
+export interface IFollowingUserData {
+  _id: string
+  followedUser: string
+  startedFollowingAt: Date
+}
+
 export type TPartialNewUser = Omit<IDatabaseUser, '_id'> & {
   email: string
   password: string
@@ -67,6 +73,36 @@ export const userConverter: FirestoreDataConverter<UserModel> = {
       ...data,
       createdAt: data.createdAt.toDate(),
       updatedAt: data.updatedAt?.toDate() ?? null,
+    })
+  },
+}
+
+export class UserFollowingDataModel {
+  _id: IFollowingUserData['_id']
+  followedUser: IFollowingUserData['followedUser']
+  startedFollowingAt: IFollowingUserData['startedFollowingAt']
+
+  constructor (followingUserData: IFollowingUserData) {
+    this._id = followingUserData._id
+    this.followedUser = followingUserData.followedUser
+    this.startedFollowingAt = followingUserData.startedFollowingAt
+  }
+}
+
+export interface IFirestoreFollowingUserData extends Omit<IFollowingUserData, 'startedFollowingAt'> {
+  startedFollowingAt: Timestamp
+}
+
+export const userFollowingDataConverter : FirestoreDataConverter<UserFollowingDataModel> = {
+  toFirestore: (followingUserData: UserFollowingDataModel) => ({
+    ...followingUserData,
+  }),
+  fromFirestore: (snapshot: QueryDocumentSnapshot<IFirestoreFollowingUserData>, options: SnapshotOptions) => {
+    const data = snapshot.data(options)
+
+    return new UserFollowingDataModel({
+      ...data,
+      startedFollowingAt: data.startedFollowingAt.toDate(),
     })
   },
 }

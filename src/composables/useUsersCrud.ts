@@ -1,6 +1,12 @@
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 
-import { type IDatabaseUser, userConverter, type TPartialNewUser, type IPrivateDatabaseUserData } from '@/types/user'
+import {
+  userConverter,
+  userFollowingDataConverter,
+  type IDatabaseUser,
+  type TPartialNewUser,
+  type IPrivateDatabaseUserData,
+} from '@/types/user'
 
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
@@ -83,6 +89,30 @@ export function useUsersCrud () {
     return updatePhoto(userId, 'background_image', 'backgroundImageUrl', file)
   }
 
+  function getFollowingData (userId: string, followedUserId: string) {
+    const followersFirestoreCurd = useFirestoreCrud(`users/${userId}/following`, userFollowingDataConverter)
+    return followersFirestoreCurd.get(followedUserId)
+  }
+
+  async function follow (userId: string, followedUserId: string) {
+    const followersFirestoreCurd = useFirestoreCrud(`users/${userId}/following`, userFollowingDataConverter)
+
+    const payload = {
+      _id: 'following',
+      followedUser: followedUserId,
+      startedFollowingAt: new Date(),
+    }
+
+    await followersFirestoreCurd.create(followedUserId, payload)
+
+    return payload
+  }
+
+  function unfollow (userId: string, followedUserId: string) {
+    const followersFirestoreCurd = useFirestoreCrud(`users/${userId}/following`, userFollowingDataConverter)
+    return followersFirestoreCurd.remove(followedUserId)
+  }
+
   return {
     ...firestoreCrud,
     create,
@@ -91,5 +121,9 @@ export function useUsersCrud () {
     updateProfilePhoto,
     getBackgroundImage,
     updateBackgroundImage,
+
+    getFollowingData,
+    follow,
+    unfollow,
   }
 }
