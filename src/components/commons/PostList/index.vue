@@ -35,10 +35,15 @@
       <p
         class="mb-7"
       >
-        Create a new post by clicking the button below
+        {{
+          hideCreationButton
+            ? 'No posts have been created yet'
+            : 'Create a new post by clicking the button below'
+        }}
       </p>
 
       <v-btn
+        v-if="!hideCreationButton"
         color="secondary"
         prepend-icon="mdi-plus"
         @click="$router.push('/posts/new')"
@@ -56,5 +61,8 @@ import PostCard from './components/PostCard.vue'
 
 import type { IPost } from '@/types/post'
 
-const props = defineProps<{ posts: IPost[] }>()
+const props = defineProps<{
+  posts: IPost[]
+  hideCreationButton?: boolean
+}>()
 </script>

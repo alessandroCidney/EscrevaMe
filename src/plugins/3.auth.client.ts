@@ -26,8 +26,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
           }
 
           if (databaseUser.firstLogin) {
-            window.alert('First login')
-
             databaseUser.profilePhotoUrl = databaseUser.profilePhotoUrl ?? authUser.photoURL
             databaseUser.firstLogin = false
 

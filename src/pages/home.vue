@@ -48,13 +48,15 @@
 
       <v-window-item>
         <post-list
-          :posts="posts"
+          :posts="followingPosts"
+          hide-creation-button
         />
       </v-window-item>
 
       <v-window-item>
         <post-list
           :posts="posts"
+          hide-creation-button
         />
       </v-window-item>
     </v-window>
@@ -98,9 +100,12 @@ const popupStore = usePopupStore()
 const postsCrud = usePostsCrud()
 
 const posts = ref<IPost[]>([])
+const followingPosts = ref<IPost[]>([])
+
 const postTab = ref<number | null>(null)
 
 const loadingPosts = ref(false)
+const loadingFollowingPosts = ref(false)
 
 async function listPosts () {
   try {
@@ -118,8 +123,29 @@ async function listPosts () {
   }
 }
 
+async function listFollowingPosts () {
+  try {
+    loadingFollowingPosts.value = true
+    mainStore.setOverlay(true)
+
+    if (!accountStore.databaseUser) {
+      throw new Error('The user is not authenticated')
+    }
+
+    followingPosts.value = await postsCrud.listFollowingPosts(accountStore.databaseUser)
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    }
+  } finally {
+    loadingFollowingPosts.value = false
+    mainStore.setOverlay(false)
+  }
+}
+
 onMounted(() => {
   listPosts()
+  listFollowingPosts()
 })
 </script>
 

@@ -5,6 +5,8 @@ import { type IPost, postConverter } from '@/types/post'
 import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
+import type { IDatabaseUser } from '@/types/user'
+
 export function usePostsCrud () {
   const firestoreCrud = useFirestoreCrud<IPost>('posts', postConverter)
 
@@ -20,6 +22,17 @@ export function usePostsCrud () {
     }
 
     return firestoreCrud.list(...queries)
+  }
+
+  function listFollowingPosts (userData: IDatabaseUser) {
+    if (userData.following.length === 0) {
+      return []
+    }
+
+    return firestoreCrud.list(
+      where('private', '==', false),
+      where('authorId', 'in', userData.following),
+    )
   }
 
   async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto?: File) {
@@ -54,6 +67,7 @@ export function usePostsCrud () {
     createPost,
     updatePost,
     listPublicPosts,
+    listFollowingPosts,
     listUserPosts,
     ...firestoreCrud,
   }

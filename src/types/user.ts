@@ -13,6 +13,8 @@ export interface IDatabaseUser {
   updatedAt: Date | null
 
   firstLogin: boolean
+
+  following: string[]
 }
 
 export interface IPrivateDatabaseUserData {
@@ -49,6 +51,8 @@ export class UserModel {
 
   firstLogin!: IDatabaseUser['firstLogin']
 
+  following!: IDatabaseUser['following']
+
   constructor (user: IDatabaseUser) {
     this._id = user._id
     this.name = user.name
@@ -59,6 +63,7 @@ export class UserModel {
     this.profilePhotoUrl = user.profilePhotoUrl
     this.backgroundImageUrl = user.backgroundImageUrl
     this.firstLogin = user.firstLogin
+    this.following = user.following
   }
 }
 

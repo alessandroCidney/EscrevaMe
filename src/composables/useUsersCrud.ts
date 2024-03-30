@@ -39,6 +39,7 @@ export function useUsersCrud () {
       profilePhotoUrl: partialNewUser.profilePhotoUrl,
       updatedAt: partialNewUser.updatedAt,
       firstLogin: partialNewUser.firstLogin,
+      following: partialNewUser.following,
     }
 
     const createdUser = await firestoreCrud.create(userCredential.user.uid, payload)
@@ -94,8 +95,23 @@ export function useUsersCrud () {
     return followersFirestoreCurd.get(followedUserId)
   }
 
-  async function follow (userId: string, followedUserId: string) {
-    const followersFirestoreCurd = useFirestoreCrud(`users/${userId}/following`, userFollowingDataConverter)
+  async function follow (userData: IDatabaseUser, followedUserId: string) {
+    const followingArr = [...userData.following]
+
+    if (followingArr.includes(followedUserId)) {
+      throw new Error('Already following')
+    }
+
+    followingArr.push(followedUserId)
+
+    const updatedUserData = {
+      ...userData,
+      following: followingArr,
+    }
+
+    await firestoreCrud.update(userData._id, updatedUserData)
+
+    const followersFirestoreCurd = useFirestoreCrud(`users/${userData._id}/following`, userFollowingDataConverter)
 
     const payload = {
       _id: 'following',
@@ -105,12 +121,31 @@ export function useUsersCrud () {
 
     await followersFirestoreCurd.create(followedUserId, payload)
 
-    return payload
+    return updatedUserData
   }
 
-  function unfollow (userId: string, followedUserId: string) {
-    const followersFirestoreCurd = useFirestoreCrud(`users/${userId}/following`, userFollowingDataConverter)
-    return followersFirestoreCurd.remove(followedUserId)
+  async function unfollow (userData: IDatabaseUser, followedUserId: string) {
+    const followingArr = [...userData.following]
+
+    if (!followingArr.includes(followedUserId)) {
+      throw new Error('Not following yet')
+    }
+
+    const followingIdIndex = followingArr.findIndex(followingId => followingId === followedUserId)
+
+    followingArr.splice(followingIdIndex, 1)
+
+    const updatedUserData = {
+      ...userData,
+      following: followingArr,
+    }
+
+    await firestoreCrud.update(userData._id, updatedUserData)
+
+    const followersFirestoreCurd = useFirestoreCrud(`users/${userData._id}/following`, userFollowingDataConverter)
+    await followersFirestoreCurd.remove(followedUserId)
+
+    return updatedUserData
   }
 
   return {

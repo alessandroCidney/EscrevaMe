@@ -34,7 +34,6 @@
         { title: 'Name', value: 'name' },
         { title: 'Role', value: 'role' },
         { title: 'Created at', value: 'createdAt' },
-        { title: 'Identifier', value: '_id' },
         { title: 'Active', value: 'active' },
         { title: 'Actions', value: 'actions', align: 'center' },
       ]"
@@ -202,6 +201,7 @@ function handleCreate () {
     profilePhotoUrl: null,
     updatedAt: null,
     firstLogin: true,
+    following: [],
   }
 
   usersCreationDialogIsOpen.value = true

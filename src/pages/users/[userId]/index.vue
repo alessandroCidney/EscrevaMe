@@ -49,7 +49,6 @@
     </div>
 
     <div
-      v-if="userPosts.length > 0"
       class="postsSection px-16"
     >
       <div class="postsArea">
@@ -61,6 +60,7 @@
 
         <post-list
           :posts="userPosts"
+          :hide-creation-button="accountStore.userId !== routeUserId"
           class="py-16"
         />
       </div>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 
 import moment from 'moment'
 
@@ -110,7 +110,11 @@ const loadingUserPosts = ref(false)
 const userData = ref<IDatabaseUser | null>(null)
 const userPosts = ref<IPost[]>([])
 
-const isFollowing = ref(false)
+const isFollowing = computed(() =>
+  typeof routeUserId === 'string' &&
+  !!accountStore.databaseUser &&
+  accountStore.databaseUser.following.includes(routeUserId),
+)
 
 onMounted(async () => {
   if (typeof routeUserId !== 'string') {
@@ -122,7 +126,6 @@ onMounted(async () => {
   }
 
   await getUserData(routeUserId)
-  await getFollowingData(accountStore.userId, routeUserId)
   await listUserPosts(routeUserId)
 })
 
@@ -143,28 +146,6 @@ async function getUserData (userId: string) {
     }
   } finally {
     mainStore.setOverlay(false)
-  }
-}
-
-async function getFollowingData (userId: string, followedUserId: string) {
-  try {
-    loadingFollow.value = true
-
-    const followingData = await usersCrud.getFollowingData(userId, followedUserId)
-
-    if (followingData) {
-      isFollowing.value = true
-    }
-  } catch (err) {
-    if (err instanceof Error && err.message === 'Not found') {
-      isFollowing.value = false
-    } else if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
-  } finally {
-    loadingFollow.value = false
   }
 }
 
@@ -192,17 +173,21 @@ async function handleFollow () {
   try {
     loadingFollow.value = true
 
-    if (!accountStore.userId) {
+    if (!accountStore.databaseUser) {
       throw new Error('The user is not authenticated')
+    }
+
+    if (accountStore.databaseUser.following.length === 30) {
+      throw new Error('You can currently only follow up to 30 users')
     }
 
     if (typeof routeUserId !== 'string') {
       throw new TypeError('Invalid user')
     }
 
-    await usersCrud.follow(accountStore.userId, routeUserId)
+    const updatedUserData = await usersCrud.follow(accountStore.databaseUser, routeUserId)
 
-    isFollowing.value = true
+    accountStore.setDatabaseUser(updatedUserData)
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
@@ -218,7 +203,7 @@ async function handleUnfollow () {
   try {
     loadingFollow.value = true
 
-    if (!accountStore.userId) {
+    if (!accountStore.databaseUser) {
       throw new Error('The user is not authenticated')
     }
 
@@ -226,9 +211,9 @@ async function handleUnfollow () {
       throw new TypeError('Invalid user')
     }
 
-    await usersCrud.unfollow(accountStore.userId, routeUserId)
+    const updatedUserData = await usersCrud.unfollow(accountStore.databaseUser, routeUserId)
 
-    isFollowing.value = false
+    accountStore.setDatabaseUser(updatedUserData)
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
