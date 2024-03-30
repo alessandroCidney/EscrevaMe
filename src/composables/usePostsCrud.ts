@@ -63,12 +63,42 @@ export function usePostsCrud () {
     }
   }
 
+  async function like (postData: IPost, userId: string) {
+    const likedBy = [...postData.likedBy]
+
+    if (likedBy.includes(userId)) {
+      throw new Error('Already liked')
+    }
+
+    likedBy.push(userId)
+
+    return await firestoreCrud.update(postData._id, { ...postData, likedBy })
+  }
+
+  async function unlike (postData: IPost, userId: string) {
+    const likedBy = [...postData.likedBy]
+
+    if (!likedBy.includes(userId)) {
+      throw new Error('Not liked yet')
+    }
+
+    const likedIndex = likedBy.findIndex(likedUserId => likedUserId === userId)
+
+    likedBy.splice(likedIndex, 1)
+
+    return await firestoreCrud.update(postData._id, { ...postData, likedBy })
+  }
+
   return {
     createPost,
     updatePost,
     listPublicPosts,
     listFollowingPosts,
     listUserPosts,
+
+    like,
+    unlike,
+
     ...firestoreCrud,
   }
 }

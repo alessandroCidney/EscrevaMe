@@ -291,6 +291,8 @@ async function confirmRemove (data: IDatabaseUser) {
   } catch (err) {
     if (err instanceof Error) {
       popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
     }
   }
 }

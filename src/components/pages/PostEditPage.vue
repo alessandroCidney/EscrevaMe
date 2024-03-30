@@ -78,7 +78,7 @@
             prepend-icon="mdi-image-plus"
             @click="handleSelectImage"
           >
-            {{ (photoFile ?? props.initialPhotoUrl) ? 'Editar imagem' : 'Adicionar imagem' }}
+            {{ (photoFile ?? props.initialPhotoUrl) ? 'Edit image' : 'Add image' }}
           </v-btn>
         </div>
 

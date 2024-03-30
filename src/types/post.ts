@@ -18,6 +18,8 @@ export interface IPost {
 
   createdAt: Date
   updatedAt: Date | null
+
+  private: boolean
 }
 
 export interface IDbPost extends Omit<IPost, 'createdAt' | 'updatedAt'> {
@@ -43,6 +45,8 @@ export class PostModel {
 
   likedBy!: IPost['likedBy']
 
+  private!: IPost['private']
+
   constructor (post: IPost) {
     this._id = post._id
     this.title = post.title
@@ -52,6 +56,8 @@ export class PostModel {
     this.tags = post.tags
     this.createdAt = post.createdAt
     this.updatedAt = post.updatedAt
+    this.likedBy = post.likedBy
+    this.private = post.private
   }
 }
 

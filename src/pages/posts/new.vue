@@ -69,6 +69,8 @@ async function save () {
         updatedAt: null,
 
         likedBy: [],
+
+        private: false,
       },
       photoFile.value,
     )

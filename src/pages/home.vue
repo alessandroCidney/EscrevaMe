@@ -42,6 +42,7 @@
         </v-row>
 
         <post-list
+          v-if="posts.length !== 1"
           :posts="posts.slice(1, posts.length)"
         />
       </v-window-item>

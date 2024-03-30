@@ -55,6 +55,7 @@
             icon="mdi-delete"
             variant="text"
             size="small"
+            @click="handleRemove"
           />
         </div>
       </div>
@@ -80,9 +81,11 @@
         class="pa-5 d-flex align-center justify-end"
       >
         <v-btn
+          :loading="loadingLike"
+          :icon="isLiked ? 'mdi-heart' : 'mdi-heart-outline'"
           color="secondary"
-          icon="mdi-heart-outline"
           variant="text"
+          @click="isLiked ? handleUnlike() : handleLike()"
         />
 
         <v-btn
@@ -91,12 +94,37 @@
           variant="text"
         />
       </div>
+
+      <form-dialog
+        v-model:open="postRemovalDialogIsOpen"
+        :payload="postRemovalPayload"
+        :cancel="cancelRemove"
+        :save="confirmRemove"
+        title="Remove post"
+        max-width="500"
+      >
+        <p>
+          The post will be removed. Do you want to continue?
+        </p>
+
+        <template #saveButton="{ loading, save }">
+          <v-btn
+            :loading="loading"
+            color="secondary"
+            variant="text"
+            type="submit"
+            @click="save"
+          >
+            Continue
+          </v-btn>
+        </template>
+      </form-dialog>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { defineModel, ref, onMounted } from 'vue'
+import { defineModel, ref, onMounted, computed } from 'vue'
 
 import moment from 'moment'
 
@@ -112,6 +140,8 @@ import { useUsersCrud } from '@/composables/useUsersCrud'
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
 import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
 import UserAvatar from '@/components/layouts/default/AppHeader/components/UserAvatar.vue'
+
+import FormDialog from '@/components/commons/FormDialog.vue'
 
 import type { IPost } from '@/types/post'
 import type { IDatabaseUser } from '@/types/user'
@@ -136,6 +166,12 @@ const routePostId = route.params.postId
 
 const postData = ref<IPost | null>(null)
 const postAuthorData = ref<IDatabaseUser | null>(null)
+
+const isLiked = computed(() =>
+  postData.value &&
+  accountStore.userId &&
+  postData.value.likedBy.includes(accountStore.userId),
+)
 
 const titleModel = defineModel<string>('title', { default: '' })
 const contentModel = defineModel<string>('content', { default: '' })
@@ -171,6 +207,96 @@ async function getPostData (postId: string) {
     }
   } finally {
     mainStore.setOverlay(false)
+  }
+}
+
+const postRemovalDialogIsOpen = ref(false)
+const postRemovalPayload = ref<IPost | null>(null)
+
+function handleRemove () {
+  if (!postData.value) {
+    return
+  }
+
+  postRemovalDialogIsOpen.value = true
+  postRemovalPayload.value = postData.value
+}
+
+async function confirmRemove () {
+  try {
+    if (!postRemovalPayload.value) {
+      throw new Error('Post not selected')
+    }
+
+    await postsCrud.remove(postRemovalPayload.value._id)
+
+    popupStore.showSuccessPopup('Post removed successfully')
+
+    router.push('/home')
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  }
+}
+
+function cancelRemove () {
+  postRemovalDialogIsOpen.value = false
+}
+
+const loadingLike = ref(false)
+
+async function handleLike () {
+  try {
+    loadingLike.value = true
+
+    if (!postData.value) {
+      throw new Error('Post not found')
+    }
+
+    if (!accountStore.userId) {
+      throw new Error('The user is not authenticated')
+    }
+
+    const updatedPost = await postsCrud.like(postData.value, accountStore.userId)
+
+    postData.value.likedBy = updatedPost.likedBy ?? []
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingLike.value = false
+  }
+}
+
+async function handleUnlike () {
+  try {
+    loadingLike.value = true
+
+    if (!postData.value) {
+      throw new Error('Post not found')
+    }
+
+    if (!accountStore.userId) {
+      throw new Error('The user is not authenticated')
+    }
+
+    const updatedPost = await postsCrud.unlike(postData.value, accountStore.userId)
+
+    postData.value.likedBy = updatedPost.likedBy ?? []
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingLike.value = false
   }
 }
 </script>

@@ -3,6 +3,7 @@
     v-if="loadingImage"
     :width="width ?? '100%'"
     :height="height ?? '100%'"
+    v-bind="$attrs"
   />
 
   <v-img
@@ -10,6 +11,7 @@
     :max-height="loadingImage ? 0 : props.height"
     :min-height="loadingImage ? 0 : props.height"
     :max-width="loadingImage ? 0 : props.width"
+    :min-width="loadingImage ? 0 : props.width"
     class="mb-2"
     cover
     v-bind="$attrs"
