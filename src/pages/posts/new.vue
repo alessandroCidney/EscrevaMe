@@ -3,6 +3,7 @@
     v-model:title="title"
     v-model:content="content"
     v-model:photo="photoFile"
+    :initial-photo-url="null"
     @save="save"
   />
 </template>
@@ -35,7 +36,7 @@ const router = useRouter()
 
 const title = ref('')
 const content = ref('')
-const photoFile = ref<File | undefined>(undefined)
+const photoFile = ref<File | null>(null)
 
 async function save () {
   try {
@@ -62,6 +63,12 @@ async function save () {
         tags: [],
 
         authorId: accountStore.authUser?.uid,
+
+        backgroundPhotoUrl: null,
+
+        updatedAt: null,
+
+        likedBy: [],
       },
       photoFile.value,
     )

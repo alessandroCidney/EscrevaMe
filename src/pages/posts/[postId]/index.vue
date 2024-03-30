@@ -72,6 +72,25 @@
         :editor="tiptapEditor.editor"
         class="tiptapPostEditor"
       />
+
+      <div
+        :style="{
+          width: '90%'
+        }"
+        class="pa-5 d-flex align-center justify-end"
+      >
+        <v-btn
+          color="secondary"
+          icon="mdi-heart-outline"
+          variant="text"
+        />
+
+        <v-btn
+          color="secondary"
+          icon="mdi-bookmark-outline"
+          variant="text"
+        />
+      </div>
     </div>
   </section>
 </template>

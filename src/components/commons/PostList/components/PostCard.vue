@@ -28,28 +28,22 @@
     </v-card-text>
 
     <v-card-text class="px-4">
-      {{ getFromNowDate(props.post.createdAt) }}
+      {{ getFromNowDate(props.post.updatedAt ?? props.post.createdAt) }}
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import moment from 'moment'
-
 import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
 
-import type { IPost } from '@/types/post'
+import { getFromNowDate } from '@/utils/date'
 
-moment.locale('pt-BR')
+import type { IPost } from '@/types/post'
 
 const props = defineProps<{
   post: IPost,
   width?: string,
 }>()
-
-function getFromNowDate (date: Date) {
-  return moment(date).fromNow()
-}
 </script>
 
 <style scoped>

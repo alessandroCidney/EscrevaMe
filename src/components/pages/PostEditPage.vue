@@ -7,7 +7,7 @@
         class="mb-10"
       >
         <v-img
-          :src="getFileUrl() || props.initialPhotoUrl"
+          :src="getFileUrl() || (props.initialPhotoUrl ?? undefined)"
           width="100%"
           height="450px"
           cover
@@ -20,7 +20,7 @@
           variant="text"
           color="white"
           class="ma-2"
-          @click="photoFile = undefined"
+          @click="photoFile = null"
         />
       </div>
 
@@ -119,11 +119,11 @@ import DefaultEditor from '@/components/commons/DefaultEditor.vue'
 import { selectFile } from '@/utils'
 
 const emit = defineEmits(['save'])
-const props = defineProps<{ initialPhotoUrl?: string }>()
+const props = defineProps<{ initialPhotoUrl: string | null }>()
 
 const title = defineModel<string>('title')
 const contentModel = defineModel<string>('content', { default: '' })
-const photoFile = defineModel<File | undefined>('photo', { default: undefined })
+const photoFile = defineModel<File | null>('photo', { default: null })
 
 const tiptapEditor = useTiptapEditor(contentModel)
 

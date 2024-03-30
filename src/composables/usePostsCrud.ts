@@ -35,7 +35,7 @@ export function usePostsCrud () {
     )
   }
 
-  async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto?: File) {
+  async function createPost (_id: string, data: Parameters<typeof firestoreCrud.create>[1], backgroundPhoto: File | null) {
     const savedPost = await firestoreCrud.create(_id, data)
 
     if (backgroundPhoto) {

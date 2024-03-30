@@ -6,18 +6,18 @@ export interface IPost {
   title: string
   description?: string
 
-  picture?: string
-
   content: string
 
-  backgroundPhotoUrl?: string
+  backgroundPhotoUrl: string | null
 
   authorId: string
 
   tags: string[]
 
+  likedBy: string[]
+
   createdAt: Date
-  updatedAt?: Date
+  updatedAt: Date | null
 }
 
 export interface IDbPost extends Omit<IPost, 'createdAt' | 'updatedAt'> {
@@ -26,20 +26,22 @@ export interface IDbPost extends Omit<IPost, 'createdAt' | 'updatedAt'> {
 }
 
 export class PostModel {
-  _id!: string
+  _id!: IPost['_id']
 
-  title!: string
+  title!: IPost['title']
 
-  content!: string
+  content!: IPost['content']
 
-  backgroundPhotoUrl?: string
+  backgroundPhotoUrl!: IPost['backgroundPhotoUrl']
 
-  authorId!: string
+  authorId!: IPost['authorId']
 
-  tags!: string[]
+  tags!: IPost['tags']
 
-  createdAt!: Date
-  updatedAt?: Date
+  createdAt!: IPost['createdAt']
+  updatedAt!: IPost['updatedAt']
+
+  likedBy!: IPost['likedBy']
 
   constructor (post: IPost) {
     this._id = post._id
@@ -63,7 +65,7 @@ export const postConverter: FirestoreDataConverter<PostModel> = {
     return new PostModel({
       ...data,
       createdAt: data.createdAt.toDate(),
-      updatedAt: data.updatedAt?.toDate(),
+      updatedAt: data.updatedAt?.toDate() ?? null,
     })
   },
 }

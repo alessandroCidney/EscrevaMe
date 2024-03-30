@@ -3,7 +3,7 @@
     v-model:title="title"
     v-model:content="content"
     v-model:photo="photoFile"
-    :initial-photo-url="postData?.backgroundPhotoUrl"
+    :initial-photo-url="postData?.backgroundPhotoUrl ?? null"
     @save="save"
   />
 </template>

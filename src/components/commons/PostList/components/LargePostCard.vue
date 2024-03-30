@@ -24,8 +24,12 @@
           {{ props.post.title }}
         </h1>
 
-        <v-card-text class="px-0 mb-10">
+        <v-card-text class="px-0">
           Esta é a descrição de um post incrível
+        </v-card-text>
+
+        <v-card-text class="px-0 mb-10">
+          {{ getFromNowDate(props.post.updatedAt ?? props.post.createdAt) }}
         </v-card-text>
       </div>
     </div>
@@ -37,6 +41,8 @@ import { computed } from 'vue'
 import { useDisplay } from 'vuetify'
 
 import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
+
+import { getFromNowDate } from '@/utils/date'
 
 import type { IPost } from '@/types/post'
 
