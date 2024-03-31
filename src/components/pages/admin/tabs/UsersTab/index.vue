@@ -161,6 +161,7 @@ import { useUsersCrud } from '@/composables/useUsersCrud'
 import type { IDatabaseUser, TPartialNewUser } from '@/types/user'
 
 import { removeObjectEmptyValues, wait } from '@/utils/index'
+import { defaultErrorHandling } from '@/utils/error'
 
 const popupStore = usePopupStore()
 
@@ -290,11 +291,7 @@ async function confirmRemove (data: IDatabaseUser) {
 
     popupStore.showSuccessPopup('User removed successfully')
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   }
 }
 

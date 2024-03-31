@@ -79,13 +79,14 @@ import PostList from '@/components/commons/PostList/index.vue'
 
 import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
-import { usePopupStore } from '@/store/popup'
 
 import { useUsersCrud } from '@/composables/useUsersCrud'
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
 import type { IDatabaseUser } from '@/types/user'
 import type { IPost } from '@/types/post'
+
+import { defaultErrorHandling } from '@/utils/error'
 
 import { useRoute, definePageMeta, useRouter } from '#imports'
 
@@ -95,7 +96,6 @@ definePageMeta({
 
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
-const popupStore = usePopupStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -139,11 +139,7 @@ async function getUserData (userId: string) {
 
     userData.value = await usersCrud.get(userId)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     mainStore.setOverlay(false)
   }
@@ -157,11 +153,7 @@ async function listUserPosts (userId: string) {
 
     userPosts.value = await postsCrud.listUserPosts(userId, listPrivate)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingUserPosts.value = false
   }
@@ -189,11 +181,7 @@ async function handleFollow () {
 
     accountStore.setDatabaseUser(updatedUserData)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingFollow.value = false
   }
@@ -215,11 +203,7 @@ async function handleUnfollow () {
 
     accountStore.setDatabaseUser(updatedUserData)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingFollow.value = false
   }

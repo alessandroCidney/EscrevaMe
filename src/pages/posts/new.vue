@@ -17,11 +17,12 @@ import { useRouter, definePageMeta } from '#imports'
 
 import { useMainStore } from '@/store/index'
 import { useAccountStore } from '@/store/account'
-import { usePopupStore } from '@/store/popup'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
 import PostEditPage from '@/components/pages/PostEditPage.vue'
+
+import { defaultErrorHandling } from '@/utils/error'
 
 definePageMeta({
   requiresAuth: true,
@@ -29,7 +30,6 @@ definePageMeta({
 
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
-const popupStore = usePopupStore()
 
 const postsCrud = usePostsCrud()
 const router = useRouter()
@@ -77,11 +77,7 @@ async function save () {
 
     await router.push(`/posts/${savedPost._id}`)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     mainStore.setOverlay(false)
   }

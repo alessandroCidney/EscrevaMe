@@ -164,6 +164,8 @@ import FormDialog from '@/components/commons/FormDialog.vue'
 import type { IPost, IPostComment } from '@/types/post'
 import type { IDatabaseUser } from '@/types/user'
 
+import { defaultErrorHandling } from '@/utils/error'
+
 import { useRoute, definePageMeta, useRouter } from '#imports'
 
 definePageMeta({
@@ -240,11 +242,7 @@ async function getPostData (postId: string) {
     titleModel.value = postData.value.title
     contentModel.value = postData.value.content
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     mainStore.setOverlay(false)
   }
@@ -278,11 +276,7 @@ async function listPostComments () {
 
     postCommentsWithUserData.value = partialPostComments
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingPostComments.value = false
   }
@@ -312,11 +306,7 @@ async function confirmRemove () {
 
     router.push('/home')
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   }
 }
 
@@ -342,11 +332,7 @@ async function handleLike () {
 
     postData.value.likedBy = updatedPost.likedBy ?? []
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingLike.value = false
   }
@@ -368,11 +354,7 @@ async function handleUnlike () {
 
     postData.value.likedBy = updatedPost.likedBy ?? []
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingLike.value = false
   }
@@ -396,11 +378,7 @@ async function handleSavePost () {
 
     accountStore.setDatabaseUser(updatedUser)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingSavePost.value = false
   }
@@ -422,11 +400,7 @@ async function handleRemoveSavedPost () {
 
     accountStore.setDatabaseUser(updatedUser)
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingSavePost.value = false
   }

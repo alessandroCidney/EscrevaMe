@@ -11,12 +11,16 @@ import {
   type FirestoreDataConverter,
 } from 'firebase/firestore'
 
+import { type Optional } from '@/types'
+
 import { useNuxtApp } from '#imports'
 
 type TFirestoreItemBase = Record<string, any>
 
 type TDefaultFirestoreItem <T> = Omit<T, '_id'> & {
   _id: string
+  createdAt: Date
+  updatedAt: Date | null
 }
 
 type TPartialDefaultFirestoreItem <T> = Omit<Partial<T>, '_id'> & {
@@ -29,10 +33,16 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
 ) {
   const nuxtApp = useNuxtApp()
 
-  async function create (_id: string, data: TDefaultFirestoreItem<TBaseType>) {
+  async function create (
+    _id: string,
+    data: Optional<TDefaultFirestoreItem<TBaseType>, 'createdAt' | 'updatedAt'>,
+  ) {
     const docRef = doc(nuxtApp.$firestore, basePath, _id)
-    await setDoc(docRef, data)
-    return { ...data, _id } as TBaseType
+
+    const payload = { ...data, createdAt: new Date(), updatedAt: null, _id }
+    await setDoc(docRef, payload)
+
+    return payload as TBaseType
   }
 
   async function get (_id: string) {
@@ -64,8 +74,11 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
 
   async function update (_id: string, data: TPartialDefaultFirestoreItem<TBaseType>) {
     const docRef = doc(nuxtApp.$firestore, basePath, _id)
-    await updateDoc(docRef, data)
-    return { ...data }
+
+    const payload = { ...data, updatedAt: new Date() }
+    await updateDoc(docRef, payload)
+
+    return { ...payload }
   }
 
   async function remove (_id: string) {

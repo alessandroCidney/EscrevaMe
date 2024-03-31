@@ -4,7 +4,8 @@ import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import { useStorageCrud } from '@/composables/firebase/useStorageCrud'
 
 import { type IPost, postConverter, type IPostComment, postCommentConverter } from '@/types/post'
-import type { IDatabaseUser } from '@/types/user'
+import { type IDatabaseUser } from '@/types/user'
+import { type Optional } from '@/types'
 
 export function usePostsCrud () {
   const firestoreCrud = useFirestoreCrud<IPost>('posts', postConverter)
@@ -102,26 +103,26 @@ export function usePostsCrud () {
   async function createComment (
     postId: string,
     commentId: string,
-    authorId: string,
-    content: string,
-    inReplyTo: string | null,
+    commentData: Optional<IPostComment, 'createdAt' | 'updatedAt'>,
   ) {
     const commentsFirestoreCrud = useFirestoreCrud<IPostComment>(`posts/${postId}/comments`, postCommentConverter)
 
-    return await commentsFirestoreCrud.create(commentId, {
-      _id: commentId,
-      authorId,
-      content,
-      createdAt: new Date(),
-      updatedAt: null,
-      inReplyTo,
-      removed: false,
-    })
+    return await commentsFirestoreCrud.create(commentId, commentData)
   }
 
   function listComments (postId: string) {
     const commentsFirestoreCrud = useFirestoreCrud<IPostComment>(`posts/${postId}/comments`, postCommentConverter)
     return commentsFirestoreCrud.list()
+  }
+
+  function updateComment (
+    postId: string,
+    commentId: string,
+    commentData: IPostComment,
+  ) {
+    const commentsFirestoreCrud = useFirestoreCrud<IPostComment>(`posts/${postId}/comments`, postCommentConverter)
+
+    commentsFirestoreCrud.update(commentId, commentData)
   }
 
   function removeComent (
@@ -151,6 +152,7 @@ export function usePostsCrud () {
 
     listComments,
     createComment,
+    updateComment,
     removeComent,
 
     ...firestoreCrud,

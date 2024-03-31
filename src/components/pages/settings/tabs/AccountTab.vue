@@ -97,6 +97,7 @@ import UserAvatar from '@/components/layouts/default/AppHeader/components/UserAv
 
 import { selectFile } from '@/utils'
 import type { IDatabaseUser } from '@/types/user'
+import { defaultErrorHandling } from '@/utils/error'
 
 const rules = useRules()
 
@@ -165,11 +166,7 @@ async function save () {
 
     popupStore.showSuccessPopup('Data updated successfully')
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     mainStore.setOverlay(false)
   }

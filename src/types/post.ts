@@ -53,6 +53,8 @@ export interface IPostComment {
   updatedAt: Date | null
 
   removed: boolean
+
+  likedBy: string[]
 }
 
 export interface IDbPostComment extends Omit<IPostComment, 'createdAt' | 'updatedAt'> {

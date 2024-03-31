@@ -23,6 +23,8 @@ import PostEditPage from '@/components/pages/PostEditPage.vue'
 
 import type { IPost } from '@/types/post'
 
+import { defaultErrorHandling } from '@/utils/error'
+
 definePageMeta({
   requiresAuth: true,
 })
@@ -55,11 +57,7 @@ async function getPost () {
     title.value = postData.value.title
     content.value = postData.value.content
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     mainStore.setOverlay(false)
   }

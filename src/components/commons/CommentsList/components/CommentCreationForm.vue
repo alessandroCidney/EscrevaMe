@@ -32,20 +32,19 @@ import { ref, defineProps, defineModel } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 
 import { useAccountStore } from '@/store/account'
-import { usePopupStore } from '@/store/popup'
 
 import { useRules } from '@/composables/useRules'
 
 import { usePostsCrud } from '@/composables/usePostsCrud'
 
 import { type IPost, type TPostCommentWithUserData } from '@/types/post'
+import { defaultErrorHandling } from '@/utils/error'
 
 const props = defineProps<{ post: IPost, inReplyTo?: string }>()
 
 const rules = useRules()
 
 const accountStore = useAccountStore()
-const popupStore = usePopupStore()
 
 const postsCrud = usePostsCrud()
 
@@ -64,13 +63,16 @@ async function handleSaveComment () {
       throw new Error('The user is not authenticated')
     }
 
-    const commentData = await postsCrud.createComment(
-      props.post._id,
-      uuidv4(),
-      accountStore.userId,
-      newCommentText.value,
-      props.inReplyTo ?? null,
-    )
+    const newCommentId = uuidv4()
+
+    const commentData = await postsCrud.createComment(props.post._id, newCommentId, {
+      _id: newCommentId,
+      authorId: accountStore.userId,
+      content: newCommentText.value,
+      inReplyTo: props.inReplyTo ?? null,
+      removed: false,
+      likedBy: [],
+    })
 
     commentsModel.value.push({
       ...commentData,
@@ -80,11 +82,7 @@ async function handleSaveComment () {
     newCommentText.value = ''
     visibleModel.value = false
   } catch (err) {
-    if (err instanceof Error) {
-      popupStore.showErrorPopup(err.message)
-    } else {
-      popupStore.showErrorPopup()
-    }
+    defaultErrorHandling(err)
   } finally {
     loadingSaveComment.value = false
   }
