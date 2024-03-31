@@ -25,6 +25,14 @@
 
       <template v-if="!props.comment.removed" #append>
         <v-btn
+          :loading="loadingLike"
+          :icon="isLiked ? 'mdi-heart' : 'mdi-heart-outline'"
+          color="secondary"
+          variant="text"
+          @click="isLiked ? handleUnlike() : handleLike()"
+        />
+
+        <v-btn
           :icon="showCommentCreationTextArea ? 'mdi-message' : 'mdi-message-outline'"
           color="secondary"
           variant="text"
@@ -89,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, defineModel } from 'vue'
+import { defineProps, ref, defineModel, computed } from 'vue'
 
 import _ from 'lodash'
 
@@ -113,6 +121,11 @@ const props = defineProps<{
 }>()
 
 const accountStore = useAccountStore()
+
+const isLiked = computed(() =>
+  !!accountStore.userId &&
+  props.comment.likedBy.includes(accountStore.userId),
+)
 
 const postsCrud = usePostsCrud()
 
@@ -155,5 +168,62 @@ async function confirmRemoveComment (data: TFormattedPostCommentWithUserData) {
 
 function cancelRemoveComment () {
   commentRemovalConfirmDialogIsOpen.value = false
+}
+
+const loadingLike = ref(false)
+
+function getOriginalComment () {
+  return {
+    _id: props.comment._id,
+    authorId: props.comment.authorId,
+    content: props.comment.content,
+    createdAt: props.comment.createdAt,
+    inReplyTo: props.comment.inReplyTo,
+    likedBy: props.comment.likedBy,
+    removed: props.comment.removed,
+    updatedAt: props.comment.updatedAt,
+  }
+}
+
+async function handleLike () {
+  try {
+    loadingLike.value = true
+
+    if (!accountStore.userId) {
+      throw new Error('The user is not authenticated')
+    }
+
+    const updatedComment = await postsCrud.likeComment(props.post._id, accountStore.userId, getOriginalComment())
+
+    updateCommentListItem(props.comment._id, {
+      ...props.comment,
+      ...updatedComment,
+    })
+  } catch (err) {
+    defaultErrorHandling(err)
+  } finally {
+    loadingLike.value = false
+  }
+}
+
+async function handleUnlike () {
+  try {
+    loadingLike.value = true
+
+    if (!accountStore.userId) {
+      throw new Error('The user is not authenticated')
+    }
+
+    const updatedComment = await postsCrud.unlikeComment(props.post._id, accountStore.userId, getOriginalComment())
+
+    updateCommentListItem(props.comment._id, {
+      ...props.comment,
+      ...updatedComment,
+    })
+  } catch (err) {
+    defaultErrorHandling(err)
+  } finally {
+    loadingLike.value = false
+  }
 }
 </script>

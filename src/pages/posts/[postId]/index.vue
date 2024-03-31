@@ -36,7 +36,7 @@
           </div>
 
           <div>
-            {{ formatDate(postData.createdAt) }}
+            {{ postData.updatedAt ? formatDate(postData.updatedAt) : formatDate(postData.createdAt) }}
           </div>
         </div>
 

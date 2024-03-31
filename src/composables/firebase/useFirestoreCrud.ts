@@ -25,6 +25,8 @@ type TDefaultFirestoreItem <T> = Omit<T, '_id'> & {
 
 type TPartialDefaultFirestoreItem <T> = Omit<Partial<T>, '_id'> & {
   _id?: string
+  createdAt?: Date
+  updatedAt?: Date | null
 }
 
 export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFirestoreItemBase>> (
@@ -39,7 +41,13 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
   ) {
     const docRef = doc(nuxtApp.$firestore, basePath, _id)
 
-    const payload = { ...data, createdAt: new Date(), updatedAt: null, _id }
+    const payload = {
+      ...data,
+      _id,
+      createdAt: new Date(),
+      updatedAt: null,
+    }
+
     await setDoc(docRef, payload)
 
     return payload as TBaseType
@@ -72,10 +80,21 @@ export function useFirestoreCrud <TBaseType extends TDefaultFirestoreItem<TFires
       .map(querySnapshotItem => ({ _id: querySnapshotItem.id, ...querySnapshotItem.data() })) as TBaseType[]
   }
 
-  async function update (_id: string, data: TPartialDefaultFirestoreItem<TBaseType>) {
+  async function update (
+    _id: string,
+    data: TPartialDefaultFirestoreItem<TBaseType>,
+    updateDates = true,
+  ) {
     const docRef = doc(nuxtApp.$firestore, basePath, _id)
 
-    const payload = { ...data, updatedAt: new Date() }
+    const payload: TPartialDefaultFirestoreItem<TBaseType> = {
+      ...data,
+    }
+
+    if (updateDates) {
+      payload.updatedAt = new Date()
+    }
+
     await updateDoc(docRef, payload)
 
     return { ...payload }

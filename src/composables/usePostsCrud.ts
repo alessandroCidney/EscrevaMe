@@ -74,7 +74,7 @@ export function usePostsCrud () {
     }
   }
 
-  async function like (postData: IPost, userId: string) {
+  function like (postData: IPost, userId: string) {
     const likedBy = [...postData.likedBy]
 
     if (likedBy.includes(userId)) {
@@ -83,10 +83,10 @@ export function usePostsCrud () {
 
     likedBy.push(userId)
 
-    return await firestoreCrud.update(postData._id, { ...postData, likedBy })
+    return firestoreCrud.update(postData._id, { ...postData, likedBy }, false)
   }
 
-  async function unlike (postData: IPost, userId: string) {
+  function unlike (postData: IPost, userId: string) {
     const likedBy = [...postData.likedBy]
 
     if (!likedBy.includes(userId)) {
@@ -97,7 +97,7 @@ export function usePostsCrud () {
 
     likedBy.splice(likedIndex, 1)
 
-    return await firestoreCrud.update(postData._id, { ...postData, likedBy })
+    return firestoreCrud.update(postData._id, { ...postData, likedBy }, false)
   }
 
   async function createComment (
@@ -123,6 +123,44 @@ export function usePostsCrud () {
     const commentsFirestoreCrud = useFirestoreCrud<IPostComment>(`posts/${postId}/comments`, postCommentConverter)
 
     commentsFirestoreCrud.update(commentId, commentData)
+  }
+
+  function likeComment (
+    postId: string,
+    userId: string,
+    commentData: IPostComment,
+  ) {
+    const commentsFirestoreCrud = useFirestoreCrud<IPostComment>(`posts/${postId}/comments`, postCommentConverter)
+
+    const likedBy = [...commentData.likedBy]
+
+    if (likedBy.includes(userId)) {
+      throw new Error('Already liked')
+    }
+
+    likedBy.push(userId)
+
+    return commentsFirestoreCrud.update(commentData._id, { ...commentData, likedBy }, false)
+  }
+
+  function unlikeComment (
+    postId: string,
+    userId: string,
+    commentData: IPostComment,
+  ) {
+    const commentsFirestoreCrud = useFirestoreCrud<IPostComment>(`posts/${postId}/comments`, postCommentConverter)
+
+    const likedBy = [...commentData.likedBy]
+
+    if (!likedBy.includes(userId)) {
+      throw new Error('Not liked yet')
+    }
+
+    const likedIndex = likedBy.findIndex(likedUserId => likedUserId === userId)
+
+    likedBy.splice(likedIndex, 1)
+
+    return commentsFirestoreCrud.update(commentData._id, { ...commentData, likedBy }, false)
   }
 
   function removeComent (
@@ -154,6 +192,9 @@ export function usePostsCrud () {
     createComment,
     updateComment,
     removeComent,
+
+    likeComment,
+    unlikeComment,
 
     ...firestoreCrud,
   }

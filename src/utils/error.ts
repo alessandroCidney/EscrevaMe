@@ -5,6 +5,8 @@ import { usePopupStore } from '@/store/popup'
 
 export function getFirebaseErrorMessage (code: string) {
   switch (code) {
+    case 'permission-denied':
+      return 'You do not have permission to perform this action.'
     case AuthErrorCodes.POPUP_CLOSED_BY_USER:
       return 'The authentication pop-up was closed during the procedure.'
     case AuthErrorCodes.INVALID_EMAIL:

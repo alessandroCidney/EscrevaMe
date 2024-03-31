@@ -21,6 +21,9 @@ export interface IDatabaseUser {
 export interface IPrivateDatabaseUserData {
   _id: string
   email?: string
+
+  createdAt: Date
+  updatedAt: Date | null
 }
 
 export interface IFollowingUserData {
