@@ -13,10 +13,7 @@
 
       <div
         v-if="postData && postAuthorData"
-        :style="{
-          width: '90%'
-        }"
-        class="text-left px-5 d-flex align-center justify-space-between"
+        class="text-left px-5 d-flex align-center justify-space-between adjustToWidth"
       >
         <div class="d-flex align-center">
           <div
@@ -61,10 +58,7 @@
       </div>
 
       <h1
-        :style="{
-          width: '90%'
-        }"
-        class="pa-5 mb-2 text-h4 font-weight-bold text-left"
+        class="pa-5 mb-2 text-h4 font-weight-bold text-left adjustToWidth"
       >
         {{ titleModel }}
       </h1>
@@ -75,10 +69,7 @@
       />
 
       <div
-        :style="{
-          width: '90%'
-        }"
-        class="pa-5 d-flex align-center justify-end"
+        class="pa-5 d-flex align-center justify-end adjustToWidth"
       >
         <v-btn
           :loading="loadingLike"
@@ -89,11 +80,34 @@
         />
 
         <v-btn
+          :icon="showCommentCreationTextArea ? 'mdi-message' : 'mdi-message-outline'"
+          color="secondary"
+          variant="text"
+          @click="showCommentCreationTextArea = !showCommentCreationTextArea"
+        />
+
+        <v-btn
           :loading="loadingSavePost"
           :icon="isSaved ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
           color="secondary"
           variant="text"
           @click="isSaved ? handleRemoveSavedPost() : handleSavePost()"
+        />
+      </div>
+
+      <div
+        v-if="postData"
+        class="adjustToWidth"
+      >
+        <comment-creation-form
+          v-model:visible="showCommentCreationTextArea"
+          v-model:comments="postCommentsWithUserData"
+          :post="postData"
+        />
+
+        <comments-list
+          v-model:comments="postCommentsWithUserData"
+          :post="postData"
         />
       </div>
 
@@ -142,10 +156,12 @@ import { useUsersCrud } from '@/composables/useUsersCrud'
 import DefaultEditor from '@/components/commons/DefaultEditor.vue'
 import ImageWithLoader from '@/components/commons/ImageWithLoader.vue'
 import UserAvatar from '@/components/layouts/default/AppHeader/components/UserAvatar.vue'
+import CommentsList from '@/components/commons/CommentsList/index.vue'
+import CommentCreationForm from '@/components/commons/CommentsList/components/CommentCreationForm.vue'
 
 import FormDialog from '@/components/commons/FormDialog.vue'
 
-import type { IPost } from '@/types/post'
+import type { IPost, IPostComment } from '@/types/post'
 import type { IDatabaseUser } from '@/types/user'
 
 import { useRoute, definePageMeta, useRouter } from '#imports'
@@ -192,10 +208,26 @@ onMounted(async () => {
   }
 
   await getPostData(routePostId)
+  await listPostComments()
 })
 
 function formatDate (createdAt: Date) {
   return moment(createdAt).format('MMMM Do YYYY, h:mm a')
+}
+
+const userDataCache = ref<{ [k: string]: IDatabaseUser }>({})
+
+async function cachedGetUserData (userId: string) {
+  const cachedValue = userDataCache.value[userId]
+
+  if (cachedValue) {
+    return cachedValue
+  }
+
+  const userData = await usersCrud.get(userId)
+  userDataCache.value[userData._id] = userData
+
+  return userData
 }
 
 async function getPostData (postId: string) {
@@ -203,7 +235,7 @@ async function getPostData (postId: string) {
     mainStore.setOverlay(true)
 
     postData.value = await postsCrud.get(postId)
-    postAuthorData.value = await usersCrud.get(postData.value.authorId)
+    postAuthorData.value = await cachedGetUserData(postData.value.authorId)
 
     titleModel.value = postData.value.title
     contentModel.value = postData.value.content
@@ -215,6 +247,44 @@ async function getPostData (postId: string) {
     }
   } finally {
     mainStore.setOverlay(false)
+  }
+}
+
+type TPostCommentWithUserData = IPostComment & {
+  userData: IDatabaseUser | null
+}
+
+const postCommentsWithUserData = ref<TPostCommentWithUserData[]>([])
+const loadingPostComments = ref(false)
+
+async function listPostComments () {
+  try {
+    loadingPostComments.value = true
+
+    if (typeof routePostId !== 'string') {
+      return router.push('/home')
+    }
+
+    const postComments = await postsCrud.listComments(routePostId)
+
+    const partialPostComments: TPostCommentWithUserData[] = postComments
+      .map(postComment => ({ ...postComment, userData: null }))
+
+    for (const partialPostComment of partialPostComments) {
+      if (partialPostComment.authorId) {
+        partialPostComment.userData = await cachedGetUserData(partialPostComment.authorId)
+      }
+    }
+
+    postCommentsWithUserData.value = partialPostComments
+  } catch (err) {
+    if (err instanceof Error) {
+      popupStore.showErrorPopup(err.message)
+    } else {
+      popupStore.showErrorPopup()
+    }
+  } finally {
+    loadingPostComments.value = false
   }
 }
 
@@ -361,8 +431,12 @@ async function handleRemoveSavedPost () {
     loadingSavePost.value = false
   }
 }
+
+const showCommentCreationTextArea = ref(false)
 </script>
 
 <style lang="scss" scoped>
-
+.adjustToWidth {
+  width: 90%;
+}
 </style>

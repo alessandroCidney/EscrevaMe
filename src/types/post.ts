@@ -1,4 +1,5 @@
 import type { FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, Timestamp } from 'firebase/firestore'
+import type { IDatabaseUser } from './user'
 
 export interface IPost {
   _id: string
@@ -27,51 +28,62 @@ export interface IDbPost extends Omit<IPost, 'createdAt' | 'updatedAt'> {
   updatedAt?: Timestamp
 }
 
-export class PostModel {
-  _id!: IPost['_id']
-
-  title!: IPost['title']
-
-  content!: IPost['content']
-
-  backgroundPhotoUrl!: IPost['backgroundPhotoUrl']
-
-  authorId!: IPost['authorId']
-
-  tags!: IPost['tags']
-
-  createdAt!: IPost['createdAt']
-  updatedAt!: IPost['updatedAt']
-
-  likedBy!: IPost['likedBy']
-
-  private!: IPost['private']
-
-  constructor (post: IPost) {
-    this._id = post._id
-    this.title = post.title
-    this.content = post.content
-    this.backgroundPhotoUrl = post.backgroundPhotoUrl
-    this.authorId = post.authorId
-    this.tags = post.tags
-    this.createdAt = post.createdAt
-    this.updatedAt = post.updatedAt
-    this.likedBy = post.likedBy
-    this.private = post.private
-  }
-}
-
-export const postConverter: FirestoreDataConverter<PostModel> = {
-  toFirestore: (post: PostModel) => ({
+export const postConverter: FirestoreDataConverter<IPost> = {
+  toFirestore: (post: IPost) => ({
     ...post,
   }),
   fromFirestore: (snapshot: QueryDocumentSnapshot<IDbPost>, options: SnapshotOptions) => {
     const data = snapshot.data(options)
 
-    return new PostModel({
+    return {
       ...data,
       createdAt: data.createdAt.toDate(),
       updatedAt: data.updatedAt?.toDate() ?? null,
-    })
+    }
   },
+}
+
+export interface IPostComment {
+  _id: string
+  content: string | null
+  authorId: string | null
+  inReplyTo: string | null
+
+  createdAt: Date
+  updatedAt: Date | null
+
+  removed: boolean
+}
+
+export interface IDbPostComment extends Omit<IPostComment, 'createdAt' | 'updatedAt'> {
+  createdAt: Timestamp
+  updatedAt?: Timestamp
+}
+
+export const postCommentConverter: FirestoreDataConverter<IPostComment> = {
+  toFirestore: (postComment: IPostComment) => ({
+    ...postComment,
+  }),
+  fromFirestore: (snapshot: QueryDocumentSnapshot<IDbPostComment>, options: SnapshotOptions) => {
+    const data = snapshot.data(options)
+
+    return {
+      ...data,
+      createdAt: data.createdAt.toDate(),
+      updatedAt: data.updatedAt?.toDate() ?? null,
+    }
+  },
+}
+
+export interface IFormattedPostComment extends IPostComment {
+  replies: IFormattedPostComment[]
+}
+
+export type TPostCommentWithUserData = IPostComment & {
+  userData: IDatabaseUser | null
+}
+
+export type TFormattedPostCommentWithUserData = Omit<IFormattedPostComment, 'replies'> & {
+  replies: TFormattedPostCommentWithUserData[]
+  userData: IDatabaseUser | null
 }

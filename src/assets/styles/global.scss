@@ -61,7 +61,7 @@
 
     .tiptapPostEditor {
       width: 100%;
-      min-height: calc(100vh);
+      // min-height: calc(100vh);
       line-height: 30px;
 
       h1, h2, h3, h4, h5, h6, p {
@@ -91,7 +91,7 @@
 
       > div {
         padding: 20px !important;
-        min-height: calc(100vh) !important;
+        // min-height: calc(100vh) !important;
 
         &:focus {
           outline: none !important;
