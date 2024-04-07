@@ -44,7 +44,7 @@
             v-model="emailModel"
             :rules="[rules.required, rules.email]"
             placeholder="example@email.com"
-            variant="underlined"
+            variant="outlined"
             label="Email"
             class="mb-5"
           />

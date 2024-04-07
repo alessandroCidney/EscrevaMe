@@ -123,7 +123,7 @@ async function handleLoginWithGoogle () {
 
     accountStore.setAuthUser(userCredential.user)
     accountStore.setDatabaseUser(databaseUser)
-    await nuxtApp.$router.push('home')
+    await nuxtApp.$router.push('/home')
   } catch (err) {
     if (err instanceof FirebaseError) {
       popupStore.showErrorPopup(getFirebaseErrorMessage(err.code))
@@ -152,7 +152,7 @@ async function handleLoginWithEmail () {
 
     accountStore.setAuthUser(userCredential.user)
     accountStore.setDatabaseUser(databaseUser)
-    await nuxtApp.$router.push('home')
+    await nuxtApp.$router.push('/home')
   } catch (err) {
     if (err instanceof FirebaseError) {
       popupStore.showErrorPopup(getFirebaseErrorMessage(err.code))

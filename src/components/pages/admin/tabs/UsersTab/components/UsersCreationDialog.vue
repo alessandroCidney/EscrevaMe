@@ -22,12 +22,11 @@
       type="email"
     />
 
-    <v-text-field
+    <password-field
       v-model="payloadModel.password"
       :rules="[rules.required, rules.password]"
       label="Password"
       variant="underlined"
-      type="password"
     />
 
     <v-select
@@ -49,6 +48,7 @@ import { defineModel, defineProps } from 'vue'
 import { useRules } from '@/composables/useRules'
 
 import FormDialog from '@/components/commons/FormDialog.vue'
+import PasswordField from '@/components/commons/PasswordField.vue'
 
 import type { TPartialNewUser } from '@/types/user'
 

@@ -22,23 +22,21 @@
         class="mb-10"
         @submit.prevent="handleUpdatePassword"
       >
-        <v-text-field
+        <password-field
           v-model="previousPassword"
           :rules="[rules.required]"
           label="Previous password"
           variant="underlined"
-          type="password"
         />
 
-        <v-text-field
+        <password-field
           v-model="newPassword"
-          :rules="[rules.required,rules.password]"
+          :rules="[rules.required, rules.password]"
           label="New password"
           variant="underlined"
-          type="password"
         />
 
-        <v-text-field
+        <password-field
           v-model="newPasswordConfirmation"
           :rules="[
             rules.required,
@@ -47,7 +45,6 @@
           ]"
           label="Confirm your new password"
           variant="underlined"
-          type="password"
         />
 
         <div class="d-flex align-center justify-end mt-5">
@@ -88,6 +85,8 @@ import { useAccountStore } from '@/store/account'
 import { usePopupStore } from '@/store/popup'
 
 import { useRules } from '@/composables/useRules'
+
+import PasswordField from '@/components/commons/PasswordField.vue'
 
 import { defaultErrorHandling } from '@/utils/error'
 
