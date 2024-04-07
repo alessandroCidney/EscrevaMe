@@ -12,6 +12,14 @@
   list-style: none;
 }
 
+a {
+  color: inherit;
+
+  &.showUnderlineOnHover:hover {
+    text-decoration: underline;
+  }
+}
+
 .normalLetterSpacing {
   letter-spacing: 0 !important;
 }

@@ -28,7 +28,7 @@
           color="white"
           variant="tonal"
           size="large"
-          @click="$router.push('/login')"
+          @click="$router.push('/auth/login')"
         >
           Join us
         </v-btn>

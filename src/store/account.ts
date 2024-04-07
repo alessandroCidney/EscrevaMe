@@ -62,7 +62,7 @@ export const useAccountStore = defineStore('account', {
       this.authUser = undefined
       this.databaseUser = undefined
 
-      nuxtApp.$router.push('/login')
+      nuxtApp.$router.push('/auth/login')
     },
   },
 })

@@ -14,7 +14,7 @@
     </v-col>
 
     <v-col
-      class="px-0 loginSection d-flex align-center justify-center"
+      class="px-0 loginSection d-flex align-center justify-center flex-column"
       cols="12"
       md="6"
     >
@@ -75,6 +75,13 @@
           Sign in with Email
         </v-btn>
       </v-form>
+
+      <nuxt-link
+        to="/auth/password-reset"
+        class="showUnderlineOnHover my-6"
+      >
+        Forgot your password?
+      </nuxt-link>
     </v-col>
   </v-row>
 </template>

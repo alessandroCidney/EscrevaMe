@@ -19,7 +19,7 @@
       <v-btn
         variant="text"
         color="white"
-        @click="$router.push('/login')"
+        @click="$router.push('/auth/login')"
       >
         Sign in
       </v-btn>

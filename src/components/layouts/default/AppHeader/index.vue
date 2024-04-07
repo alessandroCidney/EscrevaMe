@@ -91,7 +91,7 @@
         <v-btn
           variant="text"
           color="secondary"
-          @click="$router.push('/login')"
+          @click="$router.push('/auth/login')"
         >
           Sign in
         </v-btn>
@@ -99,7 +99,7 @@
         <v-btn
           variant="text"
           color="secondary"
-          @click="$router.push('/signup')"
+          @click="$router.push('/auth/signup')"
         >
           Join us
         </v-btn>

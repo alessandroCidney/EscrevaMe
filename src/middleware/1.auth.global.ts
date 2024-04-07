@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware((to) => {
   }
 
   if (!accountStore.isAuthenticated && to.meta.requiresAuth) {
-    return navigateTo('/login')
+    return navigateTo('/auth/login')
   }
 
   if (accountStore.userRole && to.meta.allowedUserRoles && !to.meta.allowedUserRoles.includes(accountStore.userRole)) {
