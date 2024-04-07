@@ -1,89 +1,72 @@
 <template>
-  <v-row
-    class="loginPage filWidth fillHeight"
+  <auth-page-container
+    class="loginPage"
   >
-    <v-col
-      class="d-md-flex d-none bg-primary px-0 imageSection align-center justify-center"
-      cols="6"
+    <v-form
+      class="loginForm"
     >
-      <div class="imageArea d-flex align-center justify-center">
-        <v-img
-          src="@/assets/images/illustrations/wireframe.svg"
-        />
-      </div>
-    </v-col>
+      <v-img
+        src="@/assets/images/logos/blue_logo.svg"
+        width="200px"
+        class="logo mb-8"
+      />
 
-    <v-col
-      class="px-0 loginSection d-flex align-center justify-center flex-column"
-      cols="12"
-      md="6"
-    >
-      <v-form
-        class="loginForm"
+      <v-btn
+        :loading="loadingGoogleLogin"
+        :disabled="loadingEmailLogin"
+        prepend-icon="mdi-google"
+        color="error"
+        block
+        @click="handleLoginWithGoogle"
       >
-        <v-img
-          src="@/assets/images/logos/blue_logo.svg"
-          width="200px"
-          class="logo mb-8"
-        />
+        Sign in with Google
+      </v-btn>
 
-        <v-btn
-          :loading="loadingGoogleLogin"
-          :disabled="loadingEmailLogin"
-          prepend-icon="mdi-google"
-          color="error"
-          block
-          @click="handleLoginWithGoogle"
-        >
-          Sign in with Google
-        </v-btn>
+      <div class="d-flex align-center justify-center orArea py-7">
+        <v-divider />
 
-        <div class="d-flex align-center justify-center orArea py-7">
-          <v-divider />
-
-          <div class="text-center">
-            or
-          </div>
-
-          <v-divider />
+        <div class="text-center">
+          or
         </div>
 
-        <v-text-field
-          v-model="email"
-          :readonly="loadingEmailLogin || loadingGoogleLogin"
-          label="Email"
-          variant="outlined"
-          type="email"
-        />
+        <v-divider />
+      </div>
 
-        <v-text-field
-          v-model="password"
-          :readonly="loadingEmailLogin || loadingGoogleLogin"
-          label="Password"
-          variant="outlined"
-          type="password"
-        />
+      <v-text-field
+        v-model="email"
+        :readonly="loadingEmailLogin || loadingGoogleLogin"
+        label="Email"
+        variant="outlined"
+        type="email"
+      />
 
-        <v-btn
-          :loading="loadingEmailLogin"
-          :disabled="loadingGoogleLogin"
-          prepend-icon="mdi-email"
-          color="secondary"
-          block
-          @click="handleLoginWithEmail"
-        >
-          Sign in with Email
-        </v-btn>
-      </v-form>
+      <v-text-field
+        v-model="password"
+        :readonly="loadingEmailLogin || loadingGoogleLogin"
+        label="Password"
+        variant="outlined"
+        type="password"
+      />
 
-      <nuxt-link
-        to="/auth/password-reset"
-        class="showUnderlineOnHover my-6"
+      <v-btn
+        :loading="loadingEmailLogin"
+        :disabled="loadingGoogleLogin"
+        prepend-icon="mdi-email"
+        color="secondary"
+        block
+        @click="handleLoginWithEmail"
       >
-        Forgot your password?
-      </nuxt-link>
-    </v-col>
-  </v-row>
+        Sign in with Email
+      </v-btn>
+    </v-form>
+
+    <nuxt-link
+      to="/auth/password-reset"
+      class="showUnderlineOnHover my-6"
+    >
+      Forgot your password?
+    </nuxt-link>
+  </auth-page-container>
 </template>
 
 <script setup lang="ts">
@@ -98,6 +81,8 @@ import { usePopupStore } from '@/store/popup'
 import { ApplicationError, getFirebaseErrorMessage } from '@/utils/error'
 
 import { useUsersCrud } from '@/composables/useUsersCrud'
+
+import AuthPageContainer from '@/components/pages/auth/AuthPageContainer.vue'
 
 import { useNuxtApp, definePageMeta } from '#imports'
 
@@ -184,32 +169,17 @@ async function handleLoginWithEmail () {
 
 <style lang="scss" scoped>
 .loginPage {
-  margin: 0;
+  .loginForm {
+    width: 400px;
 
-  .imageSection {
-    .imageArea {
-      width: 600px;
-      height: 600px;
-
-      border-radius: 16px;
-
-      background-color: rgb(var(--v-theme-primary));
+    .orArea {
+      > * {
+        width: 33%;
+      }
     }
-  }
 
-  .loginSection {
-    .loginForm {
-      width: 400px;
-
-      .orArea {
-        > * {
-          width: 33%;
-        }
-      }
-
-      .logo {
-        margin: 0 auto;
-      }
+    .logo {
+      margin: 0 auto;
     }
   }
 }
