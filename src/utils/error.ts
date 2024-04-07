@@ -13,6 +13,10 @@ export function getFirebaseErrorMessage (code: string) {
       return 'Invalid email.'
     case AuthErrorCodes.INVALID_IDP_RESPONSE:
       return 'Incorrect email or password.'
+    case AuthErrorCodes.EXPIRED_OOB_CODE:
+      return 'The link used has expired.'
+    case AuthErrorCodes.INVALID_OOB_CODE:
+      return 'The link used is invalid.'
     default:
       return 'An internal error has occurred.'
   }

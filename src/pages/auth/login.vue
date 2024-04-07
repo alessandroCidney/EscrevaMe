@@ -40,12 +40,11 @@
         type="email"
       />
 
-      <v-text-field
+      <password-field
         v-model="password"
         :readonly="loadingEmailLogin || loadingGoogleLogin"
         label="Password"
         variant="outlined"
-        type="password"
       />
 
       <v-btn
@@ -83,6 +82,7 @@ import { ApplicationError, getFirebaseErrorMessage } from '@/utils/error'
 import { useUsersCrud } from '@/composables/useUsersCrud'
 
 import AuthPageContainer from '@/components/pages/auth/AuthPageContainer.vue'
+import PasswordField from '@/components/commons/PasswordField.vue'
 
 import { useNuxtApp, definePageMeta } from '#imports'
 
