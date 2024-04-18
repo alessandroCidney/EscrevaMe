@@ -30,6 +30,8 @@ export class ApplicationError extends Error {
 }
 
 export function defaultErrorHandling (err: unknown) {
+  console.error(err)
+
   const popupStore = usePopupStore()
 
   if (err instanceof FirebaseError) {

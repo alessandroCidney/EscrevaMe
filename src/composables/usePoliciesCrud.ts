@@ -2,16 +2,17 @@ import { useFirestoreCrud } from '@/composables/firebase/useFirestoreCrud'
 import type { IPolicy } from '@/types/policies'
 
 export function usePoliciesCrud () {
-  function usePrivacyPolicyCrud () {
-    return useFirestoreCrud<IPolicy>('policies/privacy-policy')
+  function usePrivacyPolicyVersionsCrud () {
+    return useFirestoreCrud<IPolicy>('policies/privacy-policy/versions')
   }
 
-  function useTermsOfUseCrud () {
-    return useFirestoreCrud<IPolicy>('policies/terms-of-use')
+  function useTermsOfUseVersionsCrud () {
+    return useFirestoreCrud<IPolicy>('policies/terms-of-use/versions')
   }
 
   return {
-    usePrivacyPolicyCrud,
-    useTermsOfUseCrud,
+    ...useFirestoreCrud<IPolicy>('policies'),
+    usePrivacyPolicyVersionsCrud,
+    useTermsOfUseVersionsCrud,
   }
 }

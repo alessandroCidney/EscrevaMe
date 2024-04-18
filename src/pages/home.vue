@@ -1,7 +1,6 @@
 <template>
   <div
-    :style="{ width: '100%' }"
-    class="py-10 homePage"
+    class="py-10 homePage fillWidth"
   >
     <v-tabs
       v-if="!loadingPosts"
