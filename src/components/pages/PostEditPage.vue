@@ -73,6 +73,7 @@
           <v-divider class="mr-11 ml-5" vertical />
 
           <v-btn
+            v-if="allowImages"
             color="#eee"
             elevation="0"
             prepend-icon="mdi-image-plus"
@@ -95,6 +96,7 @@
       <div :style="{ width: '90%' }">
         <v-text-field
           v-model="title"
+          :readonly="readonlyTitle"
           placeholder="Create a title for your new post"
           class="px-5 text-h4 postEditorTitle font-weight-bold"
           variant="plain"
@@ -110,7 +112,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, defineModel, computed, defineEmits, defineProps } from 'vue'
+import { reactive, defineModel, computed, defineEmits, defineProps, type PropType } from 'vue'
 
 import { useTiptapEditor } from '@/composables/useTiptapEditor'
 
@@ -119,7 +121,12 @@ import DefaultEditor from '@/components/commons/DefaultEditor.vue'
 import { selectFile } from '@/utils'
 
 const emit = defineEmits(['save'])
-const props = defineProps<{ initialPhotoUrl: string | null }>()
+
+const props = defineProps({
+  initialPhotoUrl: { type: String as PropType<string | null>, default: null },
+  allowImages: { type: Boolean, default: true },
+  readonlyTitle: Boolean,
+})
 
 const title = defineModel<string>('title')
 const contentModel = defineModel<string>('content', { default: '' })

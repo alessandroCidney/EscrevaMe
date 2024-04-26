@@ -3,8 +3,6 @@ import type { FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, Ti
 export interface IPolicy {
   _id: string
 
-  version: string
-
   createdAt: Date
   updatedAt: Date | null
 
