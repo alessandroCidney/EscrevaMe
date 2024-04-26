@@ -32,7 +32,7 @@ definePageMeta({
 const mainStore = useMainStore()
 const accountStore = useAccountStore()
 
-const policiesCrud = usePoliciesCrud()
+const policiesCrud = usePoliciesCrud().usePrivacyPolicyVersionsCrud()
 const router = useRouter()
 
 const title = ref('Política de Privacidade')
